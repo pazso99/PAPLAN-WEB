@@ -107,7 +107,6 @@ async function onSubmit(event: any) {
     }
     delete body.account;
     delete body.transactionCategory;
-    console.log('creating transaction', body)
     await createTransaction(body);
 }
 

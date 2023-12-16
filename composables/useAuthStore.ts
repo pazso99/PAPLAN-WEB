@@ -6,7 +6,7 @@ export const useAuthStore = defineStore('auth', {
         isAuth: false,
         token: null,
         user: null,
-        loading: false,
+        loading: true,
     }),
     actions: {
         async login({ name, password }: userCredentials) {
@@ -23,7 +23,7 @@ export const useAuthStore = defineStore('auth', {
                 this.token = data.data.token;
                 useCookie('token').value = this.token;
             } catch (err: any) {
-                toast.add({ title: 'Error!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
+                toast.add({ title: 'Login failed!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
                 throw err;
             }
         },
@@ -34,7 +34,7 @@ export const useAuthStore = defineStore('auth', {
                     method: 'POST',
                 });
             } catch (err: any) {
-                toast.add({ title: 'Error!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
+                toast.add({ title: 'There was an error when logging out!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
             } finally {
                 this.isAuth = false;
                 this.token = null;
@@ -47,7 +47,7 @@ export const useAuthStore = defineStore('auth', {
                 const data: any = await useApiFetch('user');
                 this.user = data.data;
             } catch (err: any) {
-                toast.add({ title: 'Error!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
+                toast.add({ title: 'There was an error when getting user!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
             }
         },
     },

@@ -5,7 +5,10 @@
             title: 'Transactions',
             columns,
             items: transactions,
-            url: '/spending/transactions'
+            url: '/spending/transactions',
+            sortBy: ['date'],
+            sortType: ['desc'],
+            searchField: ['id']
         }"
         :loading="loading"
         @delete-item="removeTransaction"
@@ -32,43 +35,50 @@ onMounted(async () => {
 
 const columns = [
     {
-        key: 'id',
-        label: 'ID',
+        value: 'id',
+        text: 'ID',
+        sortable: true,
+        width: 40,
+    },
+    {
+        value: 'status',
+        text: 'Status',
         sortable: true,
     },
     {
-        key: 'status',
-        label: 'Status',
+        value: 'date',
+        text: 'Date',
         sortable: true,
     },
     {
-        key: 'date',
-        label: 'Date',
+        value: 'account.name',
+        text: 'Account name',
         sortable: true,
     },
     {
-        key: 'account.name',
-        label: 'Account name',
+        value: 'amount',
+        text: 'Amount',
         sortable: true,
     },
     {
-        key: 'transactionType',
-        label: 'Amount',
+        value: 'transactionType',
+        text: 'Transaction type',
         sortable: true,
     },
     {
-        key: 'transactionCategory.name',
-        label: 'Category',
+        value: 'transactionCategory.name',
+        text: 'Category',
         sortable: true,
     },
     {
-        key: 'comment',
-        label: 'Comment',
+        value: 'comment',
+        text: 'Comment',
         sortable: true,
     },
     {
-        key: 'actions',
-        label: 'Actions',
+        value: 'actions',
+        text: 'Actions',
+        width: 100,
     }
 ];
 

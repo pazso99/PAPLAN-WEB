@@ -6,7 +6,6 @@
     </AppContent>
 </template>
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',

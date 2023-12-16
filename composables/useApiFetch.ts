@@ -9,5 +9,12 @@ export function useApiFetch<T> (url: string, options: any = {}) {
             },
             ...options,
         }
-    );
+    ).catch((error) => {
+        if (error.response.status === 401) {
+            token.value = null;
+            navigateTo('/login');
+            return;
+        }
+        throw error;
+    });
 }

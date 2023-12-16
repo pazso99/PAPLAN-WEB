@@ -54,8 +54,6 @@
 </template>
 
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
-
 const router: any = useRouter();
 const disabled = ref(false);
 const { logout, isAuth } = useAuthStore();

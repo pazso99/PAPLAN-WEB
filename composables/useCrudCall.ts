@@ -9,17 +9,17 @@ export async function useCrudCall(type: any, url: any, navUrl: any, options: any
         if (type === 'store' || type === 'update') {
             const createdData: any = await useApiFetch(`${url}`, options);
             navigateTo(`/${navUrl}/${createdData.data.id}`);
-            toast.add({ title: 'Success!', color: 'green', icon: 'i-heroicons-check-circle' });
+            toast.add({ title: (type === 'store' ? 'Record created!' : 'Record updated'), color: 'green', icon: 'i-heroicons-check-circle' });
             return;
         }
 
         if (type === 'delete') {
             await useApiFetch(`${url}`, options);
             navigateTo(`/${navUrl}`);
-            toast.add({ title: 'Success!', color: 'green', icon: 'i-heroicons-check-circle' });
+            toast.add({ title: 'Record deleted!', color: 'green', icon: 'i-heroicons-check-circle' });
         }
     } catch (err: any) {
         navigateTo(`/${navUrl}`);
-        toast.add({ title: 'Error!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
+        toast.add({ title: 'Some error happened!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
     }
 }

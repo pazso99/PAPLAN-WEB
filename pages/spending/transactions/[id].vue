@@ -8,15 +8,15 @@
     >
         <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
             <UFormGroup name="id" label="Id">
-                <UInput v-model="state.id" disabled />
+                <span class="ml-3 text-sm">{{ state.id }}</span>
             </UFormGroup>
 
             <UFormGroup name="createdAt" label="createdAt">
-                <UInput v-model="state.createdAt" disabled />
+                <span class="ml-3 text-sm">{{ $dayjs(state.createdAt).format('YYYY-MM-DD HH:mm') }}</span>
             </UFormGroup>
 
             <UFormGroup name="updatedAt" label="updatedAt">
-                <UInput v-model="state.updatedAt" disabled />
+                <span class="ml-3 text-sm">{{ $dayjs(state.updatedAt).format('YYYY-MM-DD HH:mm') }}</span>
             </UFormGroup>
 
             <UFormGroup name="date" label="Date">
@@ -95,7 +95,6 @@ const dayjs = useDayjs();
 
 onMounted(async () => {
     await getTransaction(route.params.id);
-    console.log('getting transaction', transaction)
     await getAccounts();
     await getTransactionCategories();
     state.id = transaction.value.id;
@@ -133,7 +132,6 @@ const validate = (state: any) => {
 }
 
 async function onSubmit(event: any) {
-    console.log(event.data)
     const body = {
         ...event.data,
         accountId: event.data.account.id,

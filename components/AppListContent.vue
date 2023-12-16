@@ -2,6 +2,7 @@
     <UCard
         class="w-full"
         :ui="{
+            base: 'overflow-visible',
             divide: 'divide-y divide-gray-200 dark:divide-gray-700',
             header: { padding: '' },
             body: { padding: '', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
@@ -15,71 +16,83 @@
                 </h2>
                 <UButton color="gray" variant="ghost" icon="i-heroicons-plus-20-solid" :to="`${tableData.url}/create`" />
             </div>
-        </template>
 
-        <div class="flex items-center justify-between gap-3 px-4 py-3">
-            <div class="flex gap-1.5 items-center">
-                <USelectMenu v-model="selectedColumns" :options="tableData.columns" multiple>
+            <div class="flex items-center justify-between gap-3 px-4 py-3">
+                <UInput v-model="searchValue" icon="i-heroicons-magnifying-glass-20-solid" placeholder="Search..." />
+                <div class="flex gap-2">
+                    <USelectMenu
+                        v-model="selectedColumns"
+                        :options="tableData.columns"
+                        multiple
+                        class="w-36"
+                    >
+                        <UButton
+                            icon="i-heroicons-view-columns"
+                            color="gray"
+                            size="xs"
+                            class="w-full"
+                        >
+                            Columns
+                        </UButton>
+
+                        <template #option="{ option }">
+                            <span class="text-md">{{ option.text }}</span>
+                        </template>
+                    </USelectMenu>
                     <UButton
-                        icon="i-heroicons-view-columns"
+                        icon="i-heroicons-funnel"
                         color="gray"
                         size="xs"
+                        :disabled="selectedColumns.length === tableData.columns.length"
+                        @click="resetFilters"
                     >
-                        Columns
+                        Reset
                     </UButton>
-                </USelectMenu>
-                <UButton
-                    icon="i-heroicons-funnel"
-                    color="gray"
-                    size="xs"
-                    :disabled="selectedColumns.length === tableData.columns.length"
-                    @click="resetFilters"
-                >
-                    Reset
-                </UButton>
+                </div>
             </div>
-        </div>
+        </template>
 
-        <UTable
-            v-model:sort="sort"
-            :rows="filteredRows"
-            :columns="columnsTable"
-            sort-asc-icon="i-heroicons-arrow-up"
-            sort-desc-icon="i-heroicons-arrow-down"
-            class="w-full"
-            :ui="{ td: { base: 'max-w-[0] truncate' } }"
+        <EasyDataTable
+            :headers="columns"
+            :items="tableData.items"
+            table-class-name="paplan-list-table"
+            theme-color="#0675d4"
+            multi-sort
+            :sort-by="sortBy"
+            :sort-type="sortType"
+            buttons-pagination
+            :rows-per-page="12"
+            :search-field="tableData.searchField"
+            :search-value="searchValue"
         >
-            <template #status-data="{ row }">
-                <UBadge size="xs" :label="row.status ? 'Active' : 'Inactive'" :color="row.status ? 'emerald' : 'red'" variant="subtle" />
+            <template #item-status="item">
+                <UBadge size="xs" :label="item.status ? 'Active' : 'Inactive'" :color="item.status ? 'emerald' : 'red'" variant="subtle" />
             </template>
 
-            <template #transactionType-data="{ row: { transactionType, amount } }">
+            <template #item-transactionType="item">
                 <UBadge
-                    v-if="tableData.url === '/spending/transaction-categories'"
                     size="xs"
-                    :label="transactionType === 'income' ? 'income' : 'expense'"
-                    :color="transactionType === 'income' ? 'green' : 'red'"
+                    :label="item.transactionType === 'income' ? 'income' : 'expense'"
+                    :color="item.transactionType === 'income' ? 'green' : 'red'"
                     variant="subtle"
                 />
-                <UBadge
-                    v-if="tableData.url === '/spending/transactions'"
-                    size="xs"
-                    :color="transactionType === 'income' ? 'green' : 'red'"
-                    variant="subtle"
-                >
-                    {{ amount }}
-                </UBadge>
             </template>
 
-            <template #createdAt-data="{ row }">
-                {{ $dayjs(row.createdAt).format('YYYY-MM-DD HH:mm') }}
+            <template #item-amount="item">
+                {{ $formatNumber(item.amount) }}
             </template>
 
-            <template #actions-data="{ row }">
-                <UButton color="gray" variant="ghost" icon="i-heroicons-pencil-square-20-solid" :to="`${tableData.url}/${row.id}`" />
-                <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="openDeleteModal(row)" />
+            <template #item-createdAt="item">
+                {{ $dayjs(item.createdAt).format('YYYY-MM-DD HH:mm') }}
             </template>
-        </UTable>
+
+            <template #item-actions="item">
+                <UButton color="blue" variant="ghost" icon="i-heroicons-pencil-square-20-solid" :to="`${tableData.url}/${item.id}`" />
+                <UButton color="red" variant="ghost" icon="i-heroicons-trash-20-solid" @click="openDeleteModal(item)" />
+            </template>
+        </EasyDataTable>
+
+
         <UModal v-model="isDeleteModalOpen" prevent-close>
             <UCard :ui="{ ring: '', divide: 'divide-y divide-gray-100 dark:divide-gray-800' }">
                 <template #header>
@@ -97,51 +110,24 @@
                 </div>
             </UCard>
         </UModal>
-        <!-- <template #footer>
-            <div class="flex flex-wrap justify-between items-center">
-                <UPagination
-                    v-model="page"
-                    :page-count="pageCount"
-                    :total="tableData.items.length"
-                    :ui="{
-                        wrapper: 'flex items-center gap-1',
-                        rounded: '!rounded-full min-w-[32px] justify-center',
-                        default: {
-                            activeButton: {
-                                variant: 'outline'
-                            }
-                        }
-                    }"
-                />
-                <div class="flex items-center gap-1.5">
-                    <span class="text-sm leading-5">Rows per page:</span>
-                    <USelect
-                        v-model="pageCount"
-                        :options="[10, 20, 30, 40, 50]"
-                        class="me-2 w-20"
-                        size="xs"
-                    />
-                </div>
-            </div>
-        </template> -->
     </UCard>
 </template>
 
 <script setup>
 const props = defineProps(['table-data']);
 const emit = defineEmits(['deleteItem']);
-// FIXME
-const page = ref(1);
-const pageCount = ref(10);
+const isDeleteModalOpen = ref(false);
+const currentRowToDelete = ref({});
+const searchValue = ref('');
+const sortBy = ref(props.tableData.sortBy);
+const sortType = ref(props.tableData.sortType);
 const selectedColumns = ref(props.tableData.columns);
-const filteredRows = ref();
-/* const filteredRows = computed(() => {
-    return props.tableData.items.slice((page.value - 1) * pageCount.value, (page.value) * pageCount.value);
-}); */
-const columnsTable = computed(() => props.tableData.columns.filter((column) => selectedColumns.value.includes(column)));
-const isDeleteModalOpen = ref(false)
-const currentRowToDelete = ref({})
-const sort = ref();
+const columns = computed(() => props.tableData.columns.filter((column) => selectedColumns.value.includes(column)));
+
+watch(selectedColumns, async (newSelectedColumns) => {
+    sortBy.value = [];
+    sortType.value = [];
+});
 
 function resetFilters() {
     selectedColumns.value = props.tableData.columns;
@@ -160,15 +146,4 @@ function deleteItem() {
     isDeleteModalOpen.value = false;
     emit('deleteItem', currentRowToDelete.value)
 }
-
-onMounted(() => {
-    filteredRows.value = props.tableData.items;
-});
-
-// TODO
-/* watch(sort, (newSort, oldSort) => {
-    console.log('Sort changed:', newSort, oldSort);
-    // Perform actions based on the new sort value
-    filteredRows.value = props.tableData.items.slice((page.value - 1) * pageCount.value, (page.value) * pageCount.value);
-}, { deep: true }); */
 </script>

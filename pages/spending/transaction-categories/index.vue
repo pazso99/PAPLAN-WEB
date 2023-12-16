@@ -5,7 +5,10 @@
             title: 'Transaction categories',
             columns,
             items: transactionCategories,
-            url: '/spending/transaction-categories'
+            url: '/spending/transaction-categories',
+            sortBy: ['id'],
+            sortType: ['asc'],
+            searchField: ['id']
         }"
         :loading="loading"
         @delete-item="removeTransactionCategory"
@@ -18,7 +21,7 @@ definePageMeta({
     layout: 'admin',
 });
 useHead({
-    title: 'Transaction Categories - Spending',
+    title: 'Transaction categories - Spending',
 });
 
 const { getTransactionCategories, deleteTransactionCategory } = useSpendingCrudStore();
@@ -32,33 +35,35 @@ onMounted(async () => {
 
 const columns = [
     {
-        key: 'id',
-        label: 'ID',
+        value: 'id',
+        text: 'ID',
+        sortable: true,
+        width: 40,
+    },
+    {
+        value: 'status',
+        text: 'Status',
         sortable: true,
     },
     {
-        key: 'status',
-        label: 'Status',
+        value: 'name',
+        text: 'Name',
         sortable: true,
     },
     {
-        key: 'name',
-        label: 'Name',
+        value: 'transactionType',
+        text: 'Type',
         sortable: true,
     },
     {
-        key: 'transactionType',
-        label: 'Type',
+        value: 'createdAt',
+        text: 'Created at',
         sortable: true,
     },
     {
-        key: 'createdAt',
-        label: 'Created at',
-        sortable: true,
-    },
-    {
-        key: 'actions',
-        label: 'Actions',
+        value: 'actions',
+        text: 'Actions',
+        width: 100,
     }
 ];
 

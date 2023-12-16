@@ -5,7 +5,10 @@
             title: 'Accounts',
             columns,
             items: accounts,
-            url: '/spending/accounts'
+            url: '/spending/accounts',
+            sortBy: ['id'],
+            sortType: ['asc'],
+            searchField: ['id']
         }"
         :loading="loading"
         @delete-item="removeAccount"
@@ -32,32 +35,35 @@ onMounted(async () => {
 
 const columns = [
     {
-        key: 'id',
-        label: 'ID',
+        value: 'id',
+        text: 'ID',
+        sortable: true,
+        width: 40,
+    },
+    {
+        value: 'status',
+        text: 'Status',
         sortable: true,
     },
     {
-        key: 'status',
-        label: 'Status',
-    },
-    {
-        key: 'name',
-        label: 'Name',
+        value: 'name',
+        text: 'Name',
         sortable: true,
     },
     {
-        key: 'balance',
-        label: 'Balance',
+        value: 'balance',
+        text: 'Balance',
         sortable: true,
     },
     {
-        key: 'createdAt',
-        label: 'Created at',
+        value: 'createdAt',
+        text: 'Created at',
         sortable: true,
     },
     {
-        key: 'actions',
-        label: 'Actions',
+        value: 'actions',
+        text: 'Actions',
+        width: 100,
     }
 ];
 

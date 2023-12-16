@@ -2,9 +2,9 @@
     <UCard
         class="w-full"
         :ui="{
-            divide: 'divide-y divide-gray-200 dark:divide-gray-700',
+            divide: 'dark:divide-gray-700',
             header: { padding: '' },
-            body: { padding: 'p-4', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
+            body: { padding: 'sm:p-4 p-2', base: 'divide-y divide-gray-200 dark:divide-gray-700' },
         }"
     >
         <template #header v-if="customHeader">

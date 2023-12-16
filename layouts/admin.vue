@@ -5,7 +5,7 @@
             <AppNavigation />
         </aside>
 
-        <main class="w-full md:w-5/6 p-4 pb-1 h-full overflow-y-auto">
+        <main class="w-full md:w-5/6 sm:p-4 h-full overflow-y-auto">
             <NuxtPage />
         </main>
     </div>

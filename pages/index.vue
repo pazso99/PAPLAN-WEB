@@ -32,20 +32,11 @@
     </AppContent>
 </template>
 <script setup lang="ts">
-import { storeToRefs } from 'pinia';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
 });
 useHead({
     title: 'Dashboard',
-});
-
-const { getSpendingData } = useDashboardStore();
-const { spending } = storeToRefs(useDashboardStore());
-
-onMounted(async () => {
-    await getSpendingData("2023-05-05");
-    console.log(spending);
 });
 </script>

@@ -8,13 +8,13 @@
     >
         <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
             <UFormGroup name="id" label="Id">
-                <UInput v-model="state.id" disabled />
+                <span class="ml-3 text-sm">{{ state.id }}</span>
             </UFormGroup>
             <UFormGroup name="createdAt" label="createdAt">
-                <UInput v-model="state.createdAt" disabled />
+                <span class="ml-3 text-sm">{{ $dayjs(state.createdAt).format('YYYY-MM-DD HH:mm') }}</span>
             </UFormGroup>
             <UFormGroup name="updatedAt" label="updatedAt">
-                <UInput v-model="state.updatedAt" disabled />
+                <span class="ml-3 text-sm">{{ $dayjs(state.updatedAt).format('YYYY-MM-DD HH:mm') }}</span>
             </UFormGroup>
             <UFormGroup name="name" label="Name">
                 <UInput v-model="state.name" />

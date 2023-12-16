@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 
 export const useSpendingCrudStore = defineStore('spending-crud', {
     state: () => ({
-        loading: false,
+        loading: true,
         accounts: [],
         account: null,
         transactionCategories: [],
