@@ -2,7 +2,7 @@
     <div class="flex items-center flex-wrap mb-6">
         <h2 class="w-full my-5 text-2xl text-center">Expense infos</h2>
         <div class="flex flex-wrap justify-center w-full max-w-full px-1 sm:px-3 mb-3 lg:w-full xl:w-1/2">
-            <div class="w-full justify-center flex">
+            <div class="w-full justify-center flex font-bold">
                 <AppMiniCountCard
                     containerClass="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
                     color="emerald"

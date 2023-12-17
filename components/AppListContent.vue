@@ -64,6 +64,7 @@
             :rows-per-page="12"
             :search-field="tableData.searchField"
             :search-value="searchValue"
+            :loading="loading"
         >
             <template #item-status="item">
                 <UBadge size="xs" :label="item.status ? 'Active' : 'Inactive'" :color="item.status ? 'emerald' : 'red'" variant="subtle" />
@@ -79,7 +80,11 @@
             </template>
 
             <template #item-amount="item">
-                {{ $formatNumber(item.amount) }}
+                {{ $formatNumber(item.amount) }} Ft
+            </template>
+
+            <template #item-balance="item">
+                {{ $formatNumber(item.balance) }} Ft
             </template>
 
             <template #item-createdAt="item">
@@ -114,7 +119,7 @@
 </template>
 
 <script setup>
-const props = defineProps(['table-data']);
+const props = defineProps(['table-data', 'loading']);
 const emit = defineEmits(['deleteItem']);
 const isDeleteModalOpen = ref(false);
 const currentRowToDelete = ref({});

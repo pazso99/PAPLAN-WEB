@@ -1,9 +1,6 @@
 <template>
     <AppContent
         :title="'Spending dashboard'"
-        :buttons="[
-            { icon: 'i-heroicons-arrow-left-20-solid', to: '/' }
-        ]"
         :loading="loading"
     >
         <div>
@@ -39,8 +36,9 @@ const { getSpendingData, createTransaction } = useDashboardStore();
 const { spending, spendingSelectedDate, loading } = storeToRefs(useDashboardStore());
 
 const dayjs = useDayjs();
+
 const dates = [
-    ...Array.from({ length: 12 }, (_, i) => dayjs().subtract(i, 'month').format('YYYY-MM')),
+    ...Array.from({ length: dayjs().month() + 13 }, (_, i) => dayjs().subtract(i, 'month').format('YYYY-MM')).filter(d => d.startsWith('2023')),
     '2023'
 ];
 

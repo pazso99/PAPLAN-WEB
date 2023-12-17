@@ -23,7 +23,7 @@
                     :search-attributes="['name']"
                 >
                     <template #option="{ option }">
-                        <span class="truncate">{{ option.name }} ({{ option.balance }} Ft)</span>
+                        <span class="truncate">{{ option.name }} ({{ $formatNumber(option.balance) }} Ft)</span>
                     </template>
                 </USelectMenu>
             </UFormGroup>
