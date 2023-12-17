@@ -57,12 +57,12 @@
                     <div class="flex">
                         <div class="w-full lg:w-1/2 p-2 mb-4 flex flex-col">
                             Basic categories:
-                            <USelectMenu placeholder="Select..." v-model="basicCategories" multiple :options="expenseCategories" option-attribute="name" by="id" />
+                            <USelectMenu placeholder="Select..." v-model="basicCategories" multiple :options="spendingSettings.expenseCategories" option-attribute="name" by="id" />
                         </div>
 
                         <div class="w-full lg:w-1/2 p-2 mb-4 flex flex-col">
                             Premium categories:
-                            <USelectMenu placeholder="Select..." v-model="premiumCategories" multiple :options="expenseCategories" option-attribute="name" by="id" />
+                            <USelectMenu placeholder="Select..." v-model="premiumCategories" multiple :options="spendingSettings.expenseCategories" option-attribute="name" by="id" />
                         </div>
                     </div>
                 </div>
@@ -312,8 +312,6 @@ const { loading, spendingActualBalances, spendingSettings }: any = storeToRefs(u
 
 const basicCategories: any = ref([]);
 const premiumCategories: any = ref([]);
-
-spendingSettings.value.expenseCategories
 
 onMounted(async () => {
     await getSpendingSettingsData();
