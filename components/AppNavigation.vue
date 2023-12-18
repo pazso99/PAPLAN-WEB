@@ -142,7 +142,7 @@ function addToggle(links: any) {
 }
 
 function isInnerAccordionActive(open: boolean) {
-    if (open && route.path.split('/').length > 2) {
+    if (open && /(\/accounts|\/transaction-categories|\/transactions)/.test(route.path)) {
         return 'text-white';
     }
 }

@@ -13,7 +13,11 @@
                     Transaction
                 </template>
                 <template #transaction-data="{ row }">
-                    <span>{{ row.transaction.date }}: <span class="font-bold">{{ row.transaction.category }}</span> [{{ row.transaction.account }}] <span v-if="row.transaction.comment">({{ row.transaction.comment }})</span></span>
+                    <ULink
+                        :to="`/spending/transactions/${row.transaction.id}`"
+                    >
+                        <span>{{ row.transaction.date }}: <span class="font-bold">{{ row.transaction.category }}</span> [{{ row.transaction.account }}] <span v-if="row.transaction.comment">({{ row.transaction.comment }})</span></span>
+                    </ULink>
                 </template>
                 <template #amount-data="{ row }">
                     <span v-if="row.transaction.type === 'income'" class="text-emerald-600">+ {{ $formatNumber(row.amount) }} Ft</span>

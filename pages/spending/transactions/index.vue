@@ -1,14 +1,13 @@
 <template>
     <AppListContent
-        v-if="!initialLoad && !loading"
         :table-data="{
             title: 'Transactions',
             columns,
             items: transactions,
             url: '/spending/transactions',
-            sortBy: ['date'],
-            sortType: ['desc'],
-            searchField: ['id']
+            sortBy: ['date', 'id'],
+            sortType: ['desc', 'desc'],
+            searchField: ['date', 'account.name', 'amount', 'transactionCategory.name', 'comment']
         }"
         :loading="loading"
         @delete-item="removeTransaction"
@@ -26,11 +25,9 @@ useHead({
 
 const { getTransactions, deleteTransaction } = useSpendingCrudStore();
 const { transactions, loading }: any = storeToRefs(useSpendingCrudStore());
-const initialLoad = ref(true);
 
 onMounted(async () => {
     await getTransactions();
-    initialLoad.value = false;
 });
 
 const columns = [
