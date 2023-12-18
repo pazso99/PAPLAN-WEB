@@ -1,53 +1,48 @@
 <template>
     <div :class="containerClass">
         <div class="p-4 text-center bg-slate-800 rounded-2xl">
-            <h1 :class="`text-${color}-500`">
+            <h1 :class="titleClass">
                 <span class="text-lg ms-n1">{{ prefix }}</span>
                 {{ "" }}
                 <CountTo class="text-3xl" :start-val="0" :end-val="count" :duration="duration" />
                 {{ "" }}
                 <span class="text-lg ms-n1">{{ suffix }}</span>
             </h1>
-            <h6 class="mb-0 font-weight-bolder">{{ title }}</h6>
-            <p class="mb-0 text-sm opacity-8">{{ description }}</p>
+            <slot />
         </div>
     </div>
 </template>
 
-  <script setup>
-  import CountTo from "vue-count-to/src";
+<script setup>
+import CountTo from "vue-count-to/src";
 
-  defineProps({
+defineProps({
     containerClass: {
         type: String,
         default: "",
     },
+    titleClass: {
+        type: String,
+        default: "",
+    },
     count: {
-      type: Number,
-      required: true,
+        type: Number,
+        required: true,
     },
     prefix: {
-      type: String,
-      default: "",
+        type: String,
+        default: "",
     },
     suffix: {
-      type: String,
-      default: "",
+        type: String,
+        default: "",
     },
     duration: {
-      type: Number,
-      default: 300,
-    },
-    title: {
-      type: String,
-      required: true,
+        type: Number,
+        default: 300,
     },
     description: {
-      type: String,
+        type: String,
     },
-    color: {
-      type: String,
-      required: true,
-    },
-  });
-  </script>
+});
+</script>
