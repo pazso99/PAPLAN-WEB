@@ -9,49 +9,6 @@
     >
         <div class="flex flex-wrap items-start xl:flex-nowrap gap-4">
             <div class="w-full max-w-full sm:px-3 mb-6 xl:w-2/6 p-4 bg-slate-800 rounded-2xl">
-                <h2 class="font-bold mb-3 text-xl">Setting #1</h2>
-                <ul class="p-2 mb-6">
-                    <li class="p-2 mb-4 flex items-center gap-5">
-                        <UToggle v-model="spendingSettings.configs.test"/> Lorem ipsum dolor sit amet consectetur.
-                    </li>
-                    <li class="p-2 mb-4 flex items-center gap-5">
-                        <UToggle /> Lorem ipsum dolor sit amet consectetur.
-                    </li>
-                    <li class="p-2 mb-4 flex items-center gap-5">
-                        <UToggle /> Lorem ipsum dolor sit amet consectetur.
-                    </li>
-                    <li class="p-2 mb-4 flex items-center gap-5">
-                        <UToggle /> Lorem ipsum dolor sit amet consectetur.
-                    </li>
-                    <li class="p-2 mb-4 flex items-center gap-5">
-                        <UToggle /> Lorem ipsum dolor sit amet consectetur.
-                    </li>
-                    <li class="p-2 mb-4 flex items-center gap-5">
-                        <UToggle /> Lorem ipsum dolor sit amet consectetur.
-                    </li>
-                    <li class="p-2 mb-4 flex items-center gap-5">
-                        <UToggle /> Lorem ipsum dolor sit amet consectetur.
-                    </li>
-                    <li class="p-2 mb-4 flex items-center gap-5">
-                        <UToggle /> Lorem ipsum dolor sit amet consectetur.
-                    </li>
-                    <li class="p-2 mb-4 flex items-center gap-5">
-                        <UToggle /> Lorem ipsum dolor sit amet consectetur.
-                    </li>
-                    <li class="flex gap-4 justify-between items-center p-2">
-                        <span class="flex-0">Lorem ipsum:</span>
-                        <UInput class="flex-1"/>
-                    </li>
-                    <li class="flex gap-4 justify-between items-center p-2">
-                        <span class="flex-0">Lorem ipsum:</span>
-                        <UInput class="flex-1"/>
-                    </li>
-                    <li class="flex gap-4 justify-between items-center p-2">
-                        <span class="flex-0">Lorem ipsum:</span>
-                        <UInput class="flex-1"/>
-                    </li>
-                </ul>
-
                 <div class="flex flex-col">
                     <h2 class="font-bold mb-3 text-xl">Expense categories</h2>
                     <div class="flex">

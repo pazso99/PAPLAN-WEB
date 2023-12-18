@@ -72,7 +72,6 @@ const pieChartOptions = {
         type: 'pie',
         foreColor: '#fff',
     },
-    // TODO to settings
     colors: ['#ff5733', '#33ff57', '#5733ff', '#2ecc71', '#33ffcc', '#cc33ff', '#ff33cc', '#3399ff', '#3498db', '#e74c3c', '#f39c12'],
     labels: spending.value.categories.filter(c => c.category.type === 'expense').map(e => e.category.name),
     responsive: [{
