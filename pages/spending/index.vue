@@ -38,8 +38,8 @@ const { spending, spendingSelectedDate, loading } = storeToRefs(useDashboardStor
 const dayjs = useDayjs();
 
 const dates = [
-    ...Array.from({ length: dayjs().month() + 13 }, (_, i) => dayjs().subtract(i, 'month').format('YYYY-MM')).filter(d => d.startsWith('2023')),
-    '2023'
+    ...Array.from({ length: dayjs().month() + 13 }, (_, i) => dayjs().subtract(i, 'month').format('YYYY-MM')).filter(d => d.startsWith('2024')),
+    '2024'
 ];
 
 spendingSelectedDate.value = dates[0];
