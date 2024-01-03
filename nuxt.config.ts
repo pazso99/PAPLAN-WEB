@@ -19,6 +19,9 @@ export default defineNuxtConfig({
             ],
         },
     },
+    axios: {
+        credentials: true
+    },
     typescript: {
         strict: true,
     },
