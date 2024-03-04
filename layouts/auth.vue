@@ -13,7 +13,7 @@
             </div>
         </div>
     </div>
-    <UNotifications />
+    <Toast position="top-center" />
 </template>
 
 <script setup>

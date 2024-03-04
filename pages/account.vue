@@ -1,9 +1,9 @@
 <template>
-    <AppContent
+    <ContentBaseCard
         :title="'Account'"
     >
         <pre>{{ user }}</pre>
-    </AppContent>
+    </ContentBaseCard>
 </template>
 <script setup lang="ts">
 definePageMeta({

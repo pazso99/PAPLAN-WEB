@@ -1,108 +1,134 @@
 <template>
-    <div class="flex items-center flex-wrap mb-6">
-        <h2 class="w-full my-5 text-2xl text-center">Expense infos</h2>
+    <div class="flex items-center flex-wrap my-4 md:my-8">
+        <h2 class="w-full text-2xl text-center mb-4 md:mb-8">Expense infos</h2>
         <div class="flex flex-wrap justify-center w-full max-w-full px-1 sm:px-3 mb-3 lg:w-full xl:w-1/2">
             <div class="w-full justify-center flex">
-                <AppMiniCountCard
+                <SpendingCardExpenseInfo
                     containerClass="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
-                    titleClass="text-emerald-500 font-bold"
-                    :count="spending.totals.allIncome"
-                    suffix=" Ft"
-                >
-                    <h6 class="mb-0 font-weight-bolder">Total income</h6>
-                </AppMiniCountCard>
-                <AppMiniCountCard
+                    backgroundClass="p-4 text-center bg-gradient-to-tr from-slate-800 to-gray-900 rounded-2xl border border-green-950"
+                    :number="spending.totals.allIncome"
+                    numberClass="text-green-500 font-bold"
+                    label="Total income"
+                    labelClass="mb-0 font-weight-bolder"
+                    :duration="300"
+                    suffix="Ft"
+                />
+                <SpendingCardExpenseInfo
                     containerClass="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
-                    titleClass="text-red-500 font-bold"
-                    :count="spending.totals.allExpense"
-                    suffix=" Ft"
-                >
-                    <h6 class="mb-0 font-weight-bolder">Total expense</h6>
-                </AppMiniCountCard>
+                    backgroundClass="p-4 text-center bg-gradient-to-tr from-slate-800 to-gray-900 rounded-2xl border border-amber-950"
+                    :number="spending.totals.allExpense"
+                    numberClass="text-red-500 font-bold"
+                    label="Total expense"
+                    labelClass="mb-0 font-weight-bolder"
+                    :duration="300"
+                    suffix="Ft"
+                />
             </div>
             <div class="w-full justify-center flex">
-                <AppMiniCountCard
+                <SpendingCardExpenseInfo
                     containerClass="w-full max-w-full px-1 sm:px-3 lg:w-1/3"
-                    titleClass="text-red-500"
-                    :count="spending.totals.basicExpense"
-                    suffix=" Ft"
-                >
-                    <h6 class="mb-0 font-weight-bolder">Basic kiadás</h6>
-                </AppMiniCountCard>
-                <AppMiniCountCard
+                    backgroundClass="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
+                    :number="spending.totals.basicExpense"
+                    numberClass="text-red-500"
+                    label="Basic kiadás"
+                    labelClass="mb-0 font-weight-bolder"
+                    :duration="300"
+                    suffix="Ft"
+                />
+                <SpendingCardExpenseInfo
                     containerClass="w-full max-w-full px-1 sm:px-3 lg:w-1/3"
-                    titleClass="text-red-500"
-                    :count="spending.totals.premiumExpense"
-                    suffix=" Ft"
-                >
-                    <h6 class="mb-0 font-weight-bolder">Prémium kiadás</h6>
-                </AppMiniCountCard>
+                    backgroundClass="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
+                    :number="spending.totals.premiumExpense"
+                    numberClass="text-red-500"
+                    label="Prémium kiadás"
+                    labelClass="mb-0 font-weight-bolder"
+                    :duration="300"
+                    suffix="Ft"
+                />
             </div>
-            <UDivider class="my-6" icon="i-heroicons-squares-2x2" />
-            <AppMiniCountCard
+            <Divider align="center">
+                <i class="pi pi-th-large my-6"></i>
+            </Divider>
+            <SpendingCardExpenseInfo
                 v-for="expense in expenses"
                 :key="expense.category.name"
                 containerClass="w-full max-w-full px-1 sm:px-3 mb-3 sm:w-1/2 lg:w-1/3"
-                titleClass="text-red-500"
-                :count="expense.amount"
-                suffix=" Ft"
-            >
-                <h6 class="mb-0 font-weight-bolder">{{ expense.category.name }}</h6>
-            </AppMiniCountCard>
+                backgroundClass="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
+                :number="expense.amount"
+                numberClass="text-red-500"
+                :label="expense.category.name"
+                labelClass="mb-0 font-weight-bolder"
+                :duration="300"
+                suffix="Ft"
+            />
         </div>
-        <AppInfoCard
-            containerClass="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-full xl:w-1/2"
-        >
-            <template #body>
-                <div class="flex flex-col w-full">
-                    <apexchart :options="pieChartOptions" :series="pieChartSeries"></apexchart>
-                </div>
-            </template>
-        </AppInfoCard>
+        <div class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-full xl:w-1/2">
+            <div class="flex justify-center p-4 bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-slate-800">
+                <Chart
+                    type="pie"
+                    :data="chartData"
+                    :options="chartOptions"
+                    class="w-full md:w-[30rem]"
+                />
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup>
-import numeral from 'numeral';
+import Chart from 'primevue/chart';
 
 const { spending } = storeToRefs(useDashboardStore());
-const pieChartSeries = spending.value.categories.filter(c => c.category.type === 'expense').map(e => e.amount);
+const chartData = ref();
+const chartOptions = ref();
+const expenses = ref();
 
-const expenses = spending.value.categories.filter(c => c.category.type === 'expense');
+onMounted(() => {
+    setData(spending.value);
+});
 
-const pieChartOptions = {
-    chart: {
-        height: 800,
-        width: '100%',
-        type: 'pie',
-        foreColor: '#fff',
-    },
-    colors: [
-        '#3498db',
-        '#5733ff',
-        '#09435a',
-        '#332e2e',
-        '#464343',
-        '#a9931e',
-        '#f39c12',
-        '#6d1212',
-    ],
-    labels: spending.value.categories.filter(c => c.category.type === 'expense').map(e => e.category.name),
-    tooltip: {
-        custom: function({series, seriesIndex}) {
-            return `<div class="p-4 text-red-600"><span>${numeral(series[seriesIndex]).format('0,0')} Ft</span></div>`;
-        }
-    },
-    responsive: [{
-        breakpoint: 639,
-        options: {
-            chart: {
-                width: '100%'
-            },
+watch(spending, async (newSpending) => {
+    setData(newSpending);
+});
+
+function setData(spendingData) {
+    expenses.value = spendingData.categories.filter(c => c.category.type === 'expense');
+    let profit = spendingData.totals.allIncome - spendingData.totals.allExpense;
+    if (profit < 0) {
+        profit = 0;
+    }
+
+    const documentStyle = getComputedStyle(document.body);
+    const textColor = documentStyle.getPropertyValue('--text-color');
+    chartData.value = {
+        labels: ['Profit', ...expenses.value.map(e => e.category.name)],
+        datasets: [
+            {
+                data: [profit, ...expenses.value.map(e => e.amount)],
+                backgroundColor: [
+                    '#22c55e',
+                    '#3498db',
+                    '#5733ff',
+                    '#09435a',
+                    '#332e2e',
+                    '#464343',
+                    '#a9931e',
+                    '#f39c12',
+                    '#6d1212',
+                ],
+            }
+        ]
+    };
+
+    chartOptions.value = {
+        plugins: {
             legend: {
-                position: 'bottom'
+                labels: {
+                    usePointStyle: true,
+                    color: textColor
+                }
             }
         }
-    }]
-}
+    };
+};
 </script>

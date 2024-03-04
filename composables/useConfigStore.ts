@@ -8,31 +8,31 @@ export const useConfigStore = defineStore('config', {
     }),
     actions: {
         async getSpendingSettingsData() {
-            const toast = useToast();
+            const toast = useToastService();
             this.loading = true;
             try {
                 const data: any = await useApiFetch('spending/settings');
 
                 this.spendingSettings = data.data;
             } catch (err: any) {
-                toast.add({ title: 'There was an error when getting spending settings data!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
+                toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when getting spending settings data!', life: 3000 });
             }
         },
         async getSpendingActualBalances() {
-            const toast = useToast();
+            const toast = useToastService();
             this.loading = true;
             try {
                 const data: any = await useApiFetch('spending/actual-balances');
 
                 this.spendingActualBalances = data.data;
             } catch (err: any) {
-                toast.add({ title: 'There was an error when getting spending actual balances data!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
+                toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when getting spending actual balances data!', life: 3000 });
             } finally {
                 this.loading = false;
             }
         },
         async updateSpendingSettings(body: any) {
-            const toast = useToast();
+            const toast = useToastService();
             this.loading = true;
             try {
                 await useApiFetch('spending/settings', {
@@ -40,9 +40,9 @@ export const useConfigStore = defineStore('config', {
                     body,
                 });
 
-                toast.add({ title: 'Settings updated!', color: 'green', icon: 'i-heroicons-check-circle' });
+                toast.add({ severity: 'success', summary: 'succcess!', detail: 'Settings updated!', life: 3000 });
             } catch (err: any) {
-                toast.add({ title: 'There was an error when updating settings!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
+                toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when updating settings!', life: 3000 });
             } finally {
                 this.loading = false;
             }
