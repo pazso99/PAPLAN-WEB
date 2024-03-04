@@ -10,7 +10,7 @@ export const useAuthStore = defineStore('auth', {
     }),
     actions: {
         async login({ name, password }: userCredentials) {
-            const toast = useToast();
+            const toast = useToastService();
             try {
                 const data: any = await useApiFetch('login', {
                     method: 'POST',
@@ -22,19 +22,20 @@ export const useAuthStore = defineStore('auth', {
                 this.isAuth = true;
                 this.token = data.data.token;
                 useCookie('token').value = this.token;
+                navigateTo('/');
             } catch (err: any) {
-                toast.add({ title: 'Login failed!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
+                toast.add({ severity: 'error', summary: 'Error!', detail: 'Login failed!', life: 3000 });
                 throw err;
             }
         },
         async logout() {
-            const toast = useToast();
+            const toast = useToastService();
             try {
                 await useApiFetch('logout', {
                     method: 'POST',
                 });
             } catch (err: any) {
-                toast.add({ title: 'There was an error when logging out!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
+                toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when logging out!', life: 3000 });
             } finally {
                 this.isAuth = false;
                 this.token = null;
@@ -42,12 +43,12 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         async getUser() {
-            const toast = useToast();
+            const toast = useToastService();
             try {
                 const data: any = await useApiFetch('user');
                 this.user = data.data;
             } catch (err: any) {
-                toast.add({ title: 'There was an error when getting user!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
+                toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when getting user!', life: 3000 });
             }
         },
     },

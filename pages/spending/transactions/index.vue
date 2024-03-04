@@ -1,86 +1,279 @@
 <template>
-    <AppListContent
-        :table-data="{
-            title: 'Transactions',
-            columns,
-            items: transactions,
-            url: '/spending/transactions',
-            sortBy: ['date', 'id'],
-            sortType: ['desc', 'desc'],
-            searchField: ['date', 'account.name', 'amount', 'transactionCategory.name', 'comment']
-        }"
+    <ContentListCard
+        :title="'Transactions'"
+        :buttons="[
+            { icon: 'pi-plus', to: '/spending/transactions/create' },
+            { icon: 'pi-chevron-left', to: '/spending' }
+        ]"
+        :items="transactions"
         :loading="loading"
+        :multi-sort-meta="[
+            { field: 'date', order: -1 },
+            { field: 'id', order: -1 }
+        ]"
+        :global-filter-fields="[
+            'id',
+            'date',
+            'account.name',
+            'transactionType',
+            'amount',
+            'transactionCategory.name'
+        ]"
+        :filters="filters"
+        :actionsColumnMeta="{
+            width: '5%',
+            editUrl: '/spending/transactions',
+        }"
+        @refresh-table="refreshTable"
         @delete-item="removeTransaction"
-    />
+    >
+        <Column
+            field="id"
+            dataType="numeric"
+            header="ID"
+            sortable
+            style="width: 10%"
+        >
+            <template #filter="{ filterModel }">
+                <InputText
+                    v-model="filterModel.value"
+                    type="text"
+                    class="p-column-filter"
+                    placeholder="ID..."
+                />
+            </template>
+        </Column>
+
+        <Column
+            field="status"
+            header="Status"
+            sortable
+            :showFilterMatchModes="false"
+            style="width: 10%"
+        >
+            <template #body="{ data }">
+                <Tag
+                    :value="data.status ? 'ACTIVE' : 'INACTIVE'"
+                    :severity="data.status ? 'success' : 'danger'"
+                />
+            </template>
+            <template #filter="{ filterModel }">
+                <div class="flex gap-2 items-center">
+                    <TriStateCheckbox
+                        v-model="filterModel.value"
+                        :pt="{
+                            box: {
+                                class: [
+                                    'border-none',
+                                    filterModel.value !== null ? filterModel.value ? 'bg-green-600' : 'bg-red-800' : ''
+                                ]
+                            },
+                        }"
+                    />
+                    <Tag v-if="filterModel.value === true" value="ACTIVE" severity="success" />
+                    <Tag v-else-if="filterModel.value === false" value="INACTIVE" severity="danger" />
+                    <Tag v-else value="All" severity="info" />
+                </div>
+            </template>
+        </Column>
+
+        <Column
+            field="date"
+            header="Date"
+            sortable
+            style="width: 10%"
+        >
+            <template #body="{ data }">
+                {{ $dayjs(data.date).format('YYYY-MM-DD') }}
+            </template>
+            <template #filter="{ filterModel }">
+                <InputText
+                    v-model="filterModel.value"
+                    class="p-column-filter"
+                    placeholder="Date..."
+                />
+            </template>
+        </Column>
+
+        <Column
+            field="account.name"
+            header="Account"
+            sortable
+            style="width: 15%"
+        >
+            <template #body="{ data }">
+                {{ data.account.name }}
+            </template>
+            <template #filter="{ filterModel }">
+                <InputText
+                    v-model="filterModel.value"
+                    class="p-column-filter"
+                    placeholder="Account..."
+                />
+            </template>
+        </Column>
+
+        <Column
+            field="amount"
+            header="Amount"
+            dataType="numeric"
+            sortable
+            style="width: 15%"
+        >
+            <template #body="{ data }">
+                <span>{{ $formatNumber(data.amount) }} Ft</span>
+            </template>
+            <template #filter="{ filterModel }">
+                <InputNumber
+                    v-model="filterModel.value"
+                    placeholder="Amount..."
+                />
+            </template>
+        </Column>
+
+        <Column
+            header="Type"
+            field="transactionType"
+            sortable
+            :showFilterMatchModes="false"
+            style="width: 10%"
+        >
+            <template #body="{ data }">
+                <Tag
+                    :value="getTransactionType(data.transactionType, 'label')"
+                    :severity="getTransactionType(data.transactionType, 'color')"
+                />
+            </template>
+            <template #filter="{ filterModel }">
+                <MultiSelect
+                    v-model="filterModel.value"
+                    :options="['income', 'expense']"
+                    placeholder="Any"
+                    class="p-column-filter"
+                    :maxSelectedLabels="1"
+                >
+                    <template #option="slotProps">
+                        <span>{{ slotProps.option }}</span>
+                    </template>
+                </MultiSelect>
+            </template>
+        </Column>
+
+        <Column
+            header="Category"
+            filterField="transactionCategory"
+            sortable
+            sortField="transactionCategory.name"
+            :showFilterMatchModes="false"
+            style="width: 15%"
+        >
+            <template #body="{ data }">
+                <div class="flex align-items-center gap-2">
+                    <span>{{ data.transactionCategory.name }}</span>
+                </div>
+            </template>
+            <template #filter="{ filterModel }">
+                <MultiSelect
+                    v-model="filterModel.value"
+                    :options="transactionCategoryOptions"
+                    optionLabel="name"
+                    placeholder="Any"
+                    class="p-column-filter"
+                    :maxSelectedLabels="1"
+                >
+                    <template #option="slotProps">
+                        <span>{{ slotProps.option.name }}</span>
+                    </template>
+                </MultiSelect>
+            </template>
+        </Column>
+
+        <Column
+            field="comment"
+            header="Comment"
+            sortable
+            style="width: 10%"
+        >
+            <template #body="{ data }">
+                {{ data.comment }}
+            </template>
+            <template #filter="{ filterModel }">
+                <InputText
+                    v-model="filterModel.value"
+                    class="p-column-filter"
+                    placeholder="Comment..."
+                />
+            </template>
+        </Column>
+    </ContentListCard>
 </template>
 
 <script lang="ts" setup>
+import { FilterMatchMode, FilterOperator } from 'primevue/api';
+
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
 });
+
 useHead({
     title: 'Transactions - Spending',
 });
 
-const { getTransactions, deleteTransaction } = useSpendingCrudStore();
-const { transactions, loading }: any = storeToRefs(useSpendingCrudStore());
+const { getTransactions, deleteTransaction, getTransactionCategories } = useSpendingCrudStore();
+const { transactions, transactionCategories, loading }: any = storeToRefs(useSpendingCrudStore());
+const transactionCategoryOptions = ref([]);
+
+const filters = ref({
+    id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+    'account.name': { value: null, matchMode: FilterMatchMode.CONTAINS },
+    date: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    transactionType: { value: null, matchMode: FilterMatchMode.IN },
+    transactionCategory: { value: null, matchMode: FilterMatchMode.IN },
+    status: { value: null, matchMode: FilterMatchMode.EQUALS },
+    amount: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+    comment: { value: null, matchMode: FilterMatchMode.CONTAINS },
+});
 
 onMounted(async () => {
     await getTransactions();
+    await getTransactionCategories();
+
+    transactionCategoryOptions.value = transactionCategories.value.map(({ id, name, slug }: any) => ({
+        id,
+        name,
+        slug
+    }));
 });
 
-const columns = [
-    {
-        value: 'id',
-        text: 'ID',
-        sortable: true,
-        width: 40,
-    },
-    {
-        value: 'status',
-        text: 'Status',
-        sortable: true,
-    },
-    {
-        value: 'date',
-        text: 'Date',
-        sortable: true,
-    },
-    {
-        value: 'account.name',
-        text: 'Account name',
-        sortable: true,
-    },
-    {
-        value: 'amount',
-        text: 'Amount',
-        sortable: true,
-    },
-    {
-        value: 'transactionType',
-        text: 'Transaction type',
-        sortable: true,
-    },
-    {
-        value: 'transactionCategory.name',
-        text: 'Category',
-        sortable: true,
-    },
-    {
-        value: 'comment',
-        text: 'Comment',
-        sortable: true,
-    },
-    {
-        value: 'actions',
-        text: 'Actions',
-        width: 100,
-    }
-];
-
-async function removeTransaction(data: any) {
-    await deleteTransaction(data.id);
+async function removeTransaction(id: any) {
+    await deleteTransaction(id);
     await getTransactions();
 }
+
+async function refreshTable() {
+    await getTransactions();
+}
+
+const getTransactionType = (transactionType: string, prop: string) => {
+    const transactionTypeObj: any = {
+        label: '',
+        color: 'info'
+    };
+
+    switch (transactionType) {
+        case 'income':
+            transactionTypeObj.label = 'INCOME';
+            transactionTypeObj.color = 'success';
+            break;
+        case 'expense':
+            transactionTypeObj.label = 'EXPENSE';
+            transactionTypeObj.color = 'danger';
+            break;
+        default:
+            break;
+    }
+
+    return transactionTypeObj[prop];
+};
 </script>

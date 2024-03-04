@@ -8,33 +8,33 @@ export const useDashboardStore = defineStore('dashboard', {
     }),
     actions: {
         async getSpendingData(body: any) {
-            const toast = useToast();
+            const toast = useToastService();
             this.loading = true;
+
             try {
                 const data: any = await useApiFetch('dashboard/spending-data', {
                     method: 'POST',
                     body,
                 });
-
                 this.spending = data.data;
             } catch (err: any) {
-                toast.add({ title: 'There was an error when getting spending data!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
+                toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when getting spending data!', life: 3000 });
             } finally {
                 this.loading = false;
             }
         },
         async createTransaction(body: any) {
-            const toast = useToast();
+            const toast = useToastService();
             this.loading = true;
+
             try {
                 await useApiFetch('spending/transactions', {
                     method: 'POST',
                     body,
                 });
-
-                toast.add({ title: 'Transaction created!', color: 'green', icon: 'i-heroicons-check-circle' });
+                toast.add({ summary: 'Transaction created!', severity: 'success', detail: 'Succesfull', life: 3000 });
             } catch (err: any) {
-                toast.add({ title: 'There was an error when creating transaction data!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
+                toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when creating transaction data!', life: 3000 });
             } finally {
                 this.loading = false;
             }
