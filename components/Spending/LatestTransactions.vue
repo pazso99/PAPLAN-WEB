@@ -15,7 +15,7 @@
                         class="py-2 px-4 flex justify-between"
                     >
                         <NuxtLink :to="`/spending/transactions/${transaction.id}`">
-                            <span class="text-gray-400">
+                            <span class="text-gray-400 flex gap-1 flex-col md:flex-row">
                                 {{ transaction.date }}:
                                 <span class="font-bold">{{ transaction.category }}</span>
                                 [{{ transaction.account }}]

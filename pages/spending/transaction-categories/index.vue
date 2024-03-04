@@ -122,7 +122,7 @@
 
         <Column
             field="createdAt"
-            header="Created at"
+            header="CreatedAt"
             sortable
             style="width: 25%"
         >

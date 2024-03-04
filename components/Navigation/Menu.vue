@@ -17,19 +17,12 @@
                 <template #item="{ item, root, active }">
                     <NuxtLink
                         v-if="item.route"
-                        v-slot="{ href, navigate }"
                         :to="item.route"
-                        custom
+                        class="flex items-center justify-between px-3 py-2 cursor-pointer"
+                        :class="route.name === 'spending' ? item.key === 'spending-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
+                        @click="isMobile && toggleNav()"
                     >
-                        <a
-                            v-ripple
-                            class="flex items-center justify-between px-3 py-2 cursor-pointer"
-                            :class="route.name === 'spending' ? item.key === 'spending-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
-                            :href="href"
-                            @click="navigate"
-                        >
-                            <span :class="['text-sm', root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
-                        </a>
+                        <span :class="['text-sm', root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
                     </NuxtLink>
                     <a
                         v-else
@@ -78,6 +71,8 @@
 <script setup lang="ts">
 defineProps(['isMobile']);
 
+const { toggleNav } = useNavigationStore();
+
 const items = ref([
     {
         key: 'spending-dashboard',
@@ -119,15 +114,19 @@ if (route.fullPath.startsWith('/inventory')) {
 }
 
 const expandedKeys = ref({});
-if (
-    route.fullPath.includes('/spending/accounts') ||
-    route.fullPath.includes('/spending/transaction-categories') ||
-    route.fullPath.includes('/spending/transactions')
-) {
-    expandedKeys.value = {
-        'spending-management': true
+watch(() => route.name, () => {
+    if (
+        [
+            'spending-accounts',
+            'spending-transaction-categories',
+            'spending-transactions'
+        ].some(e => route.name.includes(e))
+    ) {
+        expandedKeys.value = {
+            'spending-management': true
+        }
     }
-}
+}, { immediate: true });
 </script>
 
 <style lang="scss" scoped>

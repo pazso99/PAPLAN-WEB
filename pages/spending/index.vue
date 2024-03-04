@@ -1,7 +1,7 @@
 <template>
     <ContentBaseCard
         :title="'Spending dashboard'"
-        :loading="loading"
+        :loading="initLoading"
     >
         <SpendingAccounts @create-transaction="saveTransaction" />
 
@@ -75,7 +75,7 @@ useHead({
 });
 
 const { getSpendingData, createTransaction } = useDashboardStore();
-const { loading, spendingSelectedDate } = storeToRefs(useDashboardStore());
+const { spendingSelectedDate } = storeToRefs(useDashboardStore());
 
 const dayjs = useDayjs();
 const dates = [
@@ -91,10 +91,10 @@ const dates = [
 ];
 spendingSelectedDate.value = dates[0];
 
-const initLoaded = ref(false);
+const initLoading = ref(true);
 onMounted(async () => {
     await getSpendingData(parseYearAndMonth(spendingSelectedDate.value));
-    // initLoaded.value = true;
+    initLoading.value = false;
 });
 
 watch(spendingSelectedDate, async (newSpendingSelectedDate) => {

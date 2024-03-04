@@ -1,5 +1,5 @@
 <template>
-    <li class="flex gap-2 justify-between items-center p-2 w-50">
+    <li class="flex gap-2 justify-between items-center p-1 w-50">
         {{ month }}
         <InputGroup class="w-48">
             <InputNumber

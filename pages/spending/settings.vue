@@ -8,39 +8,37 @@
     >
         <div class="sm:p-4 p-2">
             <div class="w-full max-w-full sm:px-3 mb-6 xl:w-2/6 p-4 bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-slate-800">
-                <div class="flex flex-col">
-                    <h2 class="font-bold mb-3 text-xl">Expense categories</h2>
-                    <div class="flex">
-                        <div class="w-full lg:w-1/2 p-2 mb-4 flex flex-col">
-                            Basic categories:
-                            <MultiSelect
-                                v-model="basicCategories"
-                                :options="selectableCategories"
-                                optionLabel="name"
-                                optionValue="id"
-                                placeholder="Select Categories"
-                                :maxSelectedLabels="1"
-                            />
-                        </div>
-                        <div class="w-full lg:w-1/2 p-2 mb-4 flex flex-col">
-                            Premium categories:
-                            <MultiSelect
-                                v-model="premiumCategories"
-                                :options="selectableCategories"
-                                optionLabel="name"
-                                optionValue="id"
-                                placeholder="Select Categories"
-                                :maxSelectedLabels="1"
-                            />
-                        </div>
+                <h2 class="font-bold mb-3 text-xl">Expense categories</h2>
+                <div class="flex flex-col md:flex-row">
+                    <div class="w-full lg:w-1/2 p-2 mb-4 flex flex-col">
+                        Basic categories:
+                        <MultiSelect
+                            v-model="basicCategories"
+                            :options="selectableCategories"
+                            optionLabel="name"
+                            optionValue="id"
+                            placeholder="Select Categories"
+                            :maxSelectedLabels="1"
+                        />
+                    </div>
+                    <div class="w-full lg:w-1/2 p-2 mb-4 flex flex-col">
+                        Premium categories:
+                        <MultiSelect
+                            v-model="premiumCategories"
+                            :options="selectableCategories"
+                            optionLabel="name"
+                            optionValue="id"
+                            placeholder="Select Categories"
+                            :maxSelectedLabels="1"
+                        />
                     </div>
                 </div>
             </div>
             <div class="w-full max-w-full sm:px-3 mb-6 p-4 bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-slate-800">
                 <h2 class="font-bold mb-1 text-xl">Actual total balances</h2>
-                <h3 class="font-bold mb-3 text-sm">2024</h3>
+                <h3 class="font-bold md:mb-3 text-sm">2024</h3>
                 <div class="p-2 flex flex-wrap mb-3">
-                    <ul class="w-full lg:w-1/4 p-2 md:border-r-2">
+                    <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
                             v-model="spendingActualBalances['2024-01']"
                             month="January"
@@ -54,7 +52,7 @@
                             month="March"
                         />
                     </ul>
-                    <ul class="w-full lg:w-1/4 p-2 md:border-r-2">
+                    <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
                             v-model="spendingActualBalances['2024-04']"
                             month="April"
@@ -68,7 +66,7 @@
                             month="June"
                         />
                     </ul>
-                    <ul class="w-full lg:w-1/4 p-2 md:border-r-2">
+                    <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
                             v-model="spendingActualBalances['2024-07']"
                             month="July"
@@ -82,7 +80,7 @@
                             month="September"
                         />
                     </ul>
-                    <ul class="w-full lg:w-1/4 p-2 md:border-r-2">
+                    <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
                             v-model="spendingActualBalances['2024-10']"
                             month="October"
@@ -97,9 +95,9 @@
                         />
                     </ul>
                 </div>
-                <h3 class="font-bold mb-3 text-sm">2023</h3>
+                <h3 class="font-bold md:mb-3 text-sm">2023</h3>
                 <div class="p-2 flex flex-wrap">
-                    <ul class="w-full lg:w-1/4 p-2 md:border-r-2">
+                    <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
                             v-model="spendingActualBalances['2023-01']"
                             month="January"
@@ -113,7 +111,7 @@
                             month="March"
                         />
                     </ul>
-                    <ul class="w-full lg:w-1/4 p-2 md:border-r-2">
+                    <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
                             v-model="spendingActualBalances['2023-04']"
                             month="April"
@@ -127,7 +125,7 @@
                             month="June"
                         />
                     </ul>
-                    <ul class="w-full lg:w-1/4 p-2 md:border-r-2">
+                    <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
 
                         <SpendingSettingsMonthBalanceInput
                             v-model="spendingActualBalances['2023-07']"
@@ -142,7 +140,7 @@
                             month="September"
                         />
                     </ul>
-                    <ul class="w-full lg:w-1/4 p-2 md:border-r-2">
+                    <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
                             v-model="spendingActualBalances['2023-10']"
                             month="October"
@@ -159,11 +157,13 @@
                 </div>
             </div>
 
-            <Button
-                size="small"
-                label="Save"
-                @click="handleSave"
-            />
+            <div class="w-full text-center md:text-start mb-4">
+                <Button
+                    size="small"
+                    label="Save"
+                    @click="handleSave"
+                />
+            </div>
         </div>
         <template #loading>
             <div class="flex flex-wrap justify-center mb-4">
