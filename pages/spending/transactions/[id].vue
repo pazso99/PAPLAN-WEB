@@ -1,145 +1,279 @@
 <template>
-    <AppContent
+    <ContentBaseCard
         :title="'Edit Transaction'"
-        :buttons="[
-            { icon: 'i-heroicons-arrow-left-20-solid', to: '/spending/transactions' }
+        :navButtons="[
+            { icon: 'pi-chevron-left', to: '/spending/transactions' }
         ]"
         :loading="loading"
     >
-        <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
-            <UFormGroup name="id" label="Id">
-                <span class="ml-3 text-sm">{{ state.id }}</span>
-            </UFormGroup>
+        <form class="p-5">
+            <div class="flex flex-col mb-4">
+                <label for="status" class="mb-1">Status</label>
+                <div class="flex items-center gap-2">
+                    <InputSwitch
+                        id="status"
+                        v-model="status"
+                        :pt="{
+                            slider: { class: status ? 'bg-green-600' : 'bg-red-800' },
+                        }"
+                    />
+                    <Tag
+                        :value="status ? 'ACTIVE' : 'INACTIVE'"
+                        :severity="status ? 'success' : 'danger'"
+                    />
+                </div>
+            </div>
 
-            <UFormGroup name="createdAt" label="createdAt">
-                <span class="ml-3 text-sm">{{ $dayjs(state.createdAt).format('YYYY-MM-DD HH:mm') }}</span>
-            </UFormGroup>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div class="flex flex-col mb-4">
+                    <label for="id" class="mb-1">ID</label>
+                    <InputNumber
+                        id="id"
+                        v-model="id"
+                        disabled
+                    />
+                </div>
+                <div class="flex flex-col mb-4">
+                    <label for="createdAt" class="mb-1">Created at</label>
+                    <Calendar
+                        id="createdAt"
+                        v-model="createdAt"
+                        disabled
+                    />
+                </div>
+                <div class="flex flex-col mb-4">
+                    <label for="updatedAt" class="mb-1">Updated at</label>
+                    <Calendar
+                        id="updatedAt"
+                        v-model="updatedAt"
+                        disabled
+                    />
+                </div>
+            </div>
 
-            <UFormGroup name="updatedAt" label="updatedAt">
-                <span class="ml-3 text-sm">{{ $dayjs(state.updatedAt).format('YYYY-MM-DD HH:mm') }}</span>
-            </UFormGroup>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div class="flex flex-col mb-4">
+                    <label for="date" class="mb-1">Date</label>
+                    <Calendar
+                        id="date"
+                        v-model="date"
+                        dateFormat="yy-mm-dd"
+                    />
+                </div>
+            </div>
 
-            <UFormGroup name="date" label="Date">
-                <UInput v-model="state.date" type="date" />
-            </UFormGroup>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div class="flex flex-col">
+                    <label for="transactionCategory" class="mb-1">Transaction category</label>
+                    <Dropdown
+                        v-model="transactionCategory"
+                        id="transactionCategory"
+                        :options="selectableTransactionCategories"
+                        filter
+                        optionLabel="label"
+                        optionGroupLabel="label"
+                        optionGroupChildren="items"
+                        placeholder="Select a category"
+                        :pt="{
+                            itemGroup: {
+                                class: 'p-0'
+                            },
+                        }"
+                    >
+                        <template #optiongroup="slotProps">
+                            <div class="py-1 text-center">
+                                <Tag
+                                    class="w-full"
+                                    :value="getTransactionType(slotProps.option.group, 'label')"
+                                    :severity="getTransactionType(slotProps.option.group, 'color')"
+                                />
+                            </div>
+                        </template>
+                        <template #value="slotProps">
+                            <Tag
+                                v-if="slotProps.value"
+                                :value="slotProps.value.label"
+                                :severity="slotProps.value.severity"
+                            />
+                            <span v-else>
+                                {{ slotProps.placeholder }}
+                            </span>
+                        </template>
+                    </Dropdown>
+                </div>
+                <div class="flex flex-col">
+                    <label for="account" class="mb-1">Account</label>
+                    <Dropdown
+                        id="account"
+                        v-model="account"
+                        optionLabel="name"
+                        :options="selectableAccounts"
+                        placeholder="Select account"
+                    >
+                        <template #option="slotProps">
+                            <div class="flex gap-2">
+                                <span>{{ slotProps.option.name }}</span>
+                                <Tag severity="success">{{ $formatNumber(slotProps.option.balance) }} Ft</Tag>
+                            </div>
+                        </template>
+                    </Dropdown>
+                </div>
+                <div class="flex flex-col">
+                    <label for="amount" class="mb-1">Amount</label>
+                    <InputNumber
+                        id="amount"
+                        v-model="amount"
+                        suffix=" Ft"
+                        placeholder="Amount..."
+                        integeronly
+                        :class="{ 'p-invalid': errors.amount }"
+                    />
+                    <small class="p-error">{{ errors.amount }}</small>
+                </div>
+            </div>
 
-            <UFormGroup name="account" label="Account">
-                <USelectMenu
-                    v-model="state.account"
-                    :options="accounts"
-                    placeholder="Select account..."
-                    searchable
-                    searchable-placeholder="Search..."
-                    option-attribute="name"
-                    by="id"
-                    :search-attributes="['name']"
-                >
-                    <template #option="{ option }">
-                        <span class="truncate">{{ option.name }} ({{ $formatNumber(option.balance) }} Ft)</span>
-                    </template>
-                </USelectMenu>
-            </UFormGroup>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="flex flex-col">
+                    <label for="comment" class="mb-1">Comment</label>
+                    <Textarea
+                        id="comment"
+                        v-model="comment"
+                        rows="5"
+                        cols="30"
+                    />
+                </div>
+            </div>
 
-            <UFormGroup name="transactionCategory" label="Transaction category">
-                <USelectMenu
-                    v-model="state.transactionCategory"
-                    :options="transactionCategories"
-                    placeholder="Select transaction category..."
-                    searchable
-                    searchable-placeholder="Search..."
-                    option-attribute="name"
-                    by="id"
-                    :search-attributes="['name', 'transactionType']"
-                >
-                    <template #option="{ option }">
-                        <span v-if="option.transactionType === 'income'" class="text-green-500">+</span>
-                        <span v-else-if="option.transactionType === 'expense'" class="text-red-500">-</span>
-                        <span class="truncate">{{ option.name }}</span>
-                    </template>
-                </USelectMenu>
-            </UFormGroup>
-
-            <UFormGroup name="amount" label="Amount">
-                <UInput v-model="state.amount" type="number" />
-            </UFormGroup>
-
-            <UFormGroup name="comment" label="Comment">
-                <UInput v-model="state.comment" />
-            </UFormGroup>
-
-            <UFormGroup name="status" label="Status">
-                <UToggle v-model="state.status" />
-            </UFormGroup>
-
-            <UButton type="submit">
-                Save
-            </UButton>
-        </UForm>
-    </AppContent>
+            <Button
+                size="small"
+                label="Save"
+                type="submit"
+                :disabled="!isValid"
+                @click="save"
+            />
+        </form>
+    </ContentBaseCard>
 </template>
 
 <script setup lang="ts">
+import * as yup from 'yup';
+
 definePageMeta({
     middleware: 'auth',
     layout: 'admin'
 });
+
 useHead({
     title: 'Edit Transaction - Spending',
 });
 
-const route: any = useRoute();
 const { getTransaction, updateTransaction, getAccounts, getTransactionCategories } = useSpendingCrudStore();
 const { transaction, accounts, transactionCategories, loading }: any = storeToRefs(useSpendingCrudStore());
 
+const schema = yup.object({
+    date: yup.date().required().label('Date'),
+    status: yup.boolean().label('Status'),
+    amount: yup.number().required().label('Amount'),
+    transactionCategory: yup.object().required().label('Transaction category'),
+    account: yup.object().required().label('Account'),
+    comment: yup.string().nullable().label('Comment'),
+});
+
+const { defineField, handleSubmit, errors } = useForm({
+    validationSchema: schema,
+});
+
+const isValid = useIsFormValid();
+const [id] = defineField('id');
+const [date] = defineField('date');
+const [status] = defineField('status');
+const [amount] = defineField('amount');
+const [comment] = defineField('comment');
+const [transactionCategory] = defineField('transactionCategory');
+const [account] = defineField('account');
+const [createdAt] = defineField('createdAt');
+const [updatedAt] = defineField('updatedAt');
+const [meta] = defineField('meta');
+
+const route: any = useRoute();
 const dayjs = useDayjs();
+const selectableTransactionCategories: any = ref([]);
+const selectableAccounts: any = ref([]);
 
 onMounted(async () => {
     await getTransaction(route.params.id);
     await getAccounts();
     await getTransactionCategories();
-    state.id = transaction.value.id;
-    state.date = transaction.value.date;
-    state.status = transaction.value.status;
-    state.amount = transaction.value.amount;
-    state.comment = transaction.value.comment;
-    state.meta = transaction.value.meta;
-    state.account = transaction.value.account;
-    state.transactionCategory = transaction.value.transactionCategory;
-    state.createdAt = transaction.value.createdAt;
-    state.updatedAt = transaction.value.updatedAt;
+    id.value = transaction.value.id;
+    status.value = transaction.value.status;
+    createdAt.value = dayjs(transaction.value.createdAt).format('YYYY-MM-DD HH:mm');
+    updatedAt.value = dayjs(transaction.value.updatedAt).format('YYYY-MM-DD HH:mm');
+    date.value = dayjs(transaction.value.date).format('YYYY-MM-DD');
+    amount.value = transaction.value.amount;
+    comment.value = transaction.value.comment;
+    meta.value = transaction.value.meta;
+    account.value = transaction.value.account;
+
+    selectableAccounts.value = accounts.value.map(({ id, name, slug, balance }: any) => ({
+        id,
+        name,
+        slug,
+        balance
+    }));
+
+    const groups: any = {};
+    transactionCategories.value.forEach((item: any) => {
+        if (!groups[item.transactionType]) {
+            groups[item.transactionType] = [];
+        }
+
+        const category = {
+            label: item.name,
+            value: item.id,
+            severity: getTransactionType(item.transactionType, 'color')
+        }
+        groups[item.transactionType].push(category);
+
+        if (transaction.value.transactionCategory.id === item.id) {
+            transactionCategory.value = category;
+        }
+    });
+
+    selectableTransactionCategories.value = Object.entries(groups).map(([group, items]) => ({ group, items }));
 });
 
-const state = reactive({
-    id: '',
-    createdAt: '',
-    updatedAt: '',
-    status: false,
-    date: dayjs().format('YYYY-MM-DD'),
-    amount: '',
-    account: '',
-    transactionCategory: '',
-    comment: '',
-    meta: "{}"
+const save = handleSubmit(async ({ id, account, amount, date, status, comment, transactionCategory, meta }) => {
+    await updateTransaction({
+        id,
+        accountId: account.id,
+        transactionCategoryId: transactionCategory.value,
+        comment,
+        status,
+        amount,
+        date,
+        meta,
+    });
 });
 
-const validate = (state: any) => {
-    const errors = [];
-    if (!state.date) errors.push({ path: 'date', message: 'Required' });
-    if (!state.amount) errors.push({ path: 'amount', message: 'Required' });
-    if (!state.account) errors.push({ path: 'account', message: 'Required' });
-    if (!state.transactionCategory) errors.push({ path: 'transactionCategory', message: 'Required' });
-    return errors;
-}
+const getTransactionType = (transactionType: string, prop: string) => {
+    const transactionTypeObj: any = {
+        label: '',
+        color: 'info'
+    };
 
-async function onSubmit(event: any) {
-    const body = {
-        ...event.data,
-        accountId: event.data.account.id,
-        transactionCategoryId: event.data.transactionCategory.id
+    switch (transactionType) {
+        case 'income':
+            transactionTypeObj.label = 'INCOME';
+            transactionTypeObj.color = 'success';
+            break;
+        case 'expense':
+            transactionTypeObj.label = 'EXPENSE';
+            transactionTypeObj.color = 'danger';
+            break;
+        default:
+            break;
     }
-    delete body.account;
-    delete body.transactionCategory;
 
-    await updateTransaction(body);
-}
+    return transactionTypeObj[prop];
+};
 </script>

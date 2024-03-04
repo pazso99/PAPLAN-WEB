@@ -1,55 +1,97 @@
 <template>
-    <AppContent
+    <ContentBaseCard
         :title="'Create account'"
-        :buttons="[
-            { icon: 'i-heroicons-arrow-left-20-solid', to: '/spending/accounts' }
+        :navButtons="[
+            { icon: 'pi-chevron-left', to: '/spending/accounts' }
         ]"
     >
-        <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
-            <UFormGroup name="name" label="Name">
-                <UInput v-model="state.name" />
-            </UFormGroup>
+        <form class="p-5">
+            <div class="flex flex-col mb-4">
+                <label for="status" class="mb-1">Status</label>
+                <div class="flex items-center gap-2">
+                    <InputSwitch
+                        id="status"
+                        v-model="status"
+                        :pt="{
+                            slider: { class: status ? 'bg-green-600' : 'bg-red-800' },
+                        }"
+                    />
+                    <Tag
+                        :value="status ? 'ACTIVE' : 'INACTIVE'"
+                        :severity="status ? 'success' : 'danger'"
+                    />
+                </div>
+            </div>
 
-            <UFormGroup name="balance" label="Balance">
-                <UInput v-model="state.balance" />
-            </UFormGroup>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div class="flex flex-col">
+                    <label for="name" class="mb-1">Name</label>
+                    <InputText
+                        id="name"
+                        v-model="name"
+                        name="name"
+                        :class="{ 'p-invalid': errors.name }"
+                        placeholder="Account name..."
+                    />
+                    <small class="p-error">{{ errors.name }}</small>
+                </div>
 
-            <UFormGroup name="status" label="Status">
-                <UToggle v-model="state.status" />
-            </UFormGroup>
+                <div class="flex flex-col">
+                    <label for="balance" class="mb-1">Balance</label>
+                    <InputNumber
+                        id="balance"
+                        v-model="balance"
+                        placeholder="Balance..."
+                        suffix=" Ft"
+                        integeronly
+                        :class="{ 'p-invalid': errors.balance }"
+                    />
+                    <small class="p-error">{{ errors.balance }}</small>
+                </div>
+            </div>
 
-            <UButton type="submit">
-                Save
-            </UButton>
-        </UForm>
-    </AppContent>
+            <Button
+                size="small"
+                label="Save"
+                type="submit"
+                :disabled="!isValid"
+                @click="save"
+            />
+        </form>
+    </ContentBaseCard>
 </template>
 
 <script setup lang="ts">
+import * as yup from 'yup';
+
 definePageMeta({
-  middleware: 'auth',
-  layout: 'admin'
+    middleware: 'auth',
+    layout: 'admin'
 });
+
 useHead({
     title: 'Create Account - Spending',
 });
 
-const { createAccount } = useSpendingCrudStore();
-
-const state = reactive({
-    name: '',
-    status: false,
-    balance: '',
+const schema = yup.object({
+    name: yup.string().required().label('Name'),
+    status: yup.boolean().label('Status'),
+    balance: yup.number().required().label('Balance'),
 });
 
-const validate = (state: any) => {
-    const errors = [];
-    if (!state.name) errors.push({ path: 'name', message: 'Required' });
-    if (!state.balance) errors.push({ path: 'balance', message: 'Required' });
-    return errors;
-}
+const { defineField, handleSubmit, errors } = useForm({
+    validationSchema: schema,
+});
 
-async function onSubmit(event: any) {
-    await createAccount(event.data);
-}
+const isValid = useIsFormValid();
+const [name] = defineField('name');
+const [status] = defineField('status');
+const [balance] = defineField('balance');
+
+status.value = true;
+
+const { createAccount } = useSpendingCrudStore();
+const save = handleSubmit(async (data: any) => {
+    await createAccount(data);
+});
 </script>

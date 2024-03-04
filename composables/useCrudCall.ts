@@ -1,25 +1,40 @@
-export async function useCrudCall(type: any, url: any, navUrl: any, options: any = {}) {
-    const toast = useToast();
+export async function useCrudCall(
+    type: any,
+    url: any,
+    navUrl: any,
+    options: any = {}
+) {
+    const toast = useToastService();
     try {
         if (type === 'index' || type === 'show') {
             const data: any = await useApiFetch(`${url}`);
             return data.data;
         }
 
-        if (type === 'store' || type === 'update') {
+        if (type === 'store') {
+            await useApiFetch(`${url}`, options);
+
+            navigateTo(`/${navUrl}`);
+            toast.add({ summary: 'Record created!', severity: 'success', detail: 'Succesful', life: 3000 });
+            return;
+        }
+
+        if (type === 'update') {
             const createdData: any = await useApiFetch(`${url}`, options);
+
             navigateTo(`/${navUrl}/${createdData.data.id}`);
-            toast.add({ title: (type === 'store' ? 'Record created!' : 'Record updated'), color: 'green', icon: 'i-heroicons-check-circle' });
+            toast.add({ summary: 'Record updated', severity: 'success', detail: 'Succesful', life: 3000 });
             return;
         }
 
         if (type === 'delete') {
             await useApiFetch(`${url}`, options);
+
             navigateTo(`/${navUrl}`);
-            toast.add({ title: 'Record deleted!', color: 'green', icon: 'i-heroicons-check-circle' });
+            toast.add({ summary: 'Record deleted!', severity: 'success', detail: 'Succesful', life: 3000 });
         }
     } catch (err: any) {
         navigateTo(`/${navUrl}`);
-        toast.add({ title: 'Some error happened!', color: 'red', icon: 'i-heroicons-exclamation-triangle' });
+        toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
     }
 }

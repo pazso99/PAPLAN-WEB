@@ -1,45 +1,127 @@
 <template>
-    <AppContent
+    <ContentBaseCard
         :title="'Edit Transaction Category'"
-        :buttons="[
-            { icon: 'i-heroicons-arrow-left-20-solid', to: '/spending/transaction-categories' }
+        :navButtons="[
+            { icon: 'pi-chevron-left', to: '/spending/transaction-categories' }
         ]"
         :loading="loading"
     >
-        <UForm :validate="validate" :state="state" class="space-y-4" @submit="onSubmit">
-            <UFormGroup name="id" label="Id">
-                <span class="ml-3 text-sm">{{ state.id }}</span>
-            </UFormGroup>
-            <UFormGroup name="createdAt" label="createdAt">
-                <span class="ml-3 text-sm">{{ $dayjs(state.createdAt).format('YYYY-MM-DD HH:mm') }}</span>
-            </UFormGroup>
-            <UFormGroup name="updatedAt" label="updatedAt">
-                <span class="ml-3 text-sm">{{ $dayjs(state.updatedAt).format('YYYY-MM-DD HH:mm') }}</span>
-            </UFormGroup>
-            <UFormGroup name="name" label="Name">
-                <UInput v-model="state.name" />
-            </UFormGroup>
+        <form class="p-5">
+            <div class="flex flex-col mb-4">
+                <label for="status" class="mb-1">Status</label>
+                <div class="flex items-center gap-2">
+                    <InputSwitch
+                        id="status"
+                        v-model="status"
+                        :pt="{
+                            slider: { class: status ? 'bg-green-600' : 'bg-red-800' },
+                        }"
+                    />
+                    <Tag
+                        :value="status ? 'ACTIVE' : 'INACTIVE'"
+                        :severity="status ? 'success' : 'danger'"
+                    />
+                </div>
+            </div>
 
-            <UFormGroup name="transactionType" label="Transaction type">
-                <USelectMenu v-model="state.transactionType" :options="['income', 'expense']" />
-            </UFormGroup>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div class="flex flex-col mb-4">
+                    <label for="id" class="mb-1">ID</label>
+                    <InputNumber
+                        id="id"
+                        v-model="id"
+                        disabled
+                    />
+                </div>
+                <div class="flex flex-col mb-4">
+                    <label for="createdAt" class="mb-1">Created at</label>
+                    <Calendar
+                        id="createdAt"
+                        v-model="createdAt"
+                        disabled
+                    />
+                </div>
+                <div class="flex flex-col mb-4">
+                    <label for="updatedAt" class="mb-1">Updated at</label>
+                    <Calendar
+                        id="updatedAt"
+                        v-model="updatedAt"
+                        disabled
+                    />
+                </div>
+            </div>
 
-            <UFormGroup name="status" label="Status">
-                <UToggle v-model="state.status" />
-            </UFormGroup>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div class="flex flex-col">
+                    <label for="name" class="mb-1">Name</label>
+                    <InputText
+                        id="name"
+                        v-model="name"
+                        name="name"
+                        :class="{ 'p-invalid': errors.name }"
+                        placeholder="Account name..."
+                    />
+                    <small class="p-error">{{ errors.name }}</small>
+                </div>
+            </div>
 
-            <UButton type="submit">
-                Save
-            </UButton>
-        </UForm>
-    </AppContent>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                <div class="flex flex-col">
+                    <label for="transactionType" class="mb-1">Transaction type</label>
+                    <Dropdown
+                        id="transactionType"
+                        v-model="transactionType"
+                        :options="['income', 'expense']"
+                        placeholder="Select a type"
+                    >
+                        <template #value="slotProps">
+                            <Tag
+                                v-if="slotProps.value === 'income'"
+                                value="income"
+                                severity="success"
+                            />
+                            <Tag
+                                v-else-if="slotProps.value === 'expense'"
+                                value="expense"
+                                severity="danger"
+                            />
+                            <span v-else>{{ slotProps.placeholder }}</span>
+                        </template>
+                        <template #option="slotProps">
+                            <Tag
+                                v-if="slotProps.option === 'income'"
+                                value="income"
+                                severity="success"
+                            />
+                            <Tag
+                                v-else-if="slotProps.option === 'expense'"
+                                value="expense"
+                                severity="danger"
+                            />
+                        </template>
+                    </Dropdown>
+                </div>
+            </div>
+
+            <Button
+                size="small"
+                label="Save"
+                type="submit"
+                :disabled="!isValid"
+                @click="save"
+            />
+        </form>
+    </ContentBaseCard>
 </template>
 
 <script setup lang="ts">
+import * as yup from 'yup';
+
 definePageMeta({
     middleware: 'auth',
     layout: 'admin'
 });
+
 useHead({
     title: 'Edit Transaction Category - Spending',
 });
@@ -48,33 +130,36 @@ const route: any = useRoute();
 const { getTransactionCategory, updateTransactionCategory } = useSpendingCrudStore();
 const { transactionCategory, loading }: any = storeToRefs(useSpendingCrudStore());
 
+const schema = yup.object({
+    name: yup.string().required().label('Name'),
+    status: yup.boolean().label('Status'),
+    transactionType: yup.string().required().label('Transaction type'),
+});
+
+const { defineField, handleSubmit, errors } = useForm({
+    validationSchema: schema,
+});
+
+const isValid = useIsFormValid();
+const [id] = defineField('id');
+const [name] = defineField('name');
+const [status] = defineField('status');
+const [transactionType] = defineField('transactionType');
+const [createdAt] = defineField('createdAt');
+const [updatedAt] = defineField('updatedAt');
+
+const dayjs = useDayjs();
 onMounted(async () => {
     await getTransactionCategory(route.params.id);
-    state.id = transactionCategory.value.id;
-    state.name = transactionCategory.value.name;
-    state.status = transactionCategory.value.status;
-    state.transactionType = transactionCategory.value.transactionType;
-    state.createdAt = transactionCategory.value.createdAt;
-    state.updatedAt = transactionCategory.value.updatedAt;
+    id.value = transactionCategory.value.id;
+    name.value = transactionCategory.value.name;
+    status.value = transactionCategory.value.status;
+    transactionType.value = transactionCategory.value.transactionType;
+    createdAt.value = dayjs(transactionCategory.value.createdAt).format('YYYY-MM-DD HH:mm');
+    updatedAt.value = dayjs(transactionCategory.value.updatedAt).format('YYYY-MM-DD HH:mm');
 });
 
-const state = reactive({
-    id: '',
-    name: '',
-    status: false,
-    transactionType: '',
-    createdAt: '',
-    updatedAt: '',
+const save = handleSubmit(async (data: any) => {
+    await updateTransactionCategory(data);
 });
-
-const validate = (state: any) => {
-    const errors = [];
-    if (!state.name) errors.push({ path: 'name', message: 'Required' });
-    if (!state.transactionType) errors.push({ path: 'transactionType', message: 'Required' });
-    return errors;
-}
-
-async function onSubmit (event: any) {
-    await updateTransactionCategory(event.data);
-}
 </script>

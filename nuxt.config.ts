@@ -11,11 +11,6 @@ export default defineNuxtConfig({
                     rel: 'preconnect',
                     href: 'https://fonts.googleapis.com',
                 },
-                {
-                    rel: 'stylesheet',
-                    href: 'https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap',
-                    crossorigin: '',
-                },
             ],
         },
     },
@@ -38,11 +33,18 @@ export default defineNuxtConfig({
     },
     css: [
         '~/assets/scss/main.scss',
+        'primevue/resources/themes/aura-dark-blue/theme.css',
+        'primevue/resources/primevue.css',
+        'primeicons/primeicons.css',
     ],
+    primevue: {
+        cssLayerOrder: 'tailwind-base, primevue, tailwind-utilities',
+    },
     modules: [
         '@pinia/nuxt',
-        '@nuxt/ui',
+        '@nuxtjs/tailwindcss',
         '@vee-validate/nuxt',
-        'dayjs-nuxt'
-    ],
+        'dayjs-nuxt',
+        'nuxt-primevue'
+    ]
 });
