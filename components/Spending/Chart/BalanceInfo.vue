@@ -39,9 +39,9 @@ function setData(spendingData) {
                 label: 'Balance',
                 fill: false,
                 borderColor: documentStyle.getPropertyValue('--green-500'),
-                data: spendingData.diagrams.yearlyBalance.filter(b => b.amount > 0).map(b => b.amount)
-            }
-        ]
+                data: spendingData.diagrams.yearlyBalance.filter(b => b.amount > 0).map(b => b.amount),
+            },
+        ],
     };
 
     chartOptions.value = {
@@ -51,31 +51,31 @@ function setData(spendingData) {
         plugins: {
             legend: {
                 labels: {
-                    color: textColor
-                }
-            }
+                    color: textColor,
+                },
+            },
         },
         scales: {
             x: {
                 ticks: {
-                    color: textColorSecondary
+                    color: textColorSecondary,
                 },
                 grid: {
-                    color: surfaceBorder
-                }
+                    color: surfaceBorder,
+                },
             },
             y: {
                 type: 'linear',
                 display: true,
                 position: 'left',
                 ticks: {
-                    color: textColorSecondary
+                    color: textColorSecondary,
                 },
                 grid: {
-                    color: surfaceBorder
-                }
+                    color: surfaceBorder,
+                },
             },
-        }
+        },
     };
 };
 </script>

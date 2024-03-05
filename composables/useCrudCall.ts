@@ -2,7 +2,7 @@ export async function useCrudCall(
     type: any,
     url: any,
     navUrl: any,
-    options: any = {}
+    options: any = {},
 ) {
     const toast = useToastService();
     try {

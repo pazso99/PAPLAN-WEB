@@ -1,8 +1,8 @@
 <template>
     <ContentBaseCard
-        :title="'Create transaction category'"
-        :navButtons="[
-            { icon: 'pi-chevron-left', to: '/spending/transaction-categories' }
+        title="Create transaction category"
+        :nav-buttons="[
+            { icon: 'pi-chevron-left', to: '/spending/transaction-categories' },
         ]"
     >
         <form class="p-5">
@@ -101,7 +101,7 @@ import * as yup from 'yup';
 
 definePageMeta({
     middleware: 'auth',
-    layout: 'admin'
+    layout: 'admin',
 });
 
 useHead({
@@ -131,7 +131,7 @@ const save = handleSubmit(async ({ name, status, transactionType }) => {
     await createTransactionCategory({
         name,
         status,
-        transactionType
+        transactionType,
     });
 });
 </script>

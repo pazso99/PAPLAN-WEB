@@ -1,24 +1,26 @@
 <template>
     <ContentBaseCard
-        :title="'Spending settings'"
-        :navButtons="[
-            { icon: 'pi-chevron-left', to: '/spending' }
+        title="Spending settings"
+        :nav-buttons="[
+            { icon: 'pi-chevron-left', to: '/spending' },
         ]"
         :loading="loading"
     >
         <div class="sm:p-4 p-2">
             <div class="w-full max-w-full sm:px-3 mb-6 xl:w-2/6 p-4 bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-slate-800">
-                <h2 class="font-bold mb-3 text-xl">Expense categories</h2>
+                <h2 class="font-bold mb-3 text-xl">
+                    Expense categories
+                </h2>
                 <div class="flex flex-col md:flex-row">
                     <div class="w-full lg:w-1/2 p-2 mb-4 flex flex-col">
                         Basic categories:
                         <MultiSelect
                             v-model="basicCategories"
                             :options="selectableCategories"
-                            optionLabel="name"
-                            optionValue="id"
+                            option-label="name"
+                            option-value="id"
                             placeholder="Select Categories"
-                            :maxSelectedLabels="1"
+                            :max-selected-labels="1"
                         />
                     </div>
                     <div class="w-full lg:w-1/2 p-2 mb-4 flex flex-col">
@@ -26,17 +28,21 @@
                         <MultiSelect
                             v-model="premiumCategories"
                             :options="selectableCategories"
-                            optionLabel="name"
-                            optionValue="id"
+                            option-label="name"
+                            option-value="id"
                             placeholder="Select Categories"
-                            :maxSelectedLabels="1"
+                            :max-selected-labels="1"
                         />
                     </div>
                 </div>
             </div>
             <div class="w-full max-w-full sm:px-3 mb-6 p-4 bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-slate-800">
-                <h2 class="font-bold mb-1 text-xl">Actual total balances</h2>
-                <h3 class="font-bold md:mb-3 text-sm">2024</h3>
+                <h2 class="font-bold mb-1 text-xl">
+                    Actual total balances
+                </h2>
+                <h3 class="font-bold md:mb-3 text-sm">
+                    2024
+                </h3>
                 <div class="p-2 flex flex-wrap mb-3">
                     <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
@@ -95,7 +101,9 @@
                         />
                     </ul>
                 </div>
-                <h3 class="font-bold md:mb-3 text-sm">2023</h3>
+                <h3 class="font-bold md:mb-3 text-sm">
+                    2023
+                </h3>
                 <div class="p-2 flex flex-wrap">
                     <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
@@ -126,7 +134,6 @@
                         />
                     </ul>
                     <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
-
                         <SpendingSettingsMonthBalanceInput
                             v-model="spendingActualBalances['2023-07']"
                             month="July"
@@ -168,28 +175,28 @@
         <template #loading>
             <div class="flex flex-wrap justify-center mb-4">
                 <div class="w-full max-w-full px-1 sm:px-3 my-3 sm:w-1/2">
-                    <Skeleton width="100%" height="14rem"></Skeleton>
+                    <Skeleton width="100%" height="14rem" />
                 </div>
                 <div class="w-full max-w-full px-1 sm:px-3 my-3 sm:w-1/2">
-                    <Skeleton width="100%" height="14rem"></Skeleton>
+                    <Skeleton width="100%" height="14rem" />
                 </div>
                 <div class="w-full max-w-full px-1 sm:px-3 my-3 sm:w-1/2">
-                    <Skeleton width="100%" height="14rem"></Skeleton>
+                    <Skeleton width="100%" height="14rem" />
                 </div>
                 <div class="w-full max-w-full px-1 sm:px-3 my-3 sm:w-1/2">
-                    <Skeleton width="100%" height="14rem"></Skeleton>
+                    <Skeleton width="100%" height="14rem" />
                 </div>
             </div>
 
             <div class="w-full flex justify-center">
                 <div class="w-full max-w-full px-1 sm:px-3 mb-3 sm:w-1/2 xl:w-1/4">
-                    <Skeleton width="100%" height="8rem"></Skeleton>
+                    <Skeleton width="100%" height="8rem" />
                 </div>
             </div>
 
             <div class="w-full flex justify-center">
                 <div class="w-full max-w-full px-1 sm:px-3 mb-3 sm:w-1/2">
-                    <Skeleton width="100%" height="16rem"></Skeleton>
+                    <Skeleton width="100%" height="16rem" />
                 </div>
             </div>
         </template>
@@ -199,7 +206,7 @@
 <script setup lang="ts">
 definePageMeta({
     middleware: 'auth',
-    layout: 'admin'
+    layout: 'admin',
 });
 
 useHead({
@@ -218,7 +225,7 @@ onMounted(async () => {
     await getSpendingActualBalances();
     basicCategories.value = spendingSettings.value.configs.spending_basic_transaction_categories;
     premiumCategories.value = spendingSettings.value.configs.spending_premium_transaction_categories;
-    selectableCategories.value = spendingSettings.value.expenseCategories
+    selectableCategories.value = spendingSettings.value.expenseCategories;
 });
 
 async function handleSave() {
@@ -226,9 +233,9 @@ async function handleSave() {
         configs: {
             ...spendingSettings.value.configs,
             spending_basic_transaction_categories: basicCategories.value,
-            spending_premium_transaction_categories: premiumCategories.value
+            spending_premium_transaction_categories: premiumCategories.value,
         },
-        actualBalances: spendingActualBalances.value
+        actualBalances: spendingActualBalances.value,
     };
     await updateSpendingSettings(body);
 };

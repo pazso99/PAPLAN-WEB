@@ -26,7 +26,7 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
             this.loading = true;
             await useCrudCall('store', 'spending/accounts', 'spending/accounts', {
                 method: 'POST',
-                body: data
+                body: data,
             });
             this.loading = false;
         },
@@ -34,7 +34,7 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
             this.loading = true;
             await useCrudCall('update', `spending/accounts/${data.id}`, 'spending/accounts', {
                 method: 'PUT',
-                body: data
+                body: data,
             });
             this.loading = false;
         },
@@ -60,7 +60,7 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
             this.loading = true;
             await useCrudCall('store', 'spending/transaction-categories', 'spending/transaction-categories', {
                 method: 'POST',
-                body: data
+                body: data,
             });
             this.loading = false;
         },
@@ -68,7 +68,7 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
             this.loading = true;
             await useCrudCall('update', `spending/transaction-categories/${data.id}`, 'spending/transaction-categories', {
                 method: 'PUT',
-                body: data
+                body: data,
             });
             this.loading = false;
         },
@@ -94,7 +94,7 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
             this.loading = true;
             await useCrudCall('store', 'spending/transactions', 'spending/transactions', {
                 method: 'POST',
-                body: data
+                body: data,
             });
             this.loading = false;
         },
@@ -102,7 +102,7 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
             this.loading = true;
             await useCrudCall('update', `spending/transactions/${data.id}`, 'spending/transactions', {
                 method: 'PUT',
-                body: data
+                body: data,
             });
             this.loading = false;
         },

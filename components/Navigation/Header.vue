@@ -31,7 +31,7 @@
                     />
                     <Sidebar v-model:visible="isNavOpen">
                         <template #container>
-                            <NavigationMenu :isMobile="true" />
+                            <NavigationMenu :is-mobile="true" />
                         </template>
                     </Sidebar>
                 </div>

@@ -21,13 +21,13 @@ interface SpendingTransactionRequest {
     amount: number;
     accountId: number;
     transactionCategoryId: number;
-    comment: string | null,
-    meta: string | null,
+    comment: string | null;
+    meta: string | null;
 }
 
 export {
     UserLoginRequest,
     SpendingSettingsRequest,
     SpendingDashboardRequest,
-    SpendingTransactionRequest
+    SpendingTransactionRequest,
 };

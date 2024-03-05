@@ -1,14 +1,14 @@
 <template>
     <ContentListCard
-        :title="'Accounts'"
+        title="Accounts"
         :buttons="[
             { icon: 'pi-plus', to: '/spending/accounts/create' },
-            { icon: 'pi-chevron-left', to: '/spending' }
+            { icon: 'pi-chevron-left', to: '/spending' },
         ]"
         :items="accounts"
         :loading="loading"
         :multi-sort-meta="[
-            { field: 'id', order: -1 }
+            { field: 'id', order: -1 },
         ]"
         :global-filter-fields="[
             'id',
@@ -17,7 +17,7 @@
             'createdAt',
         ]"
         :filters="filters"
-        :actionsColumnMeta="{
+        :actions-column-meta="{
             width: '5%',
             editUrl: '/spending/accounts',
         }"
@@ -26,7 +26,7 @@
     >
         <Column
             field="id"
-            dataType="numeric"
+            data-type="numeric"
             header="ID"
             sortable
             style="width: 10%"
@@ -45,7 +45,7 @@
             field="status"
             header="Status"
             sortable
-            :showFilterMatchModes="false"
+            :show-filter-match-modes="false"
             style="width: 10%"
         >
             <template #body="{ data }">
@@ -62,8 +62,8 @@
                             box: {
                                 class: [
                                     'border-none',
-                                    filterModel.value !== null ? filterModel.value ? 'bg-green-600' : 'bg-red-800' : ''
-                                ]
+                                    filterModel.value !== null ? filterModel.value ? 'bg-green-600' : 'bg-red-800' : '',
+                                ],
                             },
                         }"
                     />
@@ -95,7 +95,7 @@
         <Column
             field="balance"
             header="Balance"
-            dataType="numeric"
+            data-type="numeric"
             sortable
             style="width: 25%"
         >

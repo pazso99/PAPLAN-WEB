@@ -1,32 +1,34 @@
 <template>
     <ContentBaseCard
         :title="title"
-        :navButtons="buttons"
+        :nav-buttons="buttons"
         :loading="loading"
     >
         <DataTable
+            v-model:filters="filters"
             :value="items"
-            stripedRows
+            striped-rows
             size="small"
             paginator
-            paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
+            paginator-template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
             :rows="10"
-            :rowsPerPageOptions="[10, 25, 50, 100]"
-            sortMode="multiple"
-            :multiSortMeta="multiSortMeta"
-            removableSort
-            v-model:filters="filters"
-            filterDisplay="menu"
-            :globalFilterFields="globalFilterFields"
+            :rows-per-page-options="[10, 25, 50, 100]"
+            sort-mode="multiple"
+            :multi-sort-meta="multiSortMeta"
+            removable-sort
+            filter-display="menu"
+            :global-filter-fields="globalFilterFields"
         >
-            <template #empty>No data.</template>
+            <template #empty>
+                No data.
+            </template>
             <template #header>
                 <div class="flex justify-between pl-2">
-                    <IconField iconPosition="left">
+                    <IconField icon-position="left">
                         <InputIcon>
                             <i class="pi pi-search" />
                         </InputIcon>
-                        <InputText v-model="filters['global'].value" placeholder="Search..." />
+                        <InputText v-model="filters.global.value" placeholder="Search..." />
                     </IconField>
                     <Button
                         type="button"
@@ -40,14 +42,14 @@
                 </div>
             </template>
 
-            <slot></slot>
+            <slot />
 
             <Column
                 :style="`width: ${actionsColumnMeta.width}`"
             >
                 <template #header>
                     <div class="md:hidden flex-1 text-center">
-                        <i class="pi pi-cog"></i>
+                        <i class="pi pi-cog" />
                     </div>
                 </template>
                 <template #body="{ data }">
@@ -116,8 +118,8 @@
             <DataTable :value="new Array(10)">
                 <template #header>
                     <div class="flex justify-between pl-2 gap-5">
-                        <Skeleton width="16rem" height="2rem"></Skeleton>
-                        <Skeleton size="2rem"></Skeleton>
+                        <Skeleton width="16rem" height="2rem" />
+                        <Skeleton size="2rem" />
                     </div>
                 </template>
                 <Column
@@ -125,10 +127,10 @@
                     style="width: 10%"
                 >
                     <template #header>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                     <template #body>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                 </Column>
                 <Column
@@ -136,10 +138,10 @@
                     style="width: 30%"
                 >
                     <template #header>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                     <template #body>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                 </Column>
                 <Column
@@ -147,10 +149,10 @@
                     style="width: 20%"
                 >
                     <template #header>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                     <template #body>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                 </Column>
                 <Column
@@ -158,10 +160,10 @@
                     style="width: 15%"
                 >
                     <template #header>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                     <template #body>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                 </Column>
                 <Column
@@ -169,17 +171,17 @@
                     style="width: 15%"
                 >
                     <template #header>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                     <template #body>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                 </Column>
                 <Column
                     style="width: 10%"
                 >
                     <template #body>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                 </Column>
             </DataTable>
@@ -198,23 +200,24 @@ const props = defineProps([
     'multiSortMeta',
     'globalFilterFields',
     'filters',
-    'actionsColumnMeta'
+    'actionsColumnMeta',
 ]);
 
+const emit = defineEmits(['deleteItem', 'refreshTable']);
+
 const filters = ref();
-const initFilters = () => {
+function initFilters() {
     filters.value = {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        ...props.filters
+        ...props.filters,
     };
 };
 initFilters();
 
-const clearFilter = () => {
+function clearFilter() {
     initFilters();
-};
+}
 
-const emit = defineEmits(['deleteItem', 'refreshTable']);
 const deleteModalVisible = ref(false);
 const deletableItem = ref({ id: null });
 
@@ -223,13 +226,13 @@ async function openDeleteModal(deletableData: any) {
     deleteModalVisible.value = true;
 }
 
-const handleDelete = () => {
+function handleDelete() {
     emit('deleteItem', deletableItem.value.id);
     deletableItem.value = { id: null };
     deleteModalVisible.value = false;
-};
+}
 
-const handleRefresh = () => {
+function handleRefresh() {
     emit('refreshTable');
-};
+}
 </script>

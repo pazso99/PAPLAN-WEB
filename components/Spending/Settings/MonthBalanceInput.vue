@@ -3,10 +3,10 @@
         {{ month }}
         <InputGroup class="w-48">
             <InputNumber
-                :modelValue="modelValue"
+                :model-value="modelValue"
                 placeholder="Amount..."
                 integeronly
-                @update:modelValue="newValue => $emit('update:modelValue', newValue)"
+                @update:model-value="newValue => $emit('update:modelValue', newValue)"
             />
             <InputGroupAddon>
                 <span class="text-gray-500 dark:text-gray-400 text-xs">Ft</span>

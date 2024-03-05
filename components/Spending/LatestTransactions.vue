@@ -5,7 +5,9 @@
             class="w-full"
         >
             <template #header>
-                <div class="text-center">Latest transactions</div>
+                <div class="text-center">
+                    Latest transactions
+                </div>
             </template>
             <template #list="slotProps">
                 <div class="divide-y divide-zinc-800">

@@ -1,8 +1,8 @@
 <template>
     <ContentBaseCard
-        :title="'Edit account'"
-        :navButtons="[
-            { icon: 'pi-chevron-left', to: '/spending/accounts' }
+        title="Edit account"
+        :nav-buttons="[
+            { icon: 'pi-chevron-left', to: '/spending/accounts' },
         ]"
         :loading="loading"
     >
@@ -94,7 +94,7 @@ import * as yup from 'yup';
 
 definePageMeta({
     middleware: 'auth',
-    layout: 'admin'
+    layout: 'admin',
 });
 
 useHead({

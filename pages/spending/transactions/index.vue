@@ -1,15 +1,15 @@
 <template>
     <ContentListCard
-        :title="'Transactions'"
+        title="Transactions"
         :buttons="[
             { icon: 'pi-plus', to: '/spending/transactions/create' },
-            { icon: 'pi-chevron-left', to: '/spending' }
+            { icon: 'pi-chevron-left', to: '/spending' },
         ]"
         :items="transactions"
         :loading="loading"
         :multi-sort-meta="[
             { field: 'date', order: -1 },
-            { field: 'id', order: -1 }
+            { field: 'id', order: -1 },
         ]"
         :global-filter-fields="[
             'id',
@@ -17,10 +17,10 @@
             'account.name',
             'transactionType',
             'amount',
-            'transactionCategory.name'
+            'transactionCategory.name',
         ]"
         :filters="filters"
-        :actionsColumnMeta="{
+        :actions-column-meta="{
             width: '5%',
             editUrl: '/spending/transactions',
         }"
@@ -29,7 +29,7 @@
     >
         <Column
             field="id"
-            dataType="numeric"
+            data-type="numeric"
             header="ID"
             sortable
             style="width: 10%"
@@ -48,7 +48,7 @@
             field="status"
             header="Status"
             sortable
-            :showFilterMatchModes="false"
+            :show-filter-match-modes="false"
             style="width: 10%"
         >
             <template #body="{ data }">
@@ -65,8 +65,8 @@
                             box: {
                                 class: [
                                     'border-none',
-                                    filterModel.value !== null ? filterModel.value ? 'bg-green-600' : 'bg-red-800' : ''
-                                ]
+                                    filterModel.value !== null ? filterModel.value ? 'bg-green-600' : 'bg-red-800' : '',
+                                ],
                             },
                         }"
                     />
@@ -116,7 +116,7 @@
         <Column
             field="amount"
             header="Amount"
-            dataType="numeric"
+            data-type="numeric"
             sortable
             style="width: 15%"
         >
@@ -135,7 +135,7 @@
             header="Type"
             field="transactionType"
             sortable
-            :showFilterMatchModes="false"
+            :show-filter-match-modes="false"
             style="width: 10%"
         >
             <template #body="{ data }">
@@ -150,7 +150,7 @@
                     :options="['income', 'expense', 'transfer']"
                     placeholder="Any"
                     class="p-column-filter"
-                    :maxSelectedLabels="1"
+                    :max-selected-labels="1"
                 >
                     <template #option="slotProps">
                         <span>{{ slotProps.option }}</span>
@@ -161,10 +161,10 @@
 
         <Column
             header="Category"
-            filterField="transactionCategory"
+            filter-field="transactionCategory"
             sortable
-            sortField="transactionCategory.name"
-            :showFilterMatchModes="false"
+            sort-field="transactionCategory.name"
+            :show-filter-match-modes="false"
             style="width: 15%"
         >
             <template #body="{ data }">
@@ -176,10 +176,10 @@
                 <MultiSelect
                     v-model="filterModel.value"
                     :options="transactionCategoryOptions"
-                    optionLabel="name"
+                    option-label="name"
                     placeholder="Any"
                     class="p-column-filter"
-                    :maxSelectedLabels="1"
+                    :max-selected-labels="1"
                 >
                     <template #option="slotProps">
                         <span>{{ slotProps.option.name }}</span>
@@ -228,14 +228,14 @@ const { transactions, transactionCategories, loading }: any = storeToRefs(useSpe
 const transactionCategoryOptions = ref([]);
 
 const filters = ref({
-    id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+    'id': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     'account.name': { value: null, matchMode: FilterMatchMode.CONTAINS },
-    date: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    transactionType: { value: null, matchMode: FilterMatchMode.IN },
-    transactionCategory: { value: null, matchMode: FilterMatchMode.IN },
-    status: { value: null, matchMode: FilterMatchMode.EQUALS },
-    amount: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-    comment: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    'date': { value: null, matchMode: FilterMatchMode.CONTAINS },
+    'transactionType': { value: null, matchMode: FilterMatchMode.IN },
+    'transactionCategory': { value: null, matchMode: FilterMatchMode.IN },
+    'status': { value: null, matchMode: FilterMatchMode.EQUALS },
+    'amount': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+    'comment': { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 
 onMounted(async () => {
@@ -245,7 +245,7 @@ onMounted(async () => {
     transactionCategoryOptions.value = transactionCategories.value.map(({ id, name, slug }: any) => ({
         id,
         name,
-        slug
+        slug,
     }));
 });
 
@@ -258,10 +258,10 @@ async function refreshTable() {
     await getTransactions();
 }
 
-const getTransactionType = (transactionType: string, prop: string) => {
+function getTransactionType(transactionType: string, prop: string) {
     const transactionTypeObj: any = {
         label: '',
-        color: 'info'
+        color: 'info',
     };
 
     switch (transactionType) {

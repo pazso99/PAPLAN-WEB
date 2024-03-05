@@ -11,7 +11,9 @@
                 {{ "" }}
                 <span class="text-lg ms-n1">{{ suffix }}</span>
             </h1>
-            <h6 :class="labelClass">{{ label }}</h6>
+            <h6 :class="labelClass">
+                {{ label }}
+            </h6>
         </div>
     </div>
 </template>
@@ -27,6 +29,6 @@ defineProps([
     'label',
     'labelClass',
     'duration',
-    'suffix'
+    'suffix',
 ]);
 </script>

@@ -1,8 +1,8 @@
 <template>
     <ContentBaseCard
-        :title="'Edit Transaction'"
-        :navButtons="[
-            { icon: 'pi-chevron-left', to: '/spending/transactions' }
+        title="Edit Transaction"
+        :nav-buttons="[
+            { icon: 'pi-chevron-left', to: '/spending/transactions' },
         ]"
         :loading="loading"
     >
@@ -57,7 +57,7 @@
                     <Calendar
                         id="date"
                         v-model="date"
-                        dateFormat="yy-mm-dd"
+                        date-format="yy-mm-dd"
                     />
                 </div>
             </div>
@@ -66,17 +66,17 @@
                 <div class="flex flex-col">
                     <label for="transactionCategory" class="mb-1">Transaction category</label>
                     <Dropdown
-                        v-model="transactionCategory"
                         id="transactionCategory"
+                        v-model="transactionCategory"
                         :options="selectableTransactionCategories"
                         filter
-                        optionLabel="label"
-                        optionGroupLabel="label"
-                        optionGroupChildren="items"
+                        option-label="label"
+                        option-group-label="label"
+                        option-group-children="items"
                         placeholder="Select a category"
                         :pt="{
                             itemGroup: {
-                                class: 'p-0'
+                                class: 'p-0',
                             },
                         }"
                     >
@@ -106,14 +106,16 @@
                     <Dropdown
                         id="account"
                         v-model="account"
-                        optionLabel="name"
+                        option-label="name"
                         :options="selectableAccounts"
                         placeholder="Select account"
                     >
                         <template #option="slotProps">
                             <div class="flex gap-2">
                                 <span>{{ slotProps.option.name }}</span>
-                                <Tag severity="success">{{ $formatNumber(slotProps.option.balance) }} Ft</Tag>
+                                <Tag severity="success">
+                                    {{ $formatNumber(slotProps.option.balance) }} Ft
+                                </Tag>
                             </div>
                         </template>
                     </Dropdown>
@@ -190,7 +192,7 @@ import * as yup from 'yup';
 
 definePageMeta({
     middleware: 'auth',
-    layout: 'admin'
+    layout: 'admin',
 });
 
 useHead({
@@ -272,7 +274,7 @@ onMounted(async () => {
         id,
         name,
         slug,
-        balance
+        balance,
     }));
 
     const groups: any = {};
@@ -285,8 +287,8 @@ onMounted(async () => {
             label: item.name,
             value: item.id,
             type: item.transactionType,
-            severity: getTransactionType(item.transactionType, 'color')
-        }
+            severity: getTransactionType(item.transactionType, 'color'),
+        };
         groups[item.transactionType].push(category);
 
         if (transaction.value.transactionCategory.id === item.id) {
@@ -315,10 +317,10 @@ const save = handleSubmit(async ({ id, account, amount, date, status, comment, t
     });
 });
 
-const getTransactionType = (transactionType: string, prop: string) => {
+function getTransactionType(transactionType: string, prop: string) {
     const transactionTypeObj: any = {
         label: '',
-        color: 'info'
+        color: 'info',
     };
 
     switch (transactionType) {
@@ -339,5 +341,5 @@ const getTransactionType = (transactionType: string, prop: string) => {
     }
 
     return transactionTypeObj[prop];
-};
+}
 </script>

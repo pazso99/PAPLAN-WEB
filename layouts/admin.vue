@@ -15,8 +15,8 @@
 useHead({
     titleTemplate: (titleChunk) => {
         return titleChunk ? `${titleChunk} - Paplan` : 'Paplan';
-    }
-})
+    },
+});
 </script>
 
 <style lang="scss" scoped>

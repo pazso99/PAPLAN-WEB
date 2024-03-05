@@ -6,7 +6,7 @@
     >
         <template #title>
             <template v-if="customHeader">
-                <slot name="header"></slot>
+                <slot name="header" />
             </template>
             <template v-else>
                 <div class="flex items-center justify-between gap-3 pr-2 pl-5 py-3 h-[50px]">
@@ -38,9 +38,9 @@
         </template>
         <template #content>
             <div v-if="loading">
-                <slot name="loading"></slot>
+                <slot name="loading" />
             </div>
-            <slot v-else></slot>
+            <slot v-else />
         </template>
     </Card>
 </template>
@@ -51,6 +51,6 @@ defineProps([
     'actions',
     'customHeader',
     'navButtons',
-    'loading'
+    'loading',
 ]);
 </script>

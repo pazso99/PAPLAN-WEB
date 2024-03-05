@@ -94,7 +94,7 @@ interface Transaction {
 }
 
 interface DiagramData {
-    yearlyBalance: { date: string, amount: number }[];
+    yearlyBalance: { date: string; amount: number }[];
 }
 
 interface TransactionCategory {
@@ -118,5 +118,5 @@ export {
     SpendingDashboardState,
     SpendingDashboardData,
     TransactionCategory,
-    Account
+    Account,
 };

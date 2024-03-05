@@ -19,7 +19,7 @@
                 /> Ft
                 <div>
                     <span
-                        :class="account.profit < 0 ? 'text-red-500': 'text-emerald-500'"
+                        :class="account.profit < 0 ? 'text-red-500' : 'text-emerald-500'"
                     >
                         <template v-if="account.profit > 0">+</template>
                         <CountTo
@@ -49,8 +49,12 @@
                         </template>
                     </SplitButton>
                     <div class="flex gap-2">
-                        <Tag severity="success">{{ $formatNumber(account.income) }} Ft</Tag>
-                        <Tag severity="danger">{{ $formatNumber(account.expense) }} Ft</Tag>
+                        <Tag severity="success">
+                            {{ $formatNumber(account.income) }} Ft
+                        </Tag>
+                        <Tag severity="danger">
+                            {{ $formatNumber(account.expense) }} Ft
+                        </Tag>
                     </div>
                 </div>
             </Fieldset>
@@ -70,7 +74,7 @@
                     /> Ft
                     <div>
                         <span
-                            :class="spending.totals.profit < 0 ? 'text-red-500': 'text-emerald-500'"
+                            :class="spending.totals.profit < 0 ? 'text-red-500' : 'text-emerald-500'"
                         >
                             <template v-if="spending.totals.profit > 0">+</template>
                             <CountTo
@@ -82,8 +86,12 @@
                         <span class="text-slate-500">in {{ spendingSelectedDate }}</span>
                     </div>
                     <div class="flex justify-end gap-2 mt-2">
-                        <Tag severity="success">{{ $formatNumber(spending.totals.income) }} Ft</Tag>
-                        <Tag severity="danger">{{ $formatNumber(spending.totals.expense) }} Ft</Tag>
+                        <Tag severity="success">
+                            {{ $formatNumber(spending.totals.income) }} Ft
+                        </Tag>
+                        <Tag severity="danger">
+                            {{ $formatNumber(spending.totals.expense) }} Ft
+                        </Tag>
                     </div>
                 </Fieldset>
             </div>
@@ -113,7 +121,7 @@
                         <Calendar
                             id="date"
                             v-model="date"
-                            dateFormat="yy-mm-dd"
+                            date-format="yy-mm-dd"
                         />
                     </div>
                 </div>
@@ -122,11 +130,11 @@
                     <div class="flex flex-col">
                         <label for="transactionCategory" class="mb-1">Transaction category</label>
                         <Dropdown
-                            v-model="transactionCategory"
                             id="transactionCategory"
+                            v-model="transactionCategory"
                             :options="filteredTransactionCategories"
                             filter
-                            optionLabel="name"
+                            option-label="name"
                             placeholder="Select a category"
                         />
                     </div>
@@ -201,6 +209,7 @@
 import CountTo from 'vue-count-to/src';
 import * as yup from 'yup';
 
+const emit = defineEmits(['createTransaction']);
 const { spending, spendingSelectedDate } = storeToRefs(useDashboardStore());
 const { getTransactionCategories } = useSpendingCrudStore();
 const { transactionCategories } = storeToRefs(useSpendingCrudStore());
@@ -241,18 +250,18 @@ function openNewTransaction(type, account, severity) {
     newTransactionModalOpen.value = true;
     selectedAccount.value = {
         ...account,
-        severity
+        severity,
     };
     filteredTransactionCategories.value = transactionCategories.value
         .filter(({ transactionType }) => transactionType === type);
 
     transactionType.value = type;
 
-    toAccounts.value = spending.value.accounts.filter(acc => acc.id !== account.id)
+    toAccounts.value = spending.value.accounts.filter(acc => acc.id !== account.id);
 
     resetForm({
         values: {
-            date: dayjs().format('YYYY-MM-DD')
+            date: dayjs().format('YYYY-MM-DD'),
         },
     });
 }
@@ -261,12 +270,12 @@ const quickTransactionItems = [
     {
         key: 'income',
         label: 'Income',
-        severity: 'success'
+        severity: 'success',
     },
     {
         key: 'transfer',
         label: 'Transfer',
-        severity: 'warning'
+        severity: 'warning',
     },
 ];
 
@@ -274,7 +283,6 @@ onMounted(async () => {
     await getTransactionCategories();
 });
 
-const emit = defineEmits(['createTransaction']);
 const emitSave = handleSubmit(async (data) => {
     const meta = {};
     if (transactionType.value === 'transfer') {
@@ -289,7 +297,7 @@ const emitSave = handleSubmit(async (data) => {
         accountId: selectedAccount.value.id,
         transactionType: transactionType.value,
         transactionCategoryId: transactionCategory.value.id,
-        meta: JSON.stringify(meta)
+        meta: JSON.stringify(meta),
     });
     newTransactionModalOpen.value = false;
 });

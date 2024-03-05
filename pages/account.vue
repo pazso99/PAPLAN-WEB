@@ -1,10 +1,11 @@
 <template>
     <ContentBaseCard
-        :title="'Account'"
+        title="Account"
     >
         <pre>{{ user }}</pre>
     </ContentBaseCard>
 </template>
+
 <script setup lang="ts">
 definePageMeta({
     middleware: 'auth',

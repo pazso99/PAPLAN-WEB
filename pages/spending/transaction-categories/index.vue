@@ -1,14 +1,14 @@
 <template>
     <ContentListCard
-        :title="'Transaction categories'"
+        title="Transaction categories"
         :buttons="[
             { icon: 'pi-plus', to: '/spending/transaction-categories/create' },
-            { icon: 'pi-chevron-left', to: '/spending' }
+            { icon: 'pi-chevron-left', to: '/spending' },
         ]"
         :items="transactionCategories"
         :loading="loading"
         :multi-sort-meta="[
-            { field: 'id', order: -1 }
+            { field: 'id', order: -1 },
         ]"
         :global-filter-fields="[
             'id',
@@ -17,7 +17,7 @@
             'createdAt',
         ]"
         :filters="filters"
-        :actionsColumnMeta="{
+        :actions-column-meta="{
             width: '5%',
             editUrl: '/spending/transaction-categories',
         }"
@@ -26,7 +26,7 @@
     >
         <Column
             field="id"
-            dataType="numeric"
+            data-type="numeric"
             header="ID"
             sortable
             style="width: 10%"
@@ -45,7 +45,7 @@
             field="status"
             header="Status"
             sortable
-            :showFilterMatchModes="false"
+            :show-filter-match-modes="false"
             style="width: 10%"
         >
             <template #body="{ data }">
@@ -62,8 +62,8 @@
                             box: {
                                 class: [
                                     'border-none',
-                                    filterModel.value !== null ? filterModel.value ? 'bg-green-600' : 'bg-red-800' : ''
-                                ]
+                                    filterModel.value !== null ? filterModel.value ? 'bg-green-600' : 'bg-red-800' : '',
+                                ],
                             },
                         }"
                     />
@@ -96,7 +96,7 @@
             header="Type"
             field="transactionType"
             sortable
-            :showFilterMatchModes="false"
+            :show-filter-match-modes="false"
             style="width: 20%"
         >
             <template #body="{ data }">
@@ -111,7 +111,7 @@
                     :options="['income', 'expense', 'transfer']"
                     placeholder="Any"
                     class="p-column-filter"
-                    :maxSelectedLabels="1"
+                    :max-selected-labels="1"
                 >
                     <template #option="slotProps">
                         <span>{{ slotProps.option }}</span>
@@ -176,10 +176,10 @@ async function refreshTable() {
     await getTransactionCategories();
 }
 
-const getTransactionType = (transactionType: string, prop: string) => {
+function getTransactionType(transactionType: string, prop: string) {
     const transactionTypeObj: any = {
         label: '',
-        color: 'info'
+        color: 'info',
     };
 
     switch (transactionType) {
@@ -200,5 +200,5 @@ const getTransactionType = (transactionType: string, prop: string) => {
     }
 
     return transactionTypeObj[prop];
-};
+}
 </script>

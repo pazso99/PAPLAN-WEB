@@ -1,13 +1,13 @@
 import type { Account, Configs, ExpenseCategory, SpendingDashboardData, TransactionCategory, User } from './types';
 
-type ErrorResponse = {
+interface ErrorResponse {
     message: string;
-};
+}
 
-type ApiResponse<Data> = {
+interface ApiResponse<Data> {
     data: Data;
     status: number;
-};
+}
 
 type LoginResponse = ApiResponse<{
     token: string;
@@ -40,7 +40,6 @@ type SpendingTransactionResponse = ApiResponse<{
     updatedAt: string;
 }>;
 
-
 type SpendingAccountResponse = ApiResponse<SpendingDashboardData>;
 
 export {
@@ -52,5 +51,5 @@ export {
     SpendingActualBalancesResponse,
     SpendingDashboardResponse,
     SpendingTransactionResponse,
-    SpendingAccountResponse
+    SpendingAccountResponse,
 };

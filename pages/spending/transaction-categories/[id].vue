@@ -1,8 +1,8 @@
 <template>
     <ContentBaseCard
-        :title="'Edit Transaction Category'"
-        :navButtons="[
-            { icon: 'pi-chevron-left', to: '/spending/transaction-categories' }
+        title="Edit Transaction Category"
+        :nav-buttons="[
+            { icon: 'pi-chevron-left', to: '/spending/transaction-categories' },
         ]"
         :loading="loading"
     >
@@ -129,7 +129,7 @@ import * as yup from 'yup';
 
 definePageMeta({
     middleware: 'auth',
-    layout: 'admin'
+    layout: 'admin',
 });
 
 useHead({

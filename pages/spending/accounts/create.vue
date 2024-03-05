@@ -1,8 +1,8 @@
 <template>
     <ContentBaseCard
-        :title="'Create account'"
-        :navButtons="[
-            { icon: 'pi-chevron-left', to: '/spending/accounts' }
+        title="Create account"
+        :nav-buttons="[
+            { icon: 'pi-chevron-left', to: '/spending/accounts' },
         ]"
     >
         <form class="p-5">
@@ -66,7 +66,7 @@ import * as yup from 'yup';
 
 definePageMeta({
     middleware: 'auth',
-    layout: 'admin'
+    layout: 'admin',
 });
 
 useHead({

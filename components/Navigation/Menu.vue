@@ -1,17 +1,17 @@
 <template>
     <Accordion
-        :activeIndex="activeIndex"
+        :active-index="activeIndex"
     >
         <AccordionTab>
             <template #header>
                 <span class="flex items-center gap-2 text-[15px]">
-                    <i class="pi pi-credit-card text-green-600"></i>
+                    <i class="pi pi-credit-card text-green-600" />
                     <span class="font-bold white-space-nowrap">Spending</span>
                 </span>
             </template>
             <PanelMenu
-                :model="items"
                 v-model:expandedKeys="expandedKeys"
+                :model="items"
                 unstyled
             >
                 <template #item="{ item, root, active }">
@@ -22,7 +22,7 @@
                         :class="route.name === 'spending' ? item.key === 'spending-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
                         @click="isMobile && toggleNav()"
                     >
-                        <span :class="['text-sm', root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
+                        <span class="text-sm" :class="[root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
                     </NuxtLink>
                     <a
                         v-else
@@ -31,8 +31,8 @@
                     >
                         <span class="ml-2 text-sm">{{ item.label }}</span>
                         <span>
-                            <i v-if="active" class="pi pi-angle-up"></i>
-                            <i v-else class="pi pi-angle-down"></i>
+                            <i v-if="active" class="pi pi-angle-up" />
+                            <i v-else class="pi pi-angle-down" />
                         </span>
                     </a>
                 </template>
@@ -42,7 +42,7 @@
         <AccordionTab>
             <template #header>
                 <span class="flex items-center gap-2 text-[15px]">
-                    <i class="pi pi-home"></i>
+                    <i class="pi pi-home" />
                     <span class="font-bold white-space-nowrap">Inventory</span>
                 </span>
             </template>
@@ -51,7 +51,7 @@
         <AccordionTab>
             <template #header>
                 <span class="flex items-center gap-2 text-[15px]">
-                    <i class="pi pi-book"></i>
+                    <i class="pi pi-book" />
                     <span class="font-bold white-space-nowrap">Recipes</span>
                 </span>
             </template>
@@ -60,7 +60,7 @@
         <AccordionTab>
             <template #header>
                 <span class="flex items-center gap-2 text-[15px]">
-                    <i class="pi pi-table"></i>
+                    <i class="pi pi-table" />
                     <span class="font-bold white-space-nowrap">Notes</span>
                 </span>
             </template>
@@ -77,12 +77,12 @@ const items = ref([
     {
         key: 'spending-dashboard',
         label: 'Dashboard',
-        route: '/spending'
+        route: '/spending',
     },
     {
         key: 'spending-settings',
         label: 'Settings',
-        route: '/spending/settings'
+        route: '/spending/settings',
     },
     {
         key: 'spending-management',
@@ -102,15 +102,15 @@ const items = ref([
                 key: 'spending-transactions',
                 label: 'Transactions',
                 route: '/spending/transactions',
-            }
-        ]
+            },
+        ],
     },
 ]);
 
 const route: any = useRoute();
 const activeIndex: any = ref(0);
 if (route.fullPath.startsWith('/inventory')) {
-    activeIndex.value = 1
+    activeIndex.value = 1;
 }
 
 const expandedKeys = ref({});
@@ -119,12 +119,12 @@ watch(() => route.name, () => {
         [
             'spending-accounts',
             'spending-transaction-categories',
-            'spending-transactions'
+            'spending-transactions',
         ].some(e => route.name.includes(e))
     ) {
         expandedKeys.value = {
-            'spending-management': true
-        }
+            'spending-management': true,
+        };
     }
 }, { immediate: true });
 </script>
