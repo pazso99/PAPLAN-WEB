@@ -19,6 +19,7 @@ logs
 .fleet
 .idea
 todos.md
+.vscode
 
 # Local env files
 .env
