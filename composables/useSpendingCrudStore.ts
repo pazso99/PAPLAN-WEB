@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import type { Account, SpendingCrudStore, Transaction, TransactionCategory } from '~/types/types';
 
 export const useSpendingCrudStore = defineStore('spending-crud', {
     state: () => ({
@@ -9,22 +10,22 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
         transactionCategory: null,
         transactions: [],
         transaction: null,
-    }),
+    } as SpendingCrudStore),
     actions: {
         // ACCOUNTS
         async getAccounts() {
             this.loading = true;
-            this.accounts = await useCrudCall('index', 'spending/accounts', 'spending');
+            this.accounts = await useIndexCall<Account[]>('spending/accounts', 'spending');
             this.loading = false;
         },
-        async getAccount(id: any) {
+        async getAccount(id: number) {
             this.loading = true;
-            this.account = await useCrudCall('show', `spending/accounts/${id}`, 'spending/accounts');
+            this.account = await useShowCall<Account>(`spending/accounts/${id}`, 'spending/accounts');
             this.loading = false;
         },
         async createAccount(data: any) {
             this.loading = true;
-            await useCrudCall('store', 'spending/accounts', 'spending/accounts', {
+            await useStoreCall('spending/accounts', 'spending/accounts', {
                 method: 'POST',
                 body: data,
             });
@@ -32,7 +33,7 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
         },
         async updateAccount(data: any) {
             this.loading = true;
-            await useCrudCall('update', `spending/accounts/${data.id}`, 'spending/accounts', {
+            await useUpdateCall(`spending/accounts/${data.id}`, 'spending/accounts', {
                 method: 'PUT',
                 body: data,
             });
@@ -40,7 +41,7 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
         },
         async deleteAccount(id: any) {
             this.loading = true;
-            await useCrudCall('delete', `spending/accounts/${id}`, 'spending/accounts', {
+            await useDeleteCall(`spending/accounts/${id}`, 'spending/accounts', {
                 method: 'DELETE',
             });
             this.loading = false;
@@ -48,17 +49,17 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
         // TRANSACTION CATEGORIES
         async getTransactionCategories() {
             this.loading = true;
-            this.transactionCategories = await useCrudCall('index', 'spending/transaction-categories', 'spending');
+            this.transactionCategories = await useIndexCall<TransactionCategory[]>('spending/transaction-categories', 'spending');
             this.loading = false;
         },
         async getTransactionCategory(id: any) {
             this.loading = true;
-            this.transactionCategory = await useCrudCall('show', `spending/transaction-categories/${id}`, 'spending/transaction-categories');
+            this.transactionCategory = await useShowCall<TransactionCategory>(`spending/transaction-categories/${id}`, 'spending/transaction-categories');
             this.loading = false;
         },
         async createTransactionCategory(data: any) {
             this.loading = true;
-            await useCrudCall('store', 'spending/transaction-categories', 'spending/transaction-categories', {
+            await useStoreCall('spending/transaction-categories', 'spending/transaction-categories', {
                 method: 'POST',
                 body: data,
             });
@@ -66,7 +67,7 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
         },
         async updateTransactionCategory(data: any) {
             this.loading = true;
-            await useCrudCall('update', `spending/transaction-categories/${data.id}`, 'spending/transaction-categories', {
+            await useUpdateCall(`spending/transaction-categories/${data.id}`, 'spending/transaction-categories', {
                 method: 'PUT',
                 body: data,
             });
@@ -74,7 +75,7 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
         },
         async deleteTransactionCategory(id: any) {
             this.loading = true;
-            await useCrudCall('delete', `spending/transaction-categories/${id}`, 'spending/transaction-categories', {
+            await useDeleteCall(`spending/transaction-categories/${id}`, 'spending/transaction-categories', {
                 method: 'DELETE',
             });
             this.loading = false;
@@ -82,17 +83,17 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
         // TRANSACTIONS
         async getTransactions() {
             this.loading = true;
-            this.transactions = await useCrudCall('index', 'spending/transactions', 'spending');
+            this.transactions = await useIndexCall<Transaction[]>('spending/transactions', 'spending');
             this.loading = false;
         },
         async getTransaction(id: any) {
             this.loading = true;
-            this.transaction = await useCrudCall('show', `spending/transactions/${id}`, 'spending/transactions');
+            this.transaction = await useShowCall<Transaction>(`spending/transactions/${id}`, 'spending/transactions');
             this.loading = false;
         },
         async createTransaction(data: any) {
             this.loading = true;
-            await useCrudCall('store', 'spending/transactions', 'spending/transactions', {
+            await useStoreCall('spending/transactions', 'spending/transactions', {
                 method: 'POST',
                 body: data,
             });
@@ -100,7 +101,7 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
         },
         async updateTransaction(data: any) {
             this.loading = true;
-            await useCrudCall('update', `spending/transactions/${data.id}`, 'spending/transactions', {
+            await useUpdateCall(`spending/transactions/${data.id}`, 'spending/transactions', {
                 method: 'PUT',
                 body: data,
             });
@@ -108,7 +109,7 @@ export const useSpendingCrudStore = defineStore('spending-crud', {
         },
         async deleteTransaction(id: any) {
             this.loading = true;
-            await useCrudCall('delete', `spending/transactions/${id}`, 'spending/transactions', {
+            await useDeleteCall(`spending/transactions/${id}`, 'spending/transactions', {
                 method: 'DELETE',
             });
             this.loading = false;

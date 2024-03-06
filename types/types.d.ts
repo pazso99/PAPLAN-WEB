@@ -56,15 +56,6 @@ interface Totals {
     premiumExpense: number;
 }
 
-interface Account {
-    id: number;
-    name: string;
-    balance: number;
-    income: number;
-    expense: number;
-    profit: number;
-}
-
 interface TransactionsByCategory {
     category: Category;
     amount: number;
@@ -106,7 +97,20 @@ interface TransactionCategory {
 interface Account {
     id: number;
     name: string;
-    slug: string;
+    balance?: number;
+    income?: number;
+    expense?: number;
+    profit?: number;
+}
+
+interface SpendingCrudStore {
+    loading: boolean;
+    accounts: Account[];
+    account: Account | null;
+    transactionCategories: TransactionCategory[];
+    transactionCategory: TransactionCategory | null;
+    transactions: Transaction[];
+    transaction: Transaction | null;
 }
 
 export {
@@ -119,4 +123,6 @@ export {
     SpendingDashboardData,
     TransactionCategory,
     Account,
+    Transaction,
+    SpendingCrudStore,
 };

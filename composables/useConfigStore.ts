@@ -1,20 +1,24 @@
 import { defineStore } from 'pinia';
+import type { SpendingActualBalancesResponse, SpendingSettingsResponse } from '~/types/responses';
+import type { ConfigState } from '~/types/types';
+
+const configState = {
+    loading: true,
+    spendingActualBalances: null,
+    spendingSettings: null,
+} as ConfigState;
 
 export const useConfigStore = defineStore('config', {
-    state: () => ({
-        loading: true,
-        spendingActualBalances: null,
-        spendingSettings: null,
-    }),
+    state: () => configState,
     actions: {
         async getSpendingSettingsData() {
             const toast = useToastService();
             this.loading = true;
             try {
-                const data: any = await useApiFetch('spending/settings');
+                const data = await useApiFetch<SpendingSettingsResponse>('spending/settings');
 
                 this.spendingSettings = data.data;
-            } catch (err: any) {
+            } catch (err: unknown) {
                 toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when getting spending settings data!', life: 3000 });
             }
         },
@@ -22,10 +26,10 @@ export const useConfigStore = defineStore('config', {
             const toast = useToastService();
             this.loading = true;
             try {
-                const data: any = await useApiFetch('spending/actual-balances');
+                const data = await useApiFetch<SpendingActualBalancesResponse>('spending/actual-balances');
 
                 this.spendingActualBalances = data.data;
-            } catch (err: any) {
+            } catch (err: unknown) {
                 toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when getting spending actual balances data!', life: 3000 });
             } finally {
                 this.loading = false;
@@ -41,7 +45,7 @@ export const useConfigStore = defineStore('config', {
                 });
 
                 toast.add({ severity: 'success', summary: 'succcess!', detail: 'Settings updated!', life: 3000 });
-            } catch (err: any) {
+            } catch (err: unknown) {
                 toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when updating settings!', life: 3000 });
             } finally {
                 this.loading = false;

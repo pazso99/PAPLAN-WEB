@@ -2,7 +2,7 @@ export function useApiFetch<T>(url: string, options: any = {}) {
     const runtimeConfig = useRuntimeConfig();
     const token = useCookie('token');
 
-    return $fetch(`${runtimeConfig.public.API_BASE_URL}/${url}`, {
+    return $fetch<T>(`${runtimeConfig.public.API_BASE_URL}/${url}`, {
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json',

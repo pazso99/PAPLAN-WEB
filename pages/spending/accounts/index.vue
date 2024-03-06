@@ -143,7 +143,7 @@ useHead({
 });
 
 const { getAccounts, deleteAccount } = useSpendingCrudStore();
-const { accounts, loading }: any = storeToRefs(useSpendingCrudStore());
+const { accounts, loading } = storeToRefs(useSpendingCrudStore());
 
 const filters = ref({
     id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },

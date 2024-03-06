@@ -20,9 +20,7 @@ type SpendingSettingsResponse = ApiResponse<{
     expenseCategories: ExpenseCategory[];
 }>;
 
-type SpendingActualBalancesResponse = ApiResponse<{
-    actualBalances: Record<string, number>;
-}>;
+type SpendingActualBalancesResponse = ApiResponse<Record<string, number>>;
 
 type SpendingDashboardResponse = ApiResponse<SpendingDashboardData>;
 
@@ -42,6 +40,8 @@ type SpendingTransactionResponse = ApiResponse<{
 
 type SpendingAccountResponse = ApiResponse<SpendingDashboardData>;
 
+type SpendingDataResponse = ApiResponse<SpendingDashboardData>;
+
 export {
     ApiResponse,
     ErrorResponse,
@@ -52,4 +52,5 @@ export {
     SpendingDashboardResponse,
     SpendingTransactionResponse,
     SpendingAccountResponse,
+    SpendingDataResponse,
 };
