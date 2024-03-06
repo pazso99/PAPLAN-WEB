@@ -77,7 +77,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Chart from 'primevue/chart';
 
 const { spending } = storeToRefs(useDashboardStore());

@@ -69,7 +69,9 @@
 </template>
 
 <script setup lang="ts">
-defineProps(['isMobile']);
+defineProps<{
+    isMobile?: boolean;
+}>();
 
 const { toggleNav } = useNavigationStore();
 

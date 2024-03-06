@@ -1,7 +1,7 @@
 <template>
     <ContentBaseCard
         :title="title"
-        :nav-buttons="buttons"
+        :nav-buttons="navButtons"
         :loading="loading"
     >
         <DataTable
@@ -191,19 +191,23 @@
 
 <script setup lang="ts">
 import { FilterMatchMode } from 'primevue/api';
+import type { DataTableFilterMeta, DataTableSortMeta } from 'primevue/datatable';
 
-const props = defineProps([
-    'title',
-    'buttons',
-    'loading',
-    'items',
-    'multiSortMeta',
-    'globalFilterFields',
-    'filters',
-    'actionsColumnMeta',
-]);
+const props = defineProps<{
+    title: string;
+    loading: boolean;
+    navButtons: { icon: string; to: string }[];
+    items: object[];
+    multiSortMeta: DataTableSortMeta[];
+    globalFilterFields: string[];
+    filters: DataTableFilterMeta;
+    actionsColumnMeta: object;
+}>();
 
-const emit = defineEmits(['deleteItem', 'refreshTable']);
+const emit = defineEmits<{
+    (e: 'deleteItem', id: number): any;
+    (e: 'refreshTable'): any;
+}>();
 
 const filters = ref();
 function initFilters() {
@@ -219,7 +223,7 @@ function clearFilter() {
 }
 
 const deleteModalVisible = ref(false);
-const deletableItem = ref({ id: null });
+const deletableItem = ref<{ id: number }>({ id: -1 });
 
 async function openDeleteModal(deletableData: any) {
     deletableItem.value = deletableData;
@@ -228,7 +232,7 @@ async function openDeleteModal(deletableData: any) {
 
 function handleDelete() {
     emit('deleteItem', deletableItem.value.id);
-    deletableItem.value = { id: null };
+    deletableItem.value = { id: -1 };
     deleteModalVisible.value = false;
 }
 

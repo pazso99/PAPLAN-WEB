@@ -46,11 +46,10 @@
 </template>
 
 <script setup lang="ts">
-defineProps([
-    'title',
-    'actions',
-    'customHeader',
-    'navButtons',
-    'loading',
-]);
+defineProps<{
+    loading: boolean;
+    title: string;
+    customHeader?: boolean;
+    navButtons?: { icon: string; to: string }[];
+}>();
 </script>

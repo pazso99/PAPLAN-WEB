@@ -20,6 +20,7 @@ logs
 .idea
 todos.md
 .vscode
+.bckp
 
 # Local env files
 .env

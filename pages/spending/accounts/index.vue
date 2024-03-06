@@ -1,7 +1,7 @@
 <template>
     <ContentListCard
         title="Accounts"
-        :buttons="[
+        :nav-buttons="[
             { icon: 'pi-plus', to: '/spending/accounts/create' },
             { icon: 'pi-chevron-left', to: '/spending' },
         ]"
@@ -130,7 +130,7 @@
     </ContentListCard>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
 definePageMeta({

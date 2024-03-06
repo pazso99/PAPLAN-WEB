@@ -205,11 +205,14 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CountTo from 'vue-count-to/src';
 import * as yup from 'yup';
 
-const emit = defineEmits(['createTransaction']);
+const emit = defineEmits<{
+    (e: 'createTransaction', data: object): any;
+}>();
+
 const { spending, spendingSelectedDate } = storeToRefs(useDashboardStore());
 const { getTransactionCategories } = useSpendingCrudStore();
 const { transactionCategories } = storeToRefs(useSpendingCrudStore());

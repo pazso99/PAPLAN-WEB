@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
     ssr: false,
     devtools: {
-        enabled: true
+        enabled: true,
     },
     app: {
         head: {
@@ -16,7 +16,6 @@ export default defineNuxtConfig({
     },
     typescript: {
         strict: true,
-        typeCheck: true,
     },
     runtimeConfig: {
         public: {
@@ -46,6 +45,6 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         '@vee-validate/nuxt',
         'dayjs-nuxt',
-        'nuxt-primevue'
-    ]
+        'nuxt-primevue',
+    ],
 });

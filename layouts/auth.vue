@@ -16,7 +16,7 @@
     <Toast position="top-center" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 useHead({
     titleTemplate: (titleChunk) => {
         return titleChunk ? `${titleChunk} - Paplan` : 'Paplan';

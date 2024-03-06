@@ -1,7 +1,7 @@
 <template>
     <ContentListCard
         title="Transactions"
-        :buttons="[
+        :nav-buttons="[
             { icon: 'pi-plus', to: '/spending/transactions/create' },
             { icon: 'pi-chevron-left', to: '/spending' },
         ]"

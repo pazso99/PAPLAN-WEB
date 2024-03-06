@@ -53,6 +53,6 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const { spending } = storeToRefs(useDashboardStore());
 </script>
