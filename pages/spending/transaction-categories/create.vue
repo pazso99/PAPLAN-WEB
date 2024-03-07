@@ -43,7 +43,7 @@
                     <Dropdown
                         id="transactionType"
                         v-model="transactionType"
-                        :options="['income', 'expense']"
+                        :options="transactionTypeOptions"
                         placeholder="Select a type"
                     >
                         <template #value="slotProps">
@@ -57,6 +57,11 @@
                                 value="expense"
                                 severity="danger"
                             />
+                            <Tag
+                                v-else-if="slotProps.value === 'transfer'"
+                                value="transfer"
+                                severity="warning"
+                            />
                             <span v-else>{{ slotProps.placeholder }}</span>
                         </template>
                         <template #option="slotProps">
@@ -69,6 +74,11 @@
                                 v-else-if="slotProps.option === 'expense'"
                                 value="expense"
                                 severity="danger"
+                            />
+                            <Tag
+                                v-else-if="slotProps.option === 'transfer'"
+                                value="transfer"
+                                severity="warning"
                             />
                         </template>
                     </Dropdown>
@@ -98,10 +108,11 @@ useHead({
     title: 'Create Transaction Category - Spending',
 });
 
+const transactionTypeOptions = ref(['income', 'expense', 'transfer']);
 const schema = yup.object({
     name: yup.string().required().label('Name'),
     status: yup.boolean().label('Status'),
-    transactionType: yup.string().required().label('Transaction type'),
+    transactionType: yup.string().oneOf(transactionTypeOptions.value).required().label('Transaction type'),
 });
 
 const { defineField, handleSubmit, errors } = useForm({
