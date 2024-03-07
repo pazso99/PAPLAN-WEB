@@ -132,6 +132,36 @@
                 </div>
             </div>
 
+            <div
+                v-if="transactionCategory?.type === 'transfer' && account"
+                class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4"
+            >
+                <div class="flex flex-col">
+                    <label for="toAccount" class="mb-1">To Account</label>
+                    <Dropdown
+                        id="account"
+                        v-model="toAccount"
+                        optionLabel="name"
+                        :options="toAccounts"
+                        placeholder="Select account"
+                    >
+                        <template #value="slotProps">
+                            <div v-if="slotProps.value" class="flex gap-2">
+                                <span>{{ slotProps.value.name }}</span>
+                                <Tag severity="success">{{ $formatNumber(slotProps.value.balance) }} Ft</Tag>
+                            </div>
+                            <span v-else>{{ slotProps.placeholder }}</span>
+                        </template>
+                        <template #option="slotProps">
+                            <div class="flex gap-2">
+                                <span>{{ slotProps.option.name }}</span>
+                                <Tag severity="success">{{ $formatNumber(slotProps.option.balance) }} Ft</Tag>
+                            </div>
+                        </template>
+                    </Dropdown>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div class="flex flex-col">
                     <label for="comment" class="mb-1">Comment</label>
@@ -177,6 +207,12 @@ const schema = yup.object({
     transactionCategory: yup.object().required().label('Transaction category'),
     account: yup.object().required().label('Account'),
     comment: yup.string().nullable().label('Comment'),
+    toAccount: yup.object().when('transactionCategory.type', {
+        is: 'transfer',
+        then(schema) {
+            return schema.required();
+        },
+    }).label('To account'),
 });
 
 const { defineField, handleSubmit, errors } = useForm({
@@ -193,7 +229,15 @@ const [transactionCategory] = defineField('transactionCategory');
 const [account] = defineField('account');
 const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
-const [meta] = defineField('meta');
+const [toAccount] = defineField('toAccount');
+
+const toAccounts = ref([]);
+watch(account, async (newAccount) => {
+    if (toAccount.value?.id === newAccount.id) {
+        toAccount.value = null;
+    }
+    toAccounts.value = accounts.value.filter((account: any) => account.id !== newAccount.id)
+});
 
 const route: any = useRoute();
 const dayjs = useDayjs();
@@ -204,6 +248,9 @@ onMounted(async () => {
     await getTransaction(route.params.id);
     await getAccounts();
     await getTransactionCategories();
+
+    toAccounts.value = accounts.value;
+
     id.value = transaction.value.id;
     status.value = transaction.value.status;
     createdAt.value = dayjs(transaction.value.createdAt).format('YYYY-MM-DD HH:mm');
@@ -211,8 +258,15 @@ onMounted(async () => {
     date.value = dayjs(transaction.value.date).format('YYYY-MM-DD');
     amount.value = transaction.value.amount;
     comment.value = transaction.value.comment;
-    meta.value = transaction.value.meta;
     account.value = transaction.value.account;
+
+    let meta: any;
+    if (transaction.value.meta !== '{}') {
+        meta = JSON.parse(transaction.value.meta);
+    }
+    if (transaction.value.transactionType === 'transfer') {
+        toAccount.value = accounts.value.find((account: any) => account.id === meta.toAccountId);
+    }
 
     selectableAccounts.value = accounts.value.map(({ id, name, slug, balance }: any) => ({
         id,
@@ -230,6 +284,7 @@ onMounted(async () => {
         const category = {
             label: item.name,
             value: item.id,
+            type: item.transactionType,
             severity: getTransactionType(item.transactionType, 'color')
         }
         groups[item.transactionType].push(category);
@@ -242,7 +297,12 @@ onMounted(async () => {
     selectableTransactionCategories.value = Object.entries(groups).map(([group, items]) => ({ group, items }));
 });
 
-const save = handleSubmit(async ({ id, account, amount, date, status, comment, transactionCategory, meta }) => {
+const save = handleSubmit(async ({ id, account, amount, date, status, comment, transactionCategory, toAccount }) => {
+    const meta: any = {};
+    if (transactionCategory.type === 'transfer') {
+        meta.toAccountId = toAccount.id;
+    }
+
     await updateTransaction({
         id,
         accountId: account.id,
@@ -251,7 +311,7 @@ const save = handleSubmit(async ({ id, account, amount, date, status, comment, t
         status,
         amount,
         date,
-        meta,
+        meta: JSON.stringify(meta)
     });
 });
 
@@ -269,6 +329,10 @@ const getTransactionType = (transactionType: string, prop: string) => {
         case 'expense':
             transactionTypeObj.label = 'EXPENSE';
             transactionTypeObj.color = 'danger';
+            break;
+        case 'transfer':
+            transactionTypeObj.label = 'TRANSFER';
+            transactionTypeObj.color = 'warning';
             break;
         default:
             break;

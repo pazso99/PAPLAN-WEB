@@ -108,7 +108,7 @@
             <template #filter="{ filterModel }">
                 <MultiSelect
                     v-model="filterModel.value"
-                    :options="['income', 'expense']"
+                    :options="['income', 'expense', 'transfer']"
                     placeholder="Any"
                     class="p-column-filter"
                     :maxSelectedLabels="1"
@@ -190,6 +190,10 @@ const getTransactionType = (transactionType: string, prop: string) => {
         case 'expense':
             transactionTypeObj.label = 'EXPENSE';
             transactionTypeObj.color = 'danger';
+            break;
+        case 'transfer':
+            transactionTypeObj.label = 'TRANSFER';
+            transactionTypeObj.color = 'warning';
             break;
         default:
             break;

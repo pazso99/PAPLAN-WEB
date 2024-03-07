@@ -32,7 +32,7 @@
                 </div>
                 <div class="flex justify-between mt-4">
                     <SplitButton
-                        :model="items"
+                        :model="quickTransactionItems"
                         size="small"
                         label="Expense"
                         rounded
@@ -82,8 +82,8 @@
                         <span class="text-slate-500">in {{ spendingSelectedDate }}</span>
                     </div>
                     <div class="flex justify-end gap-2 mt-2">
-                        <Tag severity="success">{{ $formatNumber(spending.totals.allIncome) }} Ft</Tag>
-                        <Tag severity="danger">{{ $formatNumber(spending.totals.allExpense) }} Ft</Tag>
+                        <Tag severity="success">{{ $formatNumber(spending.totals.income) }} Ft</Tag>
+                        <Tag severity="danger">{{ $formatNumber(spending.totals.expense) }} Ft</Tag>
                     </div>
                 </Fieldset>
             </div>
@@ -101,7 +101,8 @@
                         :severity="selectedAccount.severity"
                         :value="transactionType"
                     />
-                    transaction for
+                    transaction
+                    {{ transactionType === 'transfer' ? 'from' : 'for' }}
                     <span class="font-bold">{{ selectedAccount.name }}</span>
                 </div>
             </template>
@@ -140,6 +141,36 @@
                             :class="{ 'p-invalid': errors.amount }"
                         />
                         <small class="p-error">{{ errors.amount }}</small>
+                    </div>
+                </div>
+
+                <div
+                    v-if="transactionType === 'transfer'"
+                    class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
+                >
+                    <div class="flex flex-col">
+                        <label for="toAccount" class="mb-1">To account</label>
+                        <Dropdown
+                            id="toAccount"
+                            v-model="toAccount"
+                            optionLabel="name"
+                            :options="toAccounts"
+                            placeholder="Select account"
+                        >
+                            <template #value="slotProps">
+                                <div v-if="slotProps.value" class="flex gap-2">
+                                    <span>{{ slotProps.value.name }}</span>
+                                    <Tag severity="success">{{ $formatNumber(slotProps.value.balance) }} Ft</Tag>
+                                </div>
+                                <span v-else>{{ slotProps.placeholder }}</span>
+                            </template>
+                            <template #option="slotProps">
+                                <div class="flex gap-2">
+                                    <span>{{ slotProps.option.name }}</span>
+                                    <Tag severity="success">{{ $formatNumber(slotProps.option.balance) }} Ft</Tag>
+                                </div>
+                            </template>
+                        </Dropdown>
                     </div>
                 </div>
 
@@ -185,6 +216,12 @@ const schema = yup.object({
     amount: yup.number().min(1).required().label('Amount'),
     comment: yup.string().label('Comment'),
     transactionCategory: yup.object().required().label('Transaction category'),
+    toAccount: yup.object().when('transactionCategory.type', {
+        is: 'transfer',
+        then(schema) {
+            return schema.required();
+        },
+    }).label('To account'),
 });
 
 const { defineField, handleSubmit, errors, resetForm } = useForm({
@@ -196,15 +233,23 @@ const [date] = defineField('date');
 const [amount] = defineField('amount');
 const [comment] = defineField('comment');
 const [transactionCategory] = defineField('transactionCategory');
+const [toAccount] = defineField('toAccount');
+
+const toAccounts = ref([]);
 
 function openNewTransaction(type, account, severity) {
     newTransactionModalOpen.value = true;
     selectedAccount.value = {
-        ...account, severity
+        ...account,
+        severity
     };
     filteredTransactionCategories.value = transactionCategories.value
         .filter(({ transactionType }) => transactionType === type);
+
     transactionType.value = type;
+
+    toAccounts.value = spending.value.accounts.filter(acc => acc.id !== account.id)
+
     resetForm({
         values: {
             date: dayjs().format('YYYY-MM-DD')
@@ -212,17 +257,17 @@ function openNewTransaction(type, account, severity) {
     });
 }
 
-const items = [
+const quickTransactionItems = [
     {
         key: 'income',
         label: 'Income',
         severity: 'success'
     },
-    /* {
+    {
         key: 'transfer',
         label: 'Transfer',
         severity: 'warning'
-    }, */
+    },
 ];
 
 onMounted(async () => {
@@ -231,6 +276,12 @@ onMounted(async () => {
 
 const emit = defineEmits(['createTransaction']);
 const emitSave = handleSubmit(async (data) => {
+    const meta = {};
+    if (transactionType.value === 'transfer') {
+        meta.toAccountId = toAccount.value.id;
+        delete data.toAccountId;
+    }
+
     emit('createTransaction', {
         ...data,
         status: true,
@@ -238,7 +289,7 @@ const emitSave = handleSubmit(async (data) => {
         accountId: selectedAccount.value.id,
         transactionType: transactionType.value,
         transactionCategoryId: transactionCategory.value.id,
-        meta: '{}',
+        meta: JSON.stringify(meta)
     });
     newTransactionModalOpen.value = false;
 });
