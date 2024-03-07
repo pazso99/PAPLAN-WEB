@@ -110,6 +110,36 @@
                 </div>
             </div>
 
+            <div
+                v-if="transactionCategory?.type === 'transfer' && account"
+                class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4"
+            >
+                <div class="flex flex-col">
+                    <label for="toAccount" class="mb-1">To Account</label>
+                    <Dropdown
+                        id="account"
+                        v-model="toAccount"
+                        optionLabel="name"
+                        :options="toAccounts"
+                        placeholder="Select account"
+                    >
+                        <template #value="slotProps">
+                            <div v-if="slotProps.value" class="flex gap-2">
+                                <span>{{ slotProps.value.name }}</span>
+                                <Tag severity="success">{{ $formatNumber(slotProps.value.balance) }} Ft</Tag>
+                            </div>
+                            <span v-else>{{ slotProps.placeholder }}</span>
+                        </template>
+                        <template #option="slotProps">
+                            <div class="flex gap-2">
+                                <span>{{ slotProps.option.name }}</span>
+                                <Tag severity="success">{{ $formatNumber(slotProps.option.balance) }} Ft</Tag>
+                            </div>
+                        </template>
+                    </Dropdown>
+                </div>
+            </div>
+
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div class="flex flex-col">
                     <label for="comment" class="mb-1">Comment</label>
@@ -157,6 +187,12 @@ const schema = yup.object({
     transactionCategory: yup.object().required().label('Transaction category'),
     account: yup.object().required().label('Account'),
     comment: yup.string().label('Comment'),
+    toAccount: yup.object().when('transactionCategory.type', {
+        is: 'transfer',
+        then(schema) {
+            return schema.required();
+        },
+    }).label('To account'),
 });
 
 const { defineField, handleSubmit, errors } = useForm({
@@ -170,6 +206,15 @@ const [amount] = defineField('amount');
 const [comment] = defineField('comment');
 const [transactionCategory] = defineField('transactionCategory');
 const [account] = defineField('account');
+const [toAccount] = defineField('toAccount');
+
+const toAccounts = ref([]);
+watch(account, async (newAccount) => {
+    if (toAccount.value?.id === newAccount.id) {
+        toAccount.value = null;
+    }
+    toAccounts.value = accounts.value.filter((account: any) => account.id !== newAccount.id)
+});
 
 status.value = true;
 date.value = dayjs().format('YYYY-MM-DD');
@@ -178,6 +223,8 @@ const selectableTransactionCategories: any = ref([]);
 onMounted(async () => {
     await getAccounts();
     await getTransactionCategories();
+
+    toAccounts.value = accounts.value;
 
     const groups: any = {};
     transactionCategories.value.forEach((item: any) => {
@@ -188,6 +235,7 @@ onMounted(async () => {
         groups[item.transactionType].push({
             label: item.name,
             value: item.id,
+            type: item.transactionType,
             severity: getTransactionType(item.transactionType, 'color')
         });
     });
@@ -195,7 +243,12 @@ onMounted(async () => {
     selectableTransactionCategories.value = Object.entries(groups).map(([group, items]) => ({ group, items }));
 });
 
-const save = handleSubmit(async ({ account, amount, date, status, comment, transactionCategory }) => {
+const save = handleSubmit(async ({ account, amount, date, status, comment, transactionCategory, toAccount }) => {
+    const meta: any = {};
+    if (transactionCategory.type === 'transfer') {
+        meta.toAccountId = toAccount.id;
+    }
+
     await createTransaction({
         accountId: account.id,
         transactionCategoryId: transactionCategory.value,
@@ -203,7 +256,7 @@ const save = handleSubmit(async ({ account, amount, date, status, comment, trans
         status,
         amount,
         date,
-        meta: "{}"
+        meta: JSON.stringify(meta)
     });
 });
 
@@ -221,6 +274,10 @@ const getTransactionType = (transactionType: string, prop: string) => {
         case 'expense':
             transactionTypeObj.label = 'EXPENSE';
             transactionTypeObj.color = 'danger';
+            break;
+        case 'transfer':
+            transactionTypeObj.label = 'TRANSFER';
+            transactionTypeObj.color = 'warning';
             break;
         default:
             break;

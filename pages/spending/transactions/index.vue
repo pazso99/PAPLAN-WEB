@@ -147,7 +147,7 @@
             <template #filter="{ filterModel }">
                 <MultiSelect
                     v-model="filterModel.value"
-                    :options="['income', 'expense']"
+                    :options="['income', 'expense', 'transfer']"
                     placeholder="Any"
                     class="p-column-filter"
                     :maxSelectedLabels="1"
@@ -196,6 +196,9 @@
         >
             <template #body="{ data }">
                 {{ data.comment }}
+                <span v-if="data.meta !== '{}'">
+                    {{ getMetaDescription(data) }}
+                </span>
             </template>
             <template #filter="{ filterModel }">
                 <InputText
@@ -270,10 +273,22 @@ const getTransactionType = (transactionType: string, prop: string) => {
             transactionTypeObj.label = 'EXPENSE';
             transactionTypeObj.color = 'danger';
             break;
+        case 'transfer':
+            transactionTypeObj.label = 'TRANSFER';
+            transactionTypeObj.color = 'warning';
+            break;
         default:
             break;
     }
 
     return transactionTypeObj[prop];
 };
+
+const getMetaDescription = (data: any) => {
+    const meta = JSON.parse(data.meta);
+    if (data.transactionType === 'transfer') {
+        return `to: ${meta.toAccountId}`; //TODO majd NAME
+    }
+};
+
 </script>

@@ -6,7 +6,7 @@
                 <SpendingCardExpenseInfo
                     containerClass="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
                     backgroundClass="p-4 text-center bg-gradient-to-tr from-slate-800 to-gray-900 rounded-2xl border border-green-950"
-                    :number="spending.totals.allIncome"
+                    :number="spending.totals.income"
                     numberClass="text-green-500 font-bold"
                     label="Total income"
                     labelClass="mb-0 font-weight-bolder"
@@ -16,7 +16,7 @@
                 <SpendingCardExpenseInfo
                     containerClass="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
                     backgroundClass="p-4 text-center bg-gradient-to-tr from-slate-800 to-gray-900 rounded-2xl border border-amber-950"
-                    :number="spending.totals.allExpense"
+                    :number="spending.totals.expense"
                     numberClass="text-red-500 font-bold"
                     label="Total expense"
                     labelClass="mb-0 font-weight-bolder"
@@ -93,7 +93,7 @@ watch(spending, async (newSpending) => {
 
 function setData(spendingData) {
     expenses.value = spendingData.categories.filter(c => c.category.type === 'expense');
-    let profit = spendingData.totals.allIncome - spendingData.totals.allExpense;
+    let profit = spendingData.totals.income - spendingData.totals.expense;
     if (profit < 0) {
         profit = 0;
     }
