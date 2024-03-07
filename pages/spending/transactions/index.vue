@@ -284,11 +284,11 @@ function getTransactionType(transactionType: string, prop: string) {
     return transactionTypeObj[prop];
 };
 
-const getMetaDescription = (data: any) => {
+function getMetaDescription(data: any) {
     const meta = JSON.parse(data.meta);
     if (data.transactionType === 'transfer') {
-        return `to: ${meta.toAccountId}`; //TODO majd NAME
+        return `to: ${meta.toAccountId}`;
+        // TODO majd NAME
     }
 };
-
 </script>

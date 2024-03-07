@@ -109,8 +109,8 @@ const items = ref([
     },
 ]);
 
-const route: any = useRoute();
-const activeIndex: any = ref(0);
+const route = useRoute();
+const activeIndex = ref(0);
 if (route.fullPath.startsWith('/inventory')) {
     activeIndex.value = 1;
 }
@@ -122,7 +122,7 @@ watch(() => route.name, () => {
             'spending-accounts',
             'spending-transaction-categories',
             'spending-transactions',
-        ].some(e => route.name.includes(e))
+        ].some(e => route.name && typeof route.name === 'string' && route.name.includes(e))
     ) {
         expandedKeys.value = {
             'spending-management': true,

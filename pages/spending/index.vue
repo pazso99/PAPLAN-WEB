@@ -67,6 +67,8 @@
 </template>
 
 <script setup lang="ts">
+import type { SpendingTransactionRequest } from '~/types/requests';
+
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
@@ -103,8 +105,9 @@ watch(spendingSelectedDate, async (newSpendingSelectedDate) => {
     await getSpendingData(parseYearAndMonth(newSpendingSelectedDate));
 });
 
-function parseYearAndMonth(dateString) {
-    const [year, month] = dateString.split('-');
+function parseYearAndMonth(dateString: string | null) {
+    // TODO valid?
+    const [year, month] = dateString!.split('-');
 
     return {
         year,
@@ -112,7 +115,7 @@ function parseYearAndMonth(dateString) {
     };
 }
 
-async function saveTransaction(data) {
+async function saveTransaction(data: SpendingTransactionRequest) {
     await createTransaction(data);
     await getSpendingData(parseYearAndMonth(spendingSelectedDate.value));
 }

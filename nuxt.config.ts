@@ -1,6 +1,13 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     ssr: false,
+    imports: {
+        dirs: [
+            'composables',
+            'composables/*/index.{ts,js,mjs,mts}',
+            'composables/**',
+        ],
+    },
     devtools: {
         enabled: true,
     },

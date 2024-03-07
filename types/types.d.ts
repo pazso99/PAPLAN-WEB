@@ -40,51 +40,60 @@ interface SpendingDashboardState {
 }
 
 interface SpendingDashboardData {
-    totals: Totals;
-    accounts: Account[];
-    transactionsByCategory: TransactionsByCategory;
-    latestTransactions: LatestTransactions;
-    diagrams: DiagramData;
+    totals: DashboardTotals;
+    accounts: DashboardAccount[];
+    categories: DashboardCategory[];
+    latestTransactions: DashboardLatestTransaction[];
+    diagrams: DashboardDiagramData;
 }
 
-interface Totals {
+interface DashboardTotals {
     balance: number;
-    allIncome: number;
-    allExpense: number;
+    income: number;
+    expense: number;
     profit: number;
     basicExpense: number;
     premiumExpense: number;
 }
 
-interface TransactionsByCategory {
-    category: Category;
-    amount: number;
-    transactions: Transaction[];
-}
-
-interface Category {
+interface DashboardAccount {
     id: number;
     name: string;
-    type: string;
+    balance: number;
+    income: number;
+    expense: number;
+    profit: number;
 }
 
-interface LatestTransactions {
-    transactions: Transaction[];
+interface DashboardCategory {
+    amount: number; // TODO rename to total
+    category: {
+        id: number;
+        name: string;
+        type: 'income' | 'expense' | 'transfer';
+    };
+    transactions: {
+        date: string;
+        amount: number;
+        comment: string | null;
+        account: string;
+        // TODO meta
+    }[];
+}
+
+interface DashboardLatestTransaction {
     amount: number;
+    transaction: { // TODO flat
+        id: number;
+        type: 'income' | 'expense' | 'transfer';
+        category: string;
+        comment: string;
+        account: string;
+        date: string;
+    };
 }
 
-// TODO BE.. refactor
-interface Transaction {
-    id?: number;
-    type?: string;
-    amount?: number;
-    category: string;
-    date: string;
-    comment: string;
-    account: string;
-}
-
-interface DiagramData {
+interface DashboardDiagramData {
     yearlyBalance: { date: string; amount: number }[];
 }
 
@@ -95,12 +104,13 @@ interface TransactionCategory {
 }
 
 interface Account {
-    id: number;
+    id: string;
+    status: string;
     name: string;
-    balance?: number;
-    income?: number;
-    expense?: number;
-    profit?: number;
+    slug: string;
+    balance: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 interface SpendingCrudStore {
@@ -113,6 +123,27 @@ interface SpendingCrudStore {
     transaction: Transaction | null;
 }
 
+interface Transaction {
+    id: string;
+    status: string;
+    date: string;
+    transactionType: string;
+    comment: string;
+    meta: string;
+    transactionCategory: any;
+    account: any;
+    amount: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+// TODO w/ different Transaction / Account type
+// TODO all data | base info
+/*
+[Account | Transaction | Category ] --> all prop
+[BasicAccount | BasicTransaction | BasicCategory] --> id, name, slug...
+*/
+
 export {
     AuthState,
     User,
@@ -121,8 +152,8 @@ export {
     ExpenseCategory,
     SpendingDashboardState,
     SpendingDashboardData,
+    Transaction,
     TransactionCategory,
     Account,
-    Transaction,
     SpendingCrudStore,
 };

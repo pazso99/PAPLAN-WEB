@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import type { SpendingDashboardRequest, SpendingTransactionRequest } from '~/types/requests';
 import type { SpendingDataResponse } from '~/types/responses';
 import type { SpendingDashboardState } from '~/types/types';
 
@@ -9,12 +10,12 @@ export const useDashboardStore = defineStore('dashboard', {
         spending: null,
     } as SpendingDashboardState),
     actions: {
-        async getSpendingData(body: any) {
+        async getSpendingData(body: SpendingDashboardRequest) {
             const toast = useToastService();
             this.loading = true;
 
             try {
-                const data: any = await useApiFetch<SpendingDataResponse>('dashboard/spending-data', {
+                const data = await useApiFetch<SpendingDataResponse>('dashboard/spending-data', {
                     method: 'POST',
                     body,
                 });
@@ -25,7 +26,7 @@ export const useDashboardStore = defineStore('dashboard', {
                 this.loading = false;
             }
         },
-        async createTransaction(body: any) {
+        async createTransaction(body: SpendingTransactionRequest) {
             const toast = useToastService();
             this.loading = true;
 

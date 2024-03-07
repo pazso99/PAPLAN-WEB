@@ -143,21 +143,25 @@
                     <Dropdown
                         id="account"
                         v-model="toAccount"
-                        optionLabel="name"
+                        option-label="name"
                         :options="toAccounts"
                         placeholder="Select account"
                     >
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex gap-2">
                                 <span>{{ slotProps.value.name }}</span>
-                                <Tag severity="success">{{ $formatNumber(slotProps.value.balance) }} Ft</Tag>
+                                <Tag severity="success">
+                                    {{ $formatNumber(slotProps.value.balance) }} Ft
+                                </Tag>
                             </div>
                             <span v-else>{{ slotProps.placeholder }}</span>
                         </template>
                         <template #option="slotProps">
                             <div class="flex gap-2">
                                 <span>{{ slotProps.option.name }}</span>
-                                <Tag severity="success">{{ $formatNumber(slotProps.option.balance) }} Ft</Tag>
+                                <Tag severity="success">
+                                    {{ $formatNumber(slotProps.option.balance) }} Ft
+                                </Tag>
                             </div>
                         </template>
                     </Dropdown>
@@ -238,7 +242,7 @@ watch(account, async (newAccount) => {
     if (toAccount.value?.id === newAccount.id) {
         toAccount.value = null;
     }
-    toAccounts.value = accounts.value.filter((account: any) => account.id !== newAccount.id)
+    toAccounts.value = accounts.value.filter((account: any) => account.id !== newAccount.id);
 });
 
 const route: any = useRoute();
@@ -313,7 +317,7 @@ const save = handleSubmit(async ({ id, account, amount, date, status, comment, t
         status,
         amount,
         date,
-        meta: JSON.stringify(meta)
+        meta: JSON.stringify(meta),
     });
 });
 

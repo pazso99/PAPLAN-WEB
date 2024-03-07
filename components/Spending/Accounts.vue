@@ -161,21 +161,25 @@
                         <Dropdown
                             id="toAccount"
                             v-model="toAccount"
-                            optionLabel="name"
+                            option-label="name"
                             :options="toAccounts"
                             placeholder="Select account"
                         >
                             <template #value="slotProps">
                                 <div v-if="slotProps.value" class="flex gap-2">
                                     <span>{{ slotProps.value.name }}</span>
-                                    <Tag severity="success">{{ $formatNumber(slotProps.value.balance) }} Ft</Tag>
+                                    <Tag severity="success">
+                                        {{ $formatNumber(slotProps.value.balance) }} Ft
+                                    </Tag>
                                 </div>
                                 <span v-else>{{ slotProps.placeholder }}</span>
                             </template>
                             <template #option="slotProps">
                                 <div class="flex gap-2">
                                     <span>{{ slotProps.option.name }}</span>
-                                    <Tag severity="success">{{ $formatNumber(slotProps.option.balance) }} Ft</Tag>
+                                    <Tag severity="success">
+                                        {{ $formatNumber(slotProps.option.balance) }} Ft
+                                    </Tag>
                                 </div>
                             </template>
                         </Dropdown>
@@ -208,9 +212,10 @@
 <script setup lang="ts">
 import CountTo from 'vue-count-to/src';
 import * as yup from 'yup';
+import type { SpendingTransactionRequest } from '~/types/requests';
 
 const emit = defineEmits<{
-    (e: 'createTransaction', data: object): any;
+    (e: 'createTransaction', data: SpendingTransactionRequest): any;
 }>();
 
 const { spending, spendingSelectedDate } = storeToRefs(useDashboardStore());
@@ -286,7 +291,7 @@ onMounted(async () => {
     await getTransactionCategories();
 });
 
-const emitSave = handleSubmit(async (data) => {
+const emitSave = handleSubmit(async (data: SpendingTransactionRequest) => {
     const meta = {};
     if (transactionType.value === 'transfer') {
         meta.toAccountId = toAccount.value.id;
@@ -301,7 +306,7 @@ const emitSave = handleSubmit(async (data) => {
         transactionType: transactionType.value,
         transactionCategoryId: transactionCategory.value.id,
         meta: JSON.stringify(meta),
-    });
+    } as SpendingTransactionRequest);
     newTransactionModalOpen.value = false;
 });
 </script>

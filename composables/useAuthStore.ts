@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
+import type { UserLoginRequest } from '~/types/requests';
 import type { LoginResponse, UserResponse } from '~/types/responses';
 import type { AuthState } from '~/types/types';
-import type { userCredentials } from '~~/types';
 
 const authState = {
     isAuth: false,
@@ -13,7 +13,7 @@ const authState = {
 export const useAuthStore = defineStore('auth', {
     state: () => authState,
     actions: {
-        async login({ name, password }: userCredentials) {
+        async login({ name, password }: UserLoginRequest) {
             const toast = useToastService();
             try {
                 const data = await useApiFetch<LoginResponse>('login', {
