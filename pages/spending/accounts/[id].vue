@@ -101,8 +101,8 @@ useHead({
     title: 'Edit Account - Spending',
 });
 
-const { getAccount, updateAccount } = useSpendingCrudStore();
-const { account, loading }: any = storeToRefs(useSpendingCrudStore());
+const { getAccount, updateAccount } = useSpendingManagementStore();
+const { account, loading }: any = storeToRefs(useSpendingManagementStore());
 
 const schema = yup.object({
     name: yup.string().required().label('Name'),

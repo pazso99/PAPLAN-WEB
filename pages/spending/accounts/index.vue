@@ -142,8 +142,8 @@ useHead({
     title: 'Accounts - Spending',
 });
 
-const { getAccounts, deleteAccount } = useSpendingCrudStore();
-const { accounts, loading } = storeToRefs(useSpendingCrudStore());
+const { getAccounts, deleteAccount } = useSpendingManagementStore();
+const { accounts, loading } = storeToRefs(useSpendingManagementStore());
 
 const filters = ref({
     id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },

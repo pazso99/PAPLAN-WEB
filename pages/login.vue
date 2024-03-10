@@ -66,10 +66,12 @@ useHead({
 
 const toast = useToast();
 const route: any = useRoute();
+
 onMounted(() => {
     nextTick(() => {
         if (route.query.expired == '1') {
             toast.add({ severity: 'error', summary: 'Error!', detail: 'Token expired!', life: 3000 });
+            useRouter().push({ query: {} });
         }
     });
 });

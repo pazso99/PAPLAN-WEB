@@ -16,7 +16,7 @@
                         Basic categories:
                         <MultiSelect
                             v-model="basicCategories"
-                            :options="selectableCategories"
+                            :options="expenseCategories"
                             option-label="name"
                             option-value="id"
                             placeholder="Select Categories"
@@ -27,7 +27,7 @@
                         Premium categories:
                         <MultiSelect
                             v-model="premiumCategories"
-                            :options="selectableCategories"
+                            :options="expenseCategories"
                             option-label="name"
                             option-value="id"
                             placeholder="Select Categories"
@@ -46,57 +46,57 @@
                 <div class="p-2 flex flex-wrap mb-3">
                     <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2024-01']"
+                            v-model="actualBalances['2024-01']"
                             month="January"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2024-02']"
+                            v-model="actualBalances['2024-02']"
                             month="February"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2024-03']"
+                            v-model="actualBalances['2024-03']"
                             month="March"
                         />
                     </ul>
                     <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2024-04']"
+                            v-model="actualBalances['2024-04']"
                             month="April"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2024-05']"
+                            v-model="actualBalances['2024-05']"
                             month="May"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2024-06']"
+                            v-model="actualBalances['2024-06']"
                             month="June"
                         />
                     </ul>
                     <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2024-07']"
+                            v-model="actualBalances['2024-07']"
                             month="July"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2024-08']"
+                            v-model="actualBalances['2024-08']"
                             month="August"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2024-09']"
+                            v-model="actualBalances['2024-09']"
                             month="September"
                         />
                     </ul>
                     <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2024-10']"
+                            v-model="actualBalances['2024-10']"
                             month="October"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2024-11']"
+                            v-model="actualBalances['2024-11']"
                             month="November"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2024-12']"
+                            v-model="actualBalances['2024-12']"
                             month="December"
                         />
                     </ul>
@@ -107,57 +107,57 @@
                 <div class="p-2 flex flex-wrap">
                     <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2023-01']"
+                            v-model="actualBalances['2023-01']"
                             month="January"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2023-02']"
+                            v-model="actualBalances['2023-02']"
                             month="February"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2023-03']"
+                            v-model="actualBalances['2023-03']"
                             month="March"
                         />
                     </ul>
                     <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2023-04']"
+                            v-model="actualBalances['2023-04']"
                             month="April"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2023-05']"
+                            v-model="actualBalances['2023-05']"
                             month="May"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2023-06']"
+                            v-model="actualBalances['2023-06']"
                             month="June"
                         />
                     </ul>
                     <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2023-07']"
+                            v-model="actualBalances['2023-07']"
                             month="July"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2023-08']"
+                            v-model="actualBalances['2023-08']"
                             month="August"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2023-09']"
+                            v-model="actualBalances['2023-09']"
                             month="September"
                         />
                     </ul>
                     <ul class="w-full lg:w-1/4 md:p-2 md:border-r-2">
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2023-10']"
+                            v-model="actualBalances['2023-10']"
                             month="October"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2023-11']"
+                            v-model="actualBalances['2023-11']"
                             month="November"
                         />
                         <SpendingSettingsMonthBalanceInput
-                            v-model="spendingActualBalances['2023-12']"
+                            v-model="actualBalances['2023-12']"
                             month="December"
                         />
                     </ul>
@@ -213,29 +213,32 @@ useHead({
     title: 'Spending settings',
 });
 
-const { getSpendingSettingsData, getSpendingActualBalances, updateSpendingSettings } = useConfigStore();
-const { loading, spendingActualBalances, spendingSettings }: any = storeToRefs(useConfigStore());
+const { getSpendingSettingsData, getSpendingActualBalances, updateSpendingSettings } = useSpendingSettingsStore();
+const { loading, actualBalances, settings }: any = storeToRefs(useSpendingSettingsStore());
+const { getTransactionCategories } = useSpendingManagementStore();
+const { transactionCategories } = storeToRefs(useSpendingManagementStore());
 
 const basicCategories: any = ref([]);
 const premiumCategories: any = ref([]);
-const selectableCategories: any = ref([]);
+const expenseCategories: any = ref([]);
 
 onMounted(async () => {
     await getSpendingSettingsData();
     await getSpendingActualBalances();
-    basicCategories.value = spendingSettings.value.configs.spending_basic_transaction_categories;
-    premiumCategories.value = spendingSettings.value.configs.spending_premium_transaction_categories;
-    selectableCategories.value = spendingSettings.value.expenseCategories;
+    await getTransactionCategories();
+    basicCategories.value = settings.value.configs.spending_basic_transaction_categories;
+    premiumCategories.value = settings.value.configs.spending_premium_transaction_categories;
+    expenseCategories.value = transactionCategories.value.filter(({ transactionType }) => transactionType === 'expense');
 });
 
 async function handleSave() {
     const body = {
         configs: {
-            ...spendingSettings.value.configs,
+            ...settings.value.configs,
             spending_basic_transaction_categories: basicCategories.value,
             spending_premium_transaction_categories: premiumCategories.value,
         },
-        actualBalances: spendingActualBalances.value,
+        actualBalances: actualBalances.value,
     };
     await updateSpendingSettings(body);
 };

@@ -15,7 +15,7 @@
             'id',
             'date',
             'account.name',
-            'transactionType',
+            'transactionCategory.transactionType',
             'amount',
             'transactionCategory.name',
         ]"
@@ -133,15 +133,15 @@
 
         <Column
             header="Type"
-            field="transactionType"
+            field="transactionCategory.transactionType"
             sortable
             :show-filter-match-modes="false"
             style="width: 10%"
         >
             <template #body="{ data }">
                 <Tag
-                    :value="getTransactionType(data.transactionType, 'label')"
-                    :severity="getTransactionType(data.transactionType, 'color')"
+                    :value="getTransactionType(data.transactionCategory.transactionType, 'label')"
+                    :severity="getTransactionType(data.transactionCategory.transactionType, 'color')"
                 />
             </template>
             <template #filter="{ filterModel }">
@@ -223,15 +223,15 @@ useHead({
     title: 'Transactions - Spending',
 });
 
-const { getTransactions, deleteTransaction, getTransactionCategories } = useSpendingCrudStore();
-const { transactions, transactionCategories, loading }: any = storeToRefs(useSpendingCrudStore());
+const { getTransactions, deleteTransaction, getTransactionCategories } = useSpendingManagementStore();
+const { transactions, transactionCategories, loading }: any = storeToRefs(useSpendingManagementStore());
 const transactionCategoryOptions = ref([]);
 
 const filters = ref({
     'id': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     'account.name': { value: null, matchMode: FilterMatchMode.CONTAINS },
     'date': { value: null, matchMode: FilterMatchMode.CONTAINS },
-    'transactionType': { value: null, matchMode: FilterMatchMode.IN },
+    'transactionCategory.transactionType': { value: null, matchMode: FilterMatchMode.IN },
     'transactionCategory': { value: null, matchMode: FilterMatchMode.IN },
     'status': { value: null, matchMode: FilterMatchMode.EQUALS },
     'amount': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
@@ -286,7 +286,7 @@ function getTransactionType(transactionType: string, prop: string) {
 
 function getMetaDescription(data: any) {
     const meta = JSON.parse(data.meta);
-    if (data.transactionType === 'transfer') {
+    if (data.transactionCategory.transactionType === 'transfer') {
         return `to: ${meta.toAccountId}`;
         // TODO majd NAME
     }

@@ -1,33 +1,31 @@
 import { defineStore } from 'pinia';
+import type { AuthState } from '~/types/stores';
 import type { UserLoginRequest } from '~/types/requests';
-import type { LoginResponse, UserResponse } from '~/types/responses';
-import type { AuthState } from '~/types/types';
-
-const authState = {
-    isAuth: false,
-    token: null,
-    user: null,
-    loading: true,
-} as AuthState;
+import type {
+    TokenResponse,
+    UserResponse,
+} from '~/types/responses';
 
 export const useAuthStore = defineStore('auth', {
-    state: () => authState,
+    state: () => ({
+        isAuth: false,
+        token: null,
+        user: null,
+        loading: true,
+    } as AuthState),
     actions: {
-        async login({ name, password }: UserLoginRequest) {
+        async login(data: UserLoginRequest) {
             const toast = useToastService();
             try {
-                const data = await useApiFetch<LoginResponse>('login', {
+                const response = await useApiFetch<TokenResponse>('login', {
                     method: 'POST',
-                    body: {
-                        name,
-                        password,
-                    },
+                    body: data,
                 });
                 this.isAuth = true;
-                this.token = data.data.token;
+                this.token = response.data.token;
                 useCookie('token').value = this.token;
                 navigateTo('/');
-            } catch (err: unknown) {
+            } catch (err: any) {
                 toast.add({ severity: 'error', summary: 'Error!', detail: 'Login failed!', life: 3000 });
                 throw err;
             }
@@ -38,7 +36,7 @@ export const useAuthStore = defineStore('auth', {
                 await useApiFetch('logout', {
                     method: 'POST',
                 });
-            } catch (err: unknown) {
+            } catch (err: any) {
                 toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when logging out!', life: 3000 });
             } finally {
                 this.isAuth = false;
@@ -49,9 +47,9 @@ export const useAuthStore = defineStore('auth', {
         async getUser() {
             const toast = useToastService();
             try {
-                const data = await useApiFetch<UserResponse>('user');
-                this.user = data.data;
-            } catch (err: unknown) {
+                const response = await useApiFetch<UserResponse>('user');
+                this.user = response.data;
+            } catch (err: any) {
                 toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when getting user!', life: 3000 });
             }
         },

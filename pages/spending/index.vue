@@ -67,7 +67,7 @@
 </template>
 
 <script setup lang="ts">
-import type { SpendingTransactionRequest } from '~/types/requests';
+import type { SpendingTransactionCreateRequest } from '~/types/requests';
 
 definePageMeta({
     middleware: 'auth',
@@ -78,8 +78,8 @@ useHead({
     title: 'Spending Dashboard',
 });
 
-const { getSpendingData, createTransaction } = useDashboardStore();
-const { spendingSelectedDate } = storeToRefs(useDashboardStore());
+const { getSpendingData, createTransaction } = useSpendingDashboardStore();
+const { spendingSelectedDate } = storeToRefs(useSpendingDashboardStore());
 
 const dayjs = useDayjs();
 const dates = [
@@ -115,7 +115,7 @@ function parseYearAndMonth(dateString: string | null) {
     };
 }
 
-async function saveTransaction(data: SpendingTransactionRequest) {
+async function saveTransaction(data: SpendingTransactionCreateRequest) {
     await createTransaction(data);
     await getSpendingData(parseYearAndMonth(spendingSelectedDate.value));
 }

@@ -1,13 +1,16 @@
-import type { Configs, ExpenseCategory, User } from './types';
+import type {
+    SpendingConfigs,
+    TransactionType,
+} from './types';
 
 interface UserLoginRequest {
     name: string;
     password: string;
 };
 
-interface SpendingSettingsRequest {
-    configs: Configs;
-    actualBalances: Record<string, number>;
+interface SpendingSettingsUpdateRequest {
+    configs: SpendingConfigs;
+    actualBalances: ActualBalances;
 };
 
 interface SpendingDashboardRequest {
@@ -15,7 +18,33 @@ interface SpendingDashboardRequest {
     month: string;
 };
 
-interface SpendingTransactionRequest {
+interface SpendingAccountCreateRequest {
+    status: boolean;
+    name: string;
+    balance: number;
+};
+
+interface SpendingAccountUpdateRequest {
+    id: number;
+    status: boolean;
+    name: string;
+    balance: number;
+};
+
+interface SpendingTransactionCategoryCreateRequest {
+    status: boolean;
+    name: string;
+    transactionType: TransactionType;
+};
+
+interface SpendingTransactionCategoryUpdateRequest {
+    id: number;
+    status: boolean;
+    name: string;
+    transactionType: TransactionType;
+};
+
+interface SpendingTransactionCreateRequest {
     status: boolean;
     date: string;
     amount: number;
@@ -23,11 +52,27 @@ interface SpendingTransactionRequest {
     transactionCategoryId: number;
     comment: string | null;
     meta: string | null;
-}
+};
+
+interface SpendingTransactionUpdateRequest {
+    id: number;
+    status: boolean;
+    date: string;
+    amount: number;
+    accountId: number;
+    transactionCategoryId: number;
+    comment: string | null;
+    meta: string | null;
+};
 
 export {
     UserLoginRequest,
-    SpendingSettingsRequest,
+    SpendingSettingsUpdateRequest,
     SpendingDashboardRequest,
-    SpendingTransactionRequest,
+    SpendingAccountCreateRequest,
+    SpendingAccountUpdateRequest,
+    SpendingTransactionCategoryCreateRequest,
+    SpendingTransactionCategoryUpdateRequest,
+    SpendingTransactionCreateRequest,
+    SpendingTransactionUpdateRequest,
 };

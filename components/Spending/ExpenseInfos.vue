@@ -8,7 +8,7 @@
                 <SpendingCardExpenseInfo
                     container-class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
                     background-class="p-4 text-center bg-gradient-to-tr from-slate-800 to-gray-900 rounded-2xl border border-green-950"
-                    :number="spending.totals.income"
+                    :number="spendingDashboardData.totals.income"
                     number-class="text-green-500 font-bold"
                     label="Total income"
                     label-class="mb-0 font-weight-bolder"
@@ -18,7 +18,7 @@
                 <SpendingCardExpenseInfo
                     container-class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
                     background-class="p-4 text-center bg-gradient-to-tr from-slate-800 to-gray-900 rounded-2xl border border-amber-950"
-                    :number="spending.totals.expense"
+                    :number="spendingDashboardData.totals.expense"
                     number-class="text-red-500 font-bold"
                     label="Total expense"
                     label-class="mb-0 font-weight-bolder"
@@ -30,7 +30,7 @@
                 <SpendingCardExpenseInfo
                     container-class="w-full max-w-full px-1 sm:px-3 lg:w-1/3"
                     background-class="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
-                    :number="spending.totals.basicExpense"
+                    :number="spendingDashboardData.totals.basicExpense"
                     number-class="text-red-500"
                     label="Basic kiadás"
                     label-class="mb-0 font-weight-bolder"
@@ -40,7 +40,7 @@
                 <SpendingCardExpenseInfo
                     container-class="w-full max-w-full px-1 sm:px-3 lg:w-1/3"
                     background-class="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
-                    :number="spending.totals.premiumExpense"
+                    :number="spendingDashboardData.totals.premiumExpense"
                     number-class="text-red-500"
                     label="Prémium kiadás"
                     label-class="mb-0 font-weight-bolder"
@@ -52,13 +52,13 @@
                 <i class="pi pi-th-large my-6" />
             </Divider>
             <SpendingCardExpenseInfo
-                v-for="expense in expenses"
-                :key="expense.category.name"
+                v-for="expenseCategory in expenseCategories"
+                :key="expenseCategory.name"
                 container-class="w-full max-w-full px-1 sm:px-3 mb-3 sm:w-1/2 lg:w-1/3"
                 background-class="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
-                :number="expense.amount"
+                :number="expenseCategory.sumTransactionAmount"
                 number-class="text-red-500"
-                :label="expense.category.name"
+                :label="expenseCategory.name"
                 label-class="mb-0 font-weight-bolder"
                 :duration="300"
                 suffix="Ft"
@@ -79,22 +79,23 @@
 
 <script setup lang="ts">
 import Chart from 'primevue/chart';
+import type { SpendingDashboardCategoryInfo, SpendingDashboardData } from '~/types/types';
 
-const { spending } = storeToRefs(useDashboardStore());
+const { spendingDashboardData } = storeToRefs(useSpendingDashboardStore());
 const chartData = ref();
 const chartOptions = ref();
-const expenses = ref();
+const expenseCategories = ref<SpendingDashboardCategoryInfo[]>();
 
 onMounted(() => {
-    setData(spending.value);
+    setData(spendingDashboardData.value);
 });
 
-watch(spending, async (newSpending) => {
+watch(spendingDashboardData, async (newSpending) => {
     setData(newSpending);
 });
 
-function setData(spendingData) {
-    expenses.value = spendingData.categories.filter(c => c.category.type === 'expense');
+function setData(spendingData: SpendingDashboardData) {
+    expenseCategories.value = spendingData.categories.filter(c => c.type === 'expense');
     let profit = spendingData.totals.income - spendingData.totals.expense;
     if (profit < 0) {
         profit = 0;
@@ -103,10 +104,10 @@ function setData(spendingData) {
     const documentStyle = getComputedStyle(document.body);
     const textColor = documentStyle.getPropertyValue('--text-color');
     chartData.value = {
-        labels: ['Profit', ...expenses.value.map(e => e.category.name)],
+        labels: ['Profit', ...expenseCategories.value.map(c => c.name)],
         datasets: [
             {
-                data: [profit, ...expenses.value.map(e => e.amount)],
+                data: [profit, ...expenseCategories.value.map(c => c.sumTransactionAmount)],
                 backgroundColor: [
                     '#22c55e',
                     '#3498db',

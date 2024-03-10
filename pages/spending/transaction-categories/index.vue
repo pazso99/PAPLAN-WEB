@@ -152,8 +152,8 @@ useHead({
     title: 'Transaction categories - Spending',
 });
 
-const { getTransactionCategories, deleteTransactionCategory } = useSpendingCrudStore();
-const { transactionCategories, loading }: any = storeToRefs(useSpendingCrudStore());
+const { getTransactionCategories, deleteTransactionCategory } = useSpendingManagementStore();
+const { transactionCategories, loading }: any = storeToRefs(useSpendingManagementStore());
 
 const filters = ref({
     id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },

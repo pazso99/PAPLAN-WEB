@@ -84,8 +84,8 @@
                             <div class="py-1 text-center">
                                 <Tag
                                     class="w-full"
-                                    :value="getTransactionType(slotProps.option.group, 'label')"
-                                    :severity="getTransactionType(slotProps.option.group, 'color')"
+                                    :value="getTransactionType(slotProps.option.transactionType, 'label')"
+                                    :severity="getTransactionType(slotProps.option.transactionType, 'color')"
                                 />
                             </div>
                         </template>
@@ -135,7 +135,7 @@
             </div>
 
             <div
-                v-if="transactionCategory?.type === 'transfer' && account"
+                v-if="transactionCategory?.transactionType === 'transfer' && account"
                 class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4"
             >
                 <div class="flex flex-col">
@@ -203,8 +203,8 @@ useHead({
     title: 'Edit Transaction - Spending',
 });
 
-const { getTransaction, updateTransaction, getAccounts, getTransactionCategories } = useSpendingCrudStore();
-const { transaction, accounts, transactionCategories, loading }: any = storeToRefs(useSpendingCrudStore());
+const { getTransaction, updateTransaction, getAccounts, getTransactionCategories } = useSpendingManagementStore();
+const { transaction, accounts, transactionCategories, loading }: any = storeToRefs(useSpendingManagementStore());
 
 const schema = yup.object({
     date: yup.date().required().label('Date'),
@@ -213,7 +213,7 @@ const schema = yup.object({
     transactionCategory: yup.object().required().label('Transaction category'),
     account: yup.object().required().label('Account'),
     comment: yup.string().nullable().label('Comment'),
-    toAccount: yup.object().when('transactionCategory.type', {
+    toAccount: yup.object().when('transactionCategory.transactionType', {
         is: 'transfer',
         then(schema) {
             return schema.required();
@@ -247,15 +247,11 @@ watch(account, async (newAccount) => {
 
 const route: any = useRoute();
 const dayjs = useDayjs();
-const selectableTransactionCategories: any = ref([]);
-const selectableAccounts: any = ref([]);
 
 onMounted(async () => {
     await getTransaction(route.params.id);
     await getAccounts();
     await getTransactionCategories();
-
-    toAccounts.value = accounts.value;
 
     id.value = transaction.value.id;
     status.value = transaction.value.status;
@@ -266,46 +262,14 @@ onMounted(async () => {
     comment.value = transaction.value.comment;
     account.value = transaction.value.account;
 
-    let meta: any;
-    if (transaction.value.meta !== '{}') {
-        meta = JSON.parse(transaction.value.meta);
-    }
-    if (transaction.value.transactionType === 'transfer') {
-        toAccount.value = accounts.value.find((account: any) => account.id === meta.toAccountId);
-    }
-
-    selectableAccounts.value = accounts.value.map(({ id, name, slug, balance }: any) => ({
-        id,
-        name,
-        slug,
-        balance,
-    }));
-
-    const groups: any = {};
-    transactionCategories.value.forEach((item: any) => {
-        if (!groups[item.transactionType]) {
-            groups[item.transactionType] = [];
-        }
-
-        const category = {
-            label: item.name,
-            value: item.id,
-            type: item.transactionType,
-            severity: getTransactionType(item.transactionType, 'color'),
-        };
-        groups[item.transactionType].push(category);
-
-        if (transaction.value.transactionCategory.id === item.id) {
-            transactionCategory.value = category;
-        }
-    });
-
-    selectableTransactionCategories.value = Object.entries(groups).map(([group, items]) => ({ group, items }));
+    setMeta();
+    setSelectableAccounts();
+    setTransactionTypeGroups();
 });
 
 const save = handleSubmit(async ({ id, account, amount, date, status, comment, transactionCategory, toAccount }) => {
     const meta: any = {};
-    if (transactionCategory.type === 'transfer') {
+    if (transactionCategory.transactionType === 'transfer') {
         meta.toAccountId = toAccount.id;
     }
 
@@ -320,6 +284,53 @@ const save = handleSubmit(async ({ id, account, amount, date, status, comment, t
         meta: JSON.stringify(meta),
     });
 });
+
+function setMeta() {
+    let meta: any;
+    if (transaction.value.meta !== '{}') {
+        meta = JSON.parse(transaction.value.meta);
+    }
+    if (transaction.value.transactionCategory.transactionType === 'transfer') {
+        toAccount.value = accounts.value.find((account: any) => account.id === meta.toAccountId);
+    }
+
+    toAccounts.value = accounts.value;
+}
+
+const selectableAccounts: any = ref([]);
+function setSelectableAccounts() {
+    selectableAccounts.value = accounts.value.map(({ id, name, balance }: any) => ({
+        id,
+        name,
+        balance,
+    }));
+}
+
+const selectableTransactionCategories: any = ref([]);
+function setTransactionTypeGroups() {
+    const transactionTypeGroups: any = {};
+    transactionCategories.value.forEach((item: any) => {
+        if (!transactionTypeGroups[item.transactionType]) {
+            transactionTypeGroups[item.transactionType] = [];
+        }
+
+        const category = {
+            label: item.name,
+            value: item.id,
+            transactionType: item.transactionType,
+            severity: getTransactionType(item.transactionType, 'color'),
+        };
+        transactionTypeGroups[item.transactionType].push(category);
+
+        if (transaction.value.transactionCategory.id === item.id) {
+            transactionCategory.value = category;
+        }
+    });
+
+    selectableTransactionCategories.value = Object.entries(transactionTypeGroups).map(
+        ([transactionType, items]) => ({ transactionType, items })
+    );
+}
 
 function getTransactionType(transactionType: string, prop: string) {
     const transactionTypeObj: any = {

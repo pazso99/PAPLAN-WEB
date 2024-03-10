@@ -13,20 +13,21 @@
 
 <script setup lang="ts">
 import Chart from 'primevue/chart';
+import type { SpendingDashboardData } from '~/types/types';
 
-const { spending } = storeToRefs(useDashboardStore());
+const { spendingDashboardData } = storeToRefs(useSpendingDashboardStore());
 const chartData = ref();
 const chartOptions = ref();
 
 onMounted(() => {
-    setData(spending.value);
+    setData(spendingDashboardData.value);
 });
 
-watch(spending, async (newSpending) => {
+watch(spendingDashboardData, async (newSpending) => {
     setData(newSpending);
 });
 
-function setData(spendingData) {
+function setData(spendingData: SpendingDashboardData) {
     const documentStyle = getComputedStyle(document.documentElement);
     const textColor = documentStyle.getPropertyValue('--text-color');
     const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');

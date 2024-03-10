@@ -1,7 +1,9 @@
 <template>
-    <div class="flex flex-wrap justify-center mb-4">
+    <div
+        class="flex flex-wrap justify-center mb-4"
+    >
         <div
-            v-for="account in spending.accounts"
+            v-for="account in spendingDashboardData.accounts"
             :key="account.name"
             class="w-full max-w-full px-1 sm:px-3 my-3 sm:w-1/2 xl:w-1/4"
         >
@@ -69,17 +71,17 @@
                     <CountTo
                         class="mb-2 text-3xl font-bold"
                         :start-val="0"
-                        :end-val="spending.totals.balance"
+                        :end-val="spendingDashboardData.totals.balance"
                         :duration="200"
                     /> Ft
                     <div>
                         <span
-                            :class="spending.totals.profit < 0 ? 'text-red-500' : 'text-emerald-500'"
+                            :class="spendingDashboardData.totals.profit < 0 ? 'text-red-500' : 'text-emerald-500'"
                         >
-                            <template v-if="spending.totals.profit > 0">+</template>
+                            <template v-if="spendingDashboardData.totals.profit > 0">+</template>
                             <CountTo
                                 :start-val="0"
-                                :end-val="spending.totals.profit"
+                                :end-val="spendingDashboardData.totals.profit"
                                 :duration="200"
                             /> Ft
                         </span>
@@ -87,10 +89,10 @@
                     </div>
                     <div class="flex justify-end gap-2 mt-2">
                         <Tag severity="success">
-                            {{ $formatNumber(spending.totals.income) }} Ft
+                            {{ $formatNumber(spendingDashboardData.totals.income) }} Ft
                         </Tag>
                         <Tag severity="danger">
-                            {{ $formatNumber(spending.totals.expense) }} Ft
+                            {{ $formatNumber(spendingDashboardData.totals.expense) }} Ft
                         </Tag>
                     </div>
                 </Fieldset>
@@ -212,21 +214,41 @@
 <script setup lang="ts">
 import CountTo from 'vue-count-to/src';
 import * as yup from 'yup';
-import type { SpendingTransactionRequest } from '~/types/requests';
+import type { SpendingTransactionCreateRequest } from '~/types/requests';
+import type { Account, TransactionCategory } from '~/types/resources';
 
 const emit = defineEmits<{
-    (e: 'createTransaction', data: SpendingTransactionRequest): any;
+    (e: 'createTransaction', data: SpendingTransactionCreateRequest): any;
 }>();
 
-const { spending, spendingSelectedDate } = storeToRefs(useDashboardStore());
-const { getTransactionCategories } = useSpendingCrudStore();
-const { transactionCategories } = storeToRefs(useSpendingCrudStore());
+const { spendingDashboardData, spendingSelectedDate } = storeToRefs(useSpendingDashboardStore());
+const { getTransactionCategories, getAccounts } = useSpendingManagementStore();
+const { transactionCategories, accounts } = storeToRefs(useSpendingManagementStore());
 
-const dayjs = useDayjs();
+onMounted(async () => {
+    await getTransactionCategories();
+});
+
+const quickTransactionItems = [
+    {
+        key: 'income',
+        label: 'Income',
+        severity: 'success',
+    },
+    {
+        key: 'transfer',
+        label: 'Transfer',
+        severity: 'warning',
+    },
+];
+
 const newTransactionModalOpen = ref(false);
-const selectedAccount = ref(null);
-const transactionType = ref(null);
-const filteredTransactionCategories = ref([]);
+const selectedAccount = ref<{
+    id: number;
+    balance: number;
+    name: string;
+    severity: string;
+}>();
 
 const schema = yup.object({
     date: yup.date().required().label('Date'),
@@ -252,9 +274,11 @@ const [comment] = defineField('comment');
 const [transactionCategory] = defineField('transactionCategory');
 const [toAccount] = defineField('toAccount');
 
-const toAccounts = ref([]);
+const filteredTransactionCategories = ref<TransactionCategory[]>();
+const toAccounts = ref<Account[]>();
+const transactionType = ref<string>();
 
-function openNewTransaction(type, account, severity) {
+function openNewTransaction(type: string, account: any, severity: string) {
     newTransactionModalOpen.value = true;
     selectedAccount.value = {
         ...account,
@@ -264,49 +288,34 @@ function openNewTransaction(type, account, severity) {
         .filter(({ transactionType }) => transactionType === type);
 
     transactionType.value = type;
-
-    toAccounts.value = spending.value.accounts.filter(acc => acc.id !== account.id);
+    toAccounts.value = accounts.value.filter(acc => acc.id !== account.id);
 
     resetForm({
         values: {
             date: dayjs().format('YYYY-MM-DD'),
         },
     });
-}
+};
 
-const quickTransactionItems = [
-    {
-        key: 'income',
-        label: 'Income',
-        severity: 'success',
-    },
-    {
-        key: 'transfer',
-        label: 'Transfer',
-        severity: 'warning',
-    },
-];
-
-onMounted(async () => {
-    await getTransactionCategories();
-});
-
-const emitSave = handleSubmit(async (data: SpendingTransactionRequest) => {
-    const meta = {};
+const dayjs = useDayjs();
+const emitSave = handleSubmit(async (data) => {
+    const meta: {
+        toAccountId?: number; // TODO meta t type
+    } = {};
     if (transactionType.value === 'transfer') {
         meta.toAccountId = toAccount.value.id;
         delete data.toAccountId;
     }
 
     emit('createTransaction', {
-        ...data,
+        amount: data.amount,
+        comment: data.comment,
         status: true,
         date: dayjs(data.date).format('YYYY-MM-DD'),
-        accountId: selectedAccount.value.id,
-        transactionType: transactionType.value,
+        accountId: selectedAccount.value!.id,
         transactionCategoryId: transactionCategory.value.id,
         meta: JSON.stringify(meta),
-    } as SpendingTransactionRequest);
+    });
     newTransactionModalOpen.value = false;
 });
 </script>

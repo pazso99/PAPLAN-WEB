@@ -1,56 +1,50 @@
-import type { Account, Configs, ExpenseCategory, SpendingDashboardData, TransactionCategory, User } from './types';
+import type {
+    Account,
+    Transaction,
+    TransactionCategory,
+} from './resources';
+import type {
+    SpendingDashboardData,
+    SpendingSettings,
+    SpendingActualBalances,
+} from './types';
 
 interface ErrorResponse {
     message: string;
 }
 
-interface ApiResponse<Data> {
+interface ApiSuccessResponseStructure<Data> {
     data: Data;
     status: number;
 }
 
-type LoginResponse = ApiResponse<{
+type TokenResponse = ApiSuccessResponseStructure<{
     token: string;
 }>;
 
-type UserResponse = ApiResponse<User>;
-
-type SpendingSettingsResponse = ApiResponse<{
-    configs: Configs;
-    expenseCategories: ExpenseCategory[];
-}>;
-
-type SpendingActualBalancesResponse = ApiResponse<Record<string, number>>;
-
-type SpendingDashboardResponse = ApiResponse<SpendingDashboardData>;
-
-type SpendingTransactionResponse = ApiResponse<{
-    id: number;
-    status: boolean;
-    date: string;
-    transactionType: string;
-    comment: string;
-    meta: string;
-    transactionCategory: TransactionCategory;
-    account: Account;
-    amount: number;
-    createdAt: string;
-    updatedAt: string;
-}>;
-
-type SpendingAccountResponse = ApiResponse<SpendingDashboardData>;
-
-type SpendingDataResponse = ApiResponse<SpendingDashboardData>;
+type UserResponse = ApiSuccessResponseStructure<User>;
+type SpendingSettingsResponse = ApiSuccessResponseStructure<SpendingSettings>;
+type SpendingActualBalancesResponse = ApiSuccessResponseStructure<SpendingActualBalances>;
+type SpendingDashboardResponse = ApiSuccessResponseStructure<SpendingDashboardData>;
+type SpendingAccountResponse = ApiSuccessResponseStructure<Account>;
+type SpendingAccountListResponse = ApiSuccessResponseStructure<Account[]>;
+type SpendingTransactionCategoryResponse = ApiSuccessResponseStructure<TransactionCategory>;
+type SpendingTransactionCategoryListResponse = ApiSuccessResponseStructure<TransactionCategory[]>;
+type SpendingTransactionResponse = ApiSuccessResponseStructure<Transaction>;
+type SpendingTransactionListResponse = ApiSuccessResponseStructure<Transaction[]>;
 
 export {
-    ApiResponse,
+    ApiSuccessResponseStructure,
     ErrorResponse,
-    LoginResponse,
-    UserResponse,
+    TokenResponse,
     SpendingSettingsResponse,
     SpendingActualBalancesResponse,
     SpendingDashboardResponse,
-    SpendingTransactionResponse,
+    UserResponse,
     SpendingAccountResponse,
-    SpendingDataResponse,
+    SpendingAccountListResponse,
+    SpendingTransactionCategoryResponse,
+    SpendingTransactionCategoryListResponse,
+    SpendingTransactionResponse,
+    SpendingTransactionListResponse,
 };

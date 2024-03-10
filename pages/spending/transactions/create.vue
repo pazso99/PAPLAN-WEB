@@ -57,8 +57,8 @@
                             <div class="py-1 text-center">
                                 <Tag
                                     class="w-full"
-                                    :value="getTransactionType(slotProps.option.group, 'label')"
-                                    :severity="getTransactionType(slotProps.option.group, 'color')"
+                                    :value="getTransactionType(slotProps.option.transactionType, 'label')"
+                                    :severity="getTransactionType(slotProps.option.transactionType, 'color')"
                                 />
                             </div>
                         </template>
@@ -115,7 +115,7 @@
             </div>
 
             <div
-                v-if="transactionCategory?.type === 'transfer' && account"
+                v-if="transactionCategory?.transactionType === 'transfer' && account"
                 class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4"
             >
                 <div class="flex flex-col">
@@ -173,7 +173,6 @@
 
 <script setup lang="ts">
 import * as yup from 'yup';
-import type { SpendingTransactionRequest } from '~/types/requests';
 
 definePageMeta({
     middleware: 'auth',
@@ -186,8 +185,8 @@ useHead({
 
 const dayjs = useDayjs();
 
-const { createTransaction, getAccounts, getTransactionCategories } = useSpendingCrudStore();
-const { accounts, transactionCategories, loading }: any = storeToRefs(useSpendingCrudStore());
+const { createTransaction, getAccounts, getTransactionCategories } = useSpendingManagementStore();
+const { accounts, transactionCategories, loading }: any = storeToRefs(useSpendingManagementStore());
 
 const schema = yup.object({
     date: yup.date().required().label('Date'),
@@ -196,7 +195,7 @@ const schema = yup.object({
     transactionCategory: yup.object().required().label('Transaction category'),
     account: yup.object().required().label('Account'),
     comment: yup.string().label('Comment'),
-    toAccount: yup.object().when('transactionCategory.type', {
+    toAccount: yup.object().when('transactionCategory.transactionType', {
         is: 'transfer',
         then(schema) {
             return schema.required();
@@ -227,7 +226,6 @@ watch(account, async (newAccount) => {
 
 status.value = true;
 date.value = dayjs().format('YYYY-MM-DD');
-const selectableTransactionCategories: any = ref([]);
 
 onMounted(async () => {
     await getAccounts();
@@ -235,26 +233,12 @@ onMounted(async () => {
 
     toAccounts.value = accounts.value;
 
-    const groups: any = {};
-    transactionCategories.value.forEach((item: any) => {
-        if (!groups[item.transactionType]) {
-            groups[item.transactionType] = [];
-        }
-
-        groups[item.transactionType].push({
-            label: item.name,
-            value: item.id,
-            type: item.transactionType,
-            severity: getTransactionType(item.transactionType, 'color'),
-        });
-    });
-
-    selectableTransactionCategories.value = Object.entries(groups).map(([group, items]) => ({ group, items }));
+    setTransactionTypeGroups();
 });
 
 const save = handleSubmit(async ({ account, amount, date, status, comment, transactionCategory, toAccount }) => {
     const meta: any = {};
-    if (transactionCategory.type === 'transfer') {
+    if (transactionCategory.transactionType === 'transfer') {
         meta.toAccountId = toAccount.id;
     }
 
@@ -266,8 +250,29 @@ const save = handleSubmit(async ({ account, amount, date, status, comment, trans
         amount,
         date,
         meta: JSON.stringify(meta),
-    } as SpendingTransactionRequest);
+    });
 });
+
+const selectableTransactionCategories: any = ref([]);
+function setTransactionTypeGroups() {
+    const transactionTypeGroups: any = {};
+    transactionCategories.value.forEach((item: any) => {
+        if (!transactionTypeGroups[item.transactionType]) {
+            transactionTypeGroups[item.transactionType] = [];
+        }
+
+        transactionTypeGroups[item.transactionType].push({
+            label: item.name,
+            value: item.id,
+            transactionType: item.transactionType,
+            severity: getTransactionType(item.transactionType, 'color'),
+        });
+    });
+
+    selectableTransactionCategories.value = Object.entries(transactionTypeGroups).map(
+        ([transactionType, items]) => ({ transactionType, items })
+    );
+}
 
 function getTransactionType(transactionType: string, prop: string) {
     const transactionTypeObj: any = {

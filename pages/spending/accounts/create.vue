@@ -90,7 +90,7 @@ const [balance] = defineField('balance');
 
 status.value = true;
 
-const { createAccount } = useSpendingCrudStore();
+const { createAccount } = useSpendingManagementStore();
 const save = handleSubmit(async (data: any) => {
     await createAccount(data);
 });

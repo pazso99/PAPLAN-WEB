@@ -126,7 +126,7 @@ const [transactionType] = defineField('transactionType');
 
 status.value = true;
 
-const { createTransactionCategory } = useSpendingCrudStore();
+const { createTransactionCategory } = useSpendingManagementStore();
 const save = handleSubmit(async ({ name, status, transactionType }) => {
     await createTransactionCategory({
         name,

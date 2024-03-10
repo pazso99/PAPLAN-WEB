@@ -137,8 +137,8 @@ useHead({
 });
 
 const route: any = useRoute();
-const { getTransactionCategory, updateTransactionCategory } = useSpendingCrudStore();
-const { transactionCategory, loading }: any = storeToRefs(useSpendingCrudStore());
+const { getTransactionCategory, updateTransactionCategory } = useSpendingManagementStore();
+const { transactionCategory, loading }: any = storeToRefs(useSpendingManagementStore());
 
 const transactionTypeOptions = ref(['income', 'expense', 'transfer']);
 const schema = yup.object({
