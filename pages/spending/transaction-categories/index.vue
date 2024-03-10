@@ -101,8 +101,8 @@
         >
             <template #body="{ data }">
                 <Tag
-                    :value="getTransactionType(data.transactionType, 'label')"
-                    :severity="getTransactionType(data.transactionType, 'color')"
+                    :value="getTransactionTypeLabel(data.transactionType)"
+                    :severity="getTransactionTypeColor(data.transactionType)"
                 />
             </template>
             <template #filter="{ filterModel }">
@@ -153,7 +153,7 @@ useHead({
 });
 
 const { getTransactionCategories, deleteTransactionCategory } = useSpendingManagementStore();
-const { transactionCategories, loading }: any = storeToRefs(useSpendingManagementStore());
+const { transactionCategories, loading } = storeToRefs(useSpendingManagementStore());
 
 const filters = ref({
     id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
@@ -167,38 +167,12 @@ onMounted(async () => {
     await getTransactionCategories();
 });
 
-async function removeTransactionCategory(id: any) {
+async function removeTransactionCategory(id: number) {
     await deleteTransactionCategory(id);
     await getTransactionCategories();
 }
 
 async function refreshTable() {
     await getTransactionCategories();
-}
-
-function getTransactionType(transactionType: string, prop: string) {
-    const transactionTypeObj: any = {
-        label: '',
-        color: 'info',
-    };
-
-    switch (transactionType) {
-        case 'income':
-            transactionTypeObj.label = 'INCOME';
-            transactionTypeObj.color = 'success';
-            break;
-        case 'expense':
-            transactionTypeObj.label = 'EXPENSE';
-            transactionTypeObj.color = 'danger';
-            break;
-        case 'transfer':
-            transactionTypeObj.label = 'TRANSFER';
-            transactionTypeObj.color = 'warning';
-            break;
-        default:
-            break;
-    }
-
-    return transactionTypeObj[prop];
 }
 </script>

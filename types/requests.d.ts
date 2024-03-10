@@ -1,4 +1,5 @@
 import type {
+    SpendingActualBalances,
     SpendingConfigs,
     TransactionType,
 } from './types';
@@ -10,7 +11,7 @@ interface UserLoginRequest {
 
 interface SpendingSettingsUpdateRequest {
     configs: SpendingConfigs;
-    actualBalances: ActualBalances;
+    actualBalances: SpendingActualBalances;
 };
 
 interface SpendingDashboardRequest {

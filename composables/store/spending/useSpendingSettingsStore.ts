@@ -1,12 +1,14 @@
 import { defineStore } from 'pinia';
+import type { SpendingSettingsUpdateRequest } from '~/types/requests';
 import type { SpendingActualBalancesResponse, SpendingSettingsResponse } from '~/types/responses';
 import type { SpendingSettingsState } from '~/types/stores';
+import type { SpendingActualBalances, SpendingSettings } from '~/types/types';
 
 export const useSpendingSettingsStore = defineStore('spending-settings', {
     state: () => ({
         loading: true,
-        actualBalances: null,
-        settings: null,
+        actualBalances: <SpendingActualBalances>{},
+        settings: <SpendingSettings>{},
     } as SpendingSettingsState),
     actions: {
         async getSpendingSettingsData() {
@@ -33,15 +35,16 @@ export const useSpendingSettingsStore = defineStore('spending-settings', {
                 this.loading = false;
             }
         },
-        async updateSpendingSettings(body: any) {
+        async updateSpendingSettings(data: SpendingSettingsUpdateRequest) {
             const toast = useToastService();
             this.loading = true;
             try {
-                await useApiFetch('spending/settings', {
+                const response = await useApiFetch<SpendingSettingsResponse>('spending/settings', {
                     method: 'POST',
-                    body,
+                    body: data,
                 });
 
+                this.settings = response.data;
                 toast.add({ severity: 'success', summary: 'succcess!', detail: 'Settings updated!', life: 3000 });
             } catch (err: any) {
                 toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when updating settings!', life: 3000 });

@@ -57,8 +57,8 @@
                             <div class="py-1 text-center">
                                 <Tag
                                     class="w-full"
-                                    :value="getTransactionType(slotProps.option.transactionType, 'label')"
-                                    :severity="getTransactionType(slotProps.option.transactionType, 'color')"
+                                    :value="getTransactionTypeLabel(slotProps.option.transactionType)"
+                                    :severity="getTransactionTypeColor(slotProps.option.transactionType)"
                                 />
                             </div>
                         </template>
@@ -265,38 +265,12 @@ function setTransactionTypeGroups() {
             label: item.name,
             value: item.id,
             transactionType: item.transactionType,
-            severity: getTransactionType(item.transactionType, 'color'),
+            severity: getTransactionTypeColor(item.transactionType),
         });
     });
 
     selectableTransactionCategories.value = Object.entries(transactionTypeGroups).map(
-        ([transactionType, items]) => ({ transactionType, items })
+        ([transactionType, items]) => ({ transactionType, items }),
     );
-}
-
-function getTransactionType(transactionType: string, prop: string) {
-    const transactionTypeObj: any = {
-        label: '',
-        color: 'info',
-    };
-
-    switch (transactionType) {
-        case 'income':
-            transactionTypeObj.label = 'INCOME';
-            transactionTypeObj.color = 'success';
-            break;
-        case 'expense':
-            transactionTypeObj.label = 'EXPENSE';
-            transactionTypeObj.color = 'danger';
-            break;
-        case 'transfer':
-            transactionTypeObj.label = 'TRANSFER';
-            transactionTypeObj.color = 'warning';
-            break;
-        default:
-            break;
-    }
-
-    return transactionTypeObj[prop];
 }
 </script>

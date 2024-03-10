@@ -157,7 +157,7 @@ onMounted(async () => {
     await getAccounts();
 });
 
-async function removeAccount(id: any) {
+async function removeAccount(id: number) {
     await deleteAccount(id);
     await getAccounts();
 }

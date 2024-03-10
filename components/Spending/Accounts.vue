@@ -215,7 +215,7 @@
 import CountTo from 'vue-count-to/src';
 import * as yup from 'yup';
 import type { SpendingTransactionCreateRequest } from '~/types/requests';
-import type { Account, TransactionCategory } from '~/types/resources';
+import type { Account, TransactionCategory } from '~/types/models';
 
 const emit = defineEmits<{
     (e: 'createTransaction', data: SpendingTransactionCreateRequest): any;
@@ -330,3 +330,4 @@ const emitSave = handleSubmit(async (data) => {
     }
 }
 </style>
+~/types/models

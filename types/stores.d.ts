@@ -1,14 +1,5 @@
-import type {
-    User,
-} from './resources';
-import type {
-    Account,
-    ExpenseCategory,
-    SpendingDashboardData,
-    Transaction,
-    TransactionCategory,
-    SpendingSettings,
-} from './types';
+import type { Account, Transaction, TransactionCategory, User } from './models';
+import type { SpendingActualBalances, SpendingDashboardData, SpendingSettings } from './types';
 
 interface NavigationState {
     isNavOpen: boolean;
@@ -17,18 +8,18 @@ interface NavigationState {
 interface AuthState {
     loading: boolean;
     isAuth: boolean;
-    token: string | null;
-    user: User | null;
+    token: string;
+    user: User;
 };
 
 interface SpendingManagementState {
     loading: boolean;
     accounts: Account[];
-    account: Account | null;
+    account: Account;
     transactionCategories: TransactionCategory[];
-    transactionCategory: TransactionCategory | null;
+    transactionCategory: TransactionCategory;
     transactions: Transaction[];
-    transaction: Transaction | null;
+    transaction: Transaction;
 };
 
 interface SpendingDashboardState {
@@ -39,8 +30,8 @@ interface SpendingDashboardState {
 
 interface SpendingSettingsState {
     loading: boolean;
-    actualBalances: ActualBalances | null;
-    settings: SpendingSettings | null;
+    actualBalances: SpendingActualBalances;
+    settings: SpendingSettings;
 };
 
 export {

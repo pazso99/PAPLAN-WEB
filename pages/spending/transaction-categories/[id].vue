@@ -136,7 +136,7 @@ useHead({
     title: 'Edit Transaction Category - Spending',
 });
 
-const route: any = useRoute();
+const route = useRoute();
 const { getTransactionCategory, updateTransactionCategory } = useSpendingManagementStore();
 const { transactionCategory, loading }: any = storeToRefs(useSpendingManagementStore());
 
@@ -161,7 +161,7 @@ const [updatedAt] = defineField('updatedAt');
 
 const dayjs = useDayjs();
 onMounted(async () => {
-    await getTransactionCategory(route.params.id);
+    await getTransactionCategory(getIdFromRoute(route.params));
     id.value = transactionCategory.value.id;
     name.value = transactionCategory.value.name;
     status.value = transactionCategory.value.status;

@@ -1,13 +1,14 @@
 import { defineStore } from 'pinia';
-import type { SpendingDashboardRequest, SpendingTransactionRequest } from '~/types/requests';
-import type { SpendingDashboardResponse } from '~/types/responses';
+import type { SpendingDashboardRequest, SpendingTransactionCreateRequest } from '~/types/requests';
+import type { SpendingDashboardResponse, SpendingTransactionResponse } from '~/types/responses';
 import type { SpendingDashboardState } from '~/types/stores';
+import type { SpendingDashboardData } from '~/types/types';
 
 export const useSpendingDashboardStore = defineStore('spending-dashboard', {
     state: () => ({
         loading: true,
         spendingSelectedDate: '',
-        spendingDashboardData: {},
+        spendingDashboardData: <SpendingDashboardData>{},
     } as SpendingDashboardState),
     actions: {
         async getSpendingData(body: SpendingDashboardRequest) {
@@ -26,12 +27,12 @@ export const useSpendingDashboardStore = defineStore('spending-dashboard', {
                 this.loading = false;
             }
         },
-        async createTransaction(data: SpendingTransactionRequest) {
+        async createTransaction(data: SpendingTransactionCreateRequest) {
             const toast = useToastService();
             this.loading = true;
 
             try {
-                await useApiFetch('spending/transactions', {
+                await useApiFetch<SpendingTransactionResponse>('spending/transactions', {
                     method: 'POST',
                     body: data,
                 });

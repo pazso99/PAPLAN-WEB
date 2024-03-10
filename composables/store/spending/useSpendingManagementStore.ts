@@ -16,16 +16,17 @@ import type {
     SpendingTransactionResponse,
     SpendingTransactionListResponse,
 } from '~/types/responses';
+import type { Account, Transaction, TransactionCategory } from '~/types/models';
 
 export const useSpendingManagementStore = defineStore('spending-management', {
     state: () => ({
         loading: true,
         accounts: [],
-        account: null,
+        account: <Account>{},
         transactionCategories: [],
-        transactionCategory: null,
+        transactionCategory: <TransactionCategory>{},
         transactions: [],
-        transaction: null,
+        transaction: <Transaction>{},
     } as SpendingManagementState),
     actions: {
         // ACCOUNTS

@@ -102,7 +102,7 @@ useHead({
 });
 
 const { getAccount, updateAccount } = useSpendingManagementStore();
-const { account, loading }: any = storeToRefs(useSpendingManagementStore());
+const { account, loading } = storeToRefs(useSpendingManagementStore());
 
 const schema = yup.object({
     name: yup.string().required().label('Name'),
@@ -123,9 +123,9 @@ const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 
 const dayjs = useDayjs();
-const route: any = useRoute();
+const route = useRoute();
 onMounted(async () => {
-    await getAccount(route.params.id);
+    await getAccount(getIdFromRoute(route.params));
     id.value = account.value.id;
     name.value = account.value.name;
     status.value = account.value.status;
@@ -134,7 +134,7 @@ onMounted(async () => {
     updatedAt.value = dayjs(account.value.updatedAt).format('YYYY-MM-DD HH:mm');
 });
 
-const save = handleSubmit(async (data: any) => {
-    await updateAccount(data);
+const save = handleSubmit(async ({ id, status, name, balance }) => {
+    await updateAccount({ id, status, name, balance });
 });
 </script>

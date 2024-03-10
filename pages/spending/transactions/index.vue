@@ -140,8 +140,8 @@
         >
             <template #body="{ data }">
                 <Tag
-                    :value="getTransactionType(data.transactionCategory.transactionType, 'label')"
-                    :severity="getTransactionType(data.transactionCategory.transactionType, 'color')"
+                    :value="getTransactionTypeLabel(data.transactionCategory.transactionType)"
+                    :severity="getTransactionTypeColor(data.transactionCategory.transactionType)"
                 />
             </template>
             <template #filter="{ filterModel }">
@@ -161,7 +161,7 @@
 
         <Column
             header="Category"
-            filter-field="transactionCategory"
+            field="transactionCategory.name"
             sortable
             sort-field="transactionCategory.name"
             :show-filter-match-modes="false"
@@ -176,13 +176,12 @@
                 <MultiSelect
                     v-model="filterModel.value"
                     :options="transactionCategoryOptions"
-                    option-label="name"
                     placeholder="Any"
                     class="p-column-filter"
                     :max-selected-labels="1"
                 >
                     <template #option="slotProps">
-                        <span>{{ slotProps.option.name }}</span>
+                        <span>{{ slotProps.option }}</span>
                     </template>
                 </MultiSelect>
             </template>
@@ -224,15 +223,15 @@ useHead({
 });
 
 const { getTransactions, deleteTransaction, getTransactionCategories } = useSpendingManagementStore();
-const { transactions, transactionCategories, loading }: any = storeToRefs(useSpendingManagementStore());
-const transactionCategoryOptions = ref([]);
+const { transactions, transactionCategories, loading } = storeToRefs(useSpendingManagementStore());
+const transactionCategoryOptions = ref<{ id: number; name: string; slug: string }[]>([]);
 
 const filters = ref({
     'id': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     'account.name': { value: null, matchMode: FilterMatchMode.CONTAINS },
     'date': { value: null, matchMode: FilterMatchMode.CONTAINS },
     'transactionCategory.transactionType': { value: null, matchMode: FilterMatchMode.IN },
-    'transactionCategory': { value: null, matchMode: FilterMatchMode.IN },
+    'transactionCategory.name': { value: null, matchMode: FilterMatchMode.IN },
     'status': { value: null, matchMode: FilterMatchMode.EQUALS },
     'amount': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     'comment': { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -242,14 +241,10 @@ onMounted(async () => {
     await getTransactions();
     await getTransactionCategories();
 
-    transactionCategoryOptions.value = transactionCategories.value.map(({ id, name, slug }: any) => ({
-        id,
-        name,
-        slug,
-    }));
+    transactionCategoryOptions.value = transactionCategories.value.map(({ id, name, slug }) => ({ id, name, slug }));
 });
 
-async function removeTransaction(id: any) {
+async function removeTransaction(id: number) {
     await deleteTransaction(id);
     await getTransactions();
 }
@@ -258,33 +253,8 @@ async function refreshTable() {
     await getTransactions();
 }
 
-function getTransactionType(transactionType: string, prop: string) {
-    const transactionTypeObj: any = {
-        label: '',
-        color: 'info',
-    };
-
-    switch (transactionType) {
-        case 'income':
-            transactionTypeObj.label = 'INCOME';
-            transactionTypeObj.color = 'success';
-            break;
-        case 'expense':
-            transactionTypeObj.label = 'EXPENSE';
-            transactionTypeObj.color = 'danger';
-            break;
-        case 'transfer':
-            transactionTypeObj.label = 'TRANSFER';
-            transactionTypeObj.color = 'warning';
-            break;
-        default:
-            break;
-    }
-
-    return transactionTypeObj[prop];
-};
-
-function getMetaDescription(data: any) {
+// TODO meta type
+function getMetaDescription(data: { meta: string; transactionCategory: { transactionType: string } }) {
     const meta = JSON.parse(data.meta);
     if (data.transactionCategory.transactionType === 'transfer') {
         return `to: ${meta.toAccountId}`;

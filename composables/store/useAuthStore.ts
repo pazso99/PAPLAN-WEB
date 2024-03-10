@@ -9,8 +9,8 @@ import type {
 export const useAuthStore = defineStore('auth', {
     state: () => ({
         isAuth: false,
-        token: null,
-        user: null,
+        token: '',
+        user: {},
         loading: true,
     } as AuthState),
     actions: {
@@ -40,7 +40,7 @@ export const useAuthStore = defineStore('auth', {
                 toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when logging out!', life: 3000 });
             } finally {
                 this.isAuth = false;
-                this.token = null;
+                this.token = '';
                 useCookie('token').value = this.token;
             }
         },

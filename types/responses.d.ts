@@ -2,7 +2,7 @@ import type {
     Account,
     Transaction,
     TransactionCategory,
-} from './resources';
+} from './models';
 import type {
     SpendingDashboardData,
     SpendingSettings,
@@ -13,28 +13,27 @@ interface ErrorResponse {
     message: string;
 }
 
-interface ApiSuccessResponseStructure<Data> {
+interface ApiSuccessResponse<Data> {
     data: Data;
     status: number;
 }
 
-type TokenResponse = ApiSuccessResponseStructure<{
+type TokenResponse = ApiSuccessResponse<{
     token: string;
 }>;
 
-type UserResponse = ApiSuccessResponseStructure<User>;
-type SpendingSettingsResponse = ApiSuccessResponseStructure<SpendingSettings>;
-type SpendingActualBalancesResponse = ApiSuccessResponseStructure<SpendingActualBalances>;
-type SpendingDashboardResponse = ApiSuccessResponseStructure<SpendingDashboardData>;
-type SpendingAccountResponse = ApiSuccessResponseStructure<Account>;
-type SpendingAccountListResponse = ApiSuccessResponseStructure<Account[]>;
-type SpendingTransactionCategoryResponse = ApiSuccessResponseStructure<TransactionCategory>;
-type SpendingTransactionCategoryListResponse = ApiSuccessResponseStructure<TransactionCategory[]>;
-type SpendingTransactionResponse = ApiSuccessResponseStructure<Transaction>;
-type SpendingTransactionListResponse = ApiSuccessResponseStructure<Transaction[]>;
+type UserResponse = ApiSuccessResponse<User>;
+type SpendingSettingsResponse = ApiSuccessResponse<SpendingSettings>;
+type SpendingActualBalancesResponse = ApiSuccessResponse<SpendingActualBalances>;
+type SpendingDashboardResponse = ApiSuccessResponse<SpendingDashboardData>;
+type SpendingAccountResponse = ApiSuccessResponse<Account>;
+type SpendingAccountListResponse = ApiSuccessResponse<Account[]>;
+type SpendingTransactionCategoryResponse = ApiSuccessResponse<TransactionCategory>;
+type SpendingTransactionCategoryListResponse = ApiSuccessResponse<TransactionCategory[]>;
+type SpendingTransactionResponse = ApiSuccessResponse<Transaction>;
+type SpendingTransactionListResponse = ApiSuccessResponse<Transaction[]>;
 
 export {
-    ApiSuccessResponseStructure,
     ErrorResponse,
     TokenResponse,
     SpendingSettingsResponse,

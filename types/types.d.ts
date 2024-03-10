@@ -1,15 +1,28 @@
 import type {
     TransactionBasic,
-    TransactionCategoryBasic
-} from './resources';
+    TransactionCategoryBasic,
+} from './models';
 
-enum EnumTransactionType {
+enum TransactionTypeEnum {
     expense,
     income,
     transfer,
 };
 
-type TransactionType = keyof typeof EnumTransactionType;
+type TransactionType = keyof typeof TransactionTypeEnum;
+
+interface SpendingDashboardData {
+    totals: SpendingDashboardTotals;
+    accounts: SpendingDashboardAccountInfo[];
+    categories: SpendingDashboardCategoryInfo[];
+    latestTransactions: TransactionBasic[];
+    diagrams: {
+        yearlyBalance: {
+            date: string;
+            amount: number;
+        }[];
+    };
+};
 
 interface SpendingDashboardTotals {
     balance: number;
@@ -36,32 +49,19 @@ interface SpendingDashboardCategoryInfo {
     sumTransactionAmount: number;
 };
 
-interface SpendingDashboardData {
-    totals: SpendingDashboardTotals;
-    accounts: SpendingDashboardAccountInfo[];
-    categories: SpendingDashboardCategoryInfo[];
-    latestTransactions: TransactionBasic[];
-    diagrams: {
-        yearlyBalance: {
-            date: string;
-            amount: number;
-        }[];
-    };
-}
+interface SpendingSettings {
+    configs: SpendingConfigs;
+};
 
 interface SpendingConfigs {
     spending_basic_transaction_categories: number[];
     spending_premium_transaction_categories: number[];
-}
-
-interface SpendingSettings {
-    configs: SpendingConfigs;
-}
+};
 
 type SpendingActualBalances = Record<string, number>;
 
 export {
-    EnumTransactionType,
+    TransactionTypeEnum,
     TransactionType,
     SpendingDashboardAccountInfo,
     SpendingDashboardCategoryInfo,
