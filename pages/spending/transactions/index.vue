@@ -1,26 +1,26 @@
 <template>
     <ContentListCard
-        :title="'Transactions'"
-        :buttons="[
+        title="Transactions"
+        :nav-buttons="[
             { icon: 'pi-plus', to: '/spending/transactions/create' },
-            { icon: 'pi-chevron-left', to: '/spending' }
+            { icon: 'pi-chevron-left', to: '/spending' },
         ]"
         :items="transactions"
         :loading="loading"
         :multi-sort-meta="[
             { field: 'date', order: -1 },
-            { field: 'id', order: -1 }
+            { field: 'id', order: -1 },
         ]"
         :global-filter-fields="[
             'id',
             'date',
             'account.name',
-            'transactionType',
+            'transactionCategory.transactionType',
             'amount',
-            'transactionCategory.name'
+            'transactionCategory.name',
         ]"
         :filters="filters"
-        :actionsColumnMeta="{
+        :actions-column-meta="{
             width: '5%',
             editUrl: '/spending/transactions',
         }"
@@ -29,7 +29,7 @@
     >
         <Column
             field="id"
-            dataType="numeric"
+            data-type="numeric"
             header="ID"
             sortable
             style="width: 10%"
@@ -48,7 +48,7 @@
             field="status"
             header="Status"
             sortable
-            :showFilterMatchModes="false"
+            :show-filter-match-modes="false"
             style="width: 10%"
         >
             <template #body="{ data }">
@@ -65,8 +65,8 @@
                             box: {
                                 class: [
                                     'border-none',
-                                    filterModel.value !== null ? filterModel.value ? 'bg-green-600' : 'bg-red-800' : ''
-                                ]
+                                    filterModel.value !== null ? filterModel.value ? 'bg-green-600' : 'bg-red-800' : '',
+                                ],
                             },
                         }"
                     />
@@ -77,9 +77,11 @@
             </template>
         </Column>
 
+
         <Column
             field="date"
             header="Date"
+            data-type="date"
             sortable
             style="width: 10%"
         >
@@ -87,10 +89,11 @@
                 {{ $dayjs(data.date).format('YYYY-MM-DD') }}
             </template>
             <template #filter="{ filterModel }">
-                <InputText
+                <Calendar
                     v-model="filterModel.value"
-                    class="p-column-filter"
-                    placeholder="Date..."
+                    date-format="yy-mm-dd"
+                    placeholder="2024-01-01"
+                    mask="9999-99-99"
                 />
             </template>
         </Column>
@@ -99,24 +102,31 @@
             field="account.name"
             header="Account"
             sortable
+            :show-filter-match-modes="false"
             style="width: 15%"
         >
             <template #body="{ data }">
                 {{ data.account.name }}
             </template>
             <template #filter="{ filterModel }">
-                <InputText
+                <MultiSelect
                     v-model="filterModel.value"
+                    :options="accountNameOptions"
+                    placeholder="Any"
                     class="p-column-filter"
-                    placeholder="Account..."
-                />
+                    :max-selected-labels="1"
+                >
+                    <template #option="slotProps">
+                        <span>{{ slotProps.option }}</span>
+                    </template>
+                </MultiSelect>
             </template>
         </Column>
 
         <Column
             field="amount"
             header="Amount"
-            dataType="numeric"
+            data-type="numeric"
             sortable
             style="width: 15%"
         >
@@ -133,24 +143,24 @@
 
         <Column
             header="Type"
-            field="transactionType"
+            field="transactionCategory.transactionType"
             sortable
-            :showFilterMatchModes="false"
+            :show-filter-match-modes="false"
             style="width: 10%"
         >
             <template #body="{ data }">
                 <Tag
-                    :value="getTransactionType(data.transactionType, 'label')"
-                    :severity="getTransactionType(data.transactionType, 'color')"
+                    :value="getTransactionTypeLabel(data.transactionCategory.transactionType)"
+                    :severity="getTransactionTypeColor(data.transactionCategory.transactionType)"
                 />
             </template>
             <template #filter="{ filterModel }">
                 <MultiSelect
                     v-model="filterModel.value"
-                    :options="['income', 'expense', 'transfer']"
+                    :options="getTransactionTypes()"
                     placeholder="Any"
                     class="p-column-filter"
-                    :maxSelectedLabels="1"
+                    :max-selected-labels="1"
                 >
                     <template #option="slotProps">
                         <span>{{ slotProps.option }}</span>
@@ -161,10 +171,9 @@
 
         <Column
             header="Category"
-            filterField="transactionCategory"
+            field="transactionCategory.name"
             sortable
-            sortField="transactionCategory.name"
-            :showFilterMatchModes="false"
+            :show-filter-match-modes="false"
             style="width: 15%"
         >
             <template #body="{ data }">
@@ -175,14 +184,13 @@
             <template #filter="{ filterModel }">
                 <MultiSelect
                     v-model="filterModel.value"
-                    :options="transactionCategoryOptions"
-                    optionLabel="name"
+                    :options="transactionCategoryNameOptions"
                     placeholder="Any"
                     class="p-column-filter"
-                    :maxSelectedLabels="1"
+                    :max-selected-labels="1"
                 >
                     <template #option="slotProps">
-                        <span>{{ slotProps.option.name }}</span>
+                        <span>{{ slotProps.option }}</span>
                     </template>
                 </MultiSelect>
             </template>
@@ -223,33 +231,33 @@ useHead({
     title: 'Transactions - Spending',
 });
 
-const { getTransactions, deleteTransaction, getTransactionCategories } = useSpendingCrudStore();
-const { transactions, transactionCategories, loading }: any = storeToRefs(useSpendingCrudStore());
-const transactionCategoryOptions = ref([]);
+const spendingManagementStore = useSpendingManagementStore();
+const { getTransactions, getAccounts, deleteTransaction, getTransactionCategories } = spendingManagementStore;
+const { transactions, accounts, transactionCategories, loading } = storeToRefs(spendingManagementStore);
 
 const filters = ref({
-    id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-    'account.name': { value: null, matchMode: FilterMatchMode.CONTAINS },
-    date: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    transactionType: { value: null, matchMode: FilterMatchMode.IN },
-    transactionCategory: { value: null, matchMode: FilterMatchMode.IN },
-    status: { value: null, matchMode: FilterMatchMode.EQUALS },
-    amount: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-    comment: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    'id': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+    'account.name': { value: null, matchMode: FilterMatchMode.IN },
+    'date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+    'transactionCategory.transactionType': { value: null, matchMode: FilterMatchMode.IN },
+    'transactionCategory.name': { value: null, matchMode: FilterMatchMode.IN },
+    'status': { value: null, matchMode: FilterMatchMode.EQUALS },
+    'amount': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+    'comment': { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 
+const transactionCategoryNameOptions = ref<string[]>();
+const accountNameOptions = ref<string[]>();
 onMounted(async () => {
     await getTransactions();
+    await getAccounts();
     await getTransactionCategories();
 
-    transactionCategoryOptions.value = transactionCategories.value.map(({ id, name, slug }: any) => ({
-        id,
-        name,
-        slug
-    }));
+    accountNameOptions.value = accounts.value.map(({ name }) => (name));
+    transactionCategoryNameOptions.value = transactionCategories.value.map(({ name }) => (name));
 });
 
-async function removeTransaction(id: any) {
+async function removeTransaction(id: number) {
     await deleteTransaction(id);
     await getTransactions();
 }
@@ -258,37 +266,18 @@ async function refreshTable() {
     await getTransactions();
 }
 
-const getTransactionType = (transactionType: string, prop: string) => {
-    const transactionTypeObj: any = {
-        label: '',
-        color: 'info'
-    };
-
-    switch (transactionType) {
-        case 'income':
-            transactionTypeObj.label = 'INCOME';
-            transactionTypeObj.color = 'success';
-            break;
-        case 'expense':
-            transactionTypeObj.label = 'EXPENSE';
-            transactionTypeObj.color = 'danger';
-            break;
-        case 'transfer':
-            transactionTypeObj.label = 'TRANSFER';
-            transactionTypeObj.color = 'warning';
-            break;
-        default:
-            break;
-    }
-
-    return transactionTypeObj[prop];
-};
-
-const getMetaDescription = (data: any) => {
+// TODO meta type
+function getMetaDescription(
+    data: {
+        meta: string;
+        transactionCategory: {
+            transactionType: string;
+        };
+    },
+) {
     const meta = JSON.parse(data.meta);
-    if (data.transactionType === 'transfer') {
-        return `to: ${meta.toAccountId}`; //TODO majd NAME
+    if (data.transactionCategory.transactionType === 'transfer') {
+        return `to: ${meta.toAccountId}`;
     }
 };
-
 </script>

@@ -1,8 +1,8 @@
 <template>
     <ContentBaseCard
-        :title="'Edit account'"
-        :navButtons="[
-            { icon: 'pi-chevron-left', to: '/spending/accounts' }
+        title="Edit account"
+        :nav-buttons="[
+            { icon: 'pi-chevron-left', to: '/spending/accounts' },
         ]"
         :loading="loading"
     >
@@ -94,15 +94,16 @@ import * as yup from 'yup';
 
 definePageMeta({
     middleware: 'auth',
-    layout: 'admin'
+    layout: 'admin',
 });
 
 useHead({
     title: 'Edit Account - Spending',
 });
 
-const { getAccount, updateAccount } = useSpendingCrudStore();
-const { account, loading }: any = storeToRefs(useSpendingCrudStore());
+const spendingManagementStore = useSpendingManagementStore();
+const { getAccount, updateAccount } = spendingManagementStore;
+const { account, loading } = storeToRefs(spendingManagementStore);
 
 const schema = yup.object({
     name: yup.string().required().label('Name'),
@@ -123,9 +124,9 @@ const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 
 const dayjs = useDayjs();
-const route: any = useRoute();
+const route = useRoute();
 onMounted(async () => {
-    await getAccount(route.params.id);
+    await getAccount(getIdFromRoute(route.params));
     id.value = account.value.id;
     name.value = account.value.name;
     status.value = account.value.status;
@@ -134,7 +135,12 @@ onMounted(async () => {
     updatedAt.value = dayjs(account.value.updatedAt).format('YYYY-MM-DD HH:mm');
 });
 
-const save = handleSubmit(async (data: any) => {
-    await updateAccount(data);
+const save = handleSubmit(async ({ id, status, name, balance }) => {
+    await updateAccount({
+        id,
+        status,
+        name,
+        balance,
+    });
 });
 </script>

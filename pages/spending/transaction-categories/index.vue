@@ -1,14 +1,14 @@
 <template>
     <ContentListCard
-        :title="'Transaction categories'"
-        :buttons="[
+        title="Transaction categories"
+        :nav-buttons="[
             { icon: 'pi-plus', to: '/spending/transaction-categories/create' },
-            { icon: 'pi-chevron-left', to: '/spending' }
+            { icon: 'pi-chevron-left', to: '/spending' },
         ]"
         :items="transactionCategories"
         :loading="loading"
         :multi-sort-meta="[
-            { field: 'id', order: -1 }
+            { field: 'id', order: -1 },
         ]"
         :global-filter-fields="[
             'id',
@@ -17,7 +17,7 @@
             'createdAt',
         ]"
         :filters="filters"
-        :actionsColumnMeta="{
+        :actions-column-meta="{
             width: '5%',
             editUrl: '/spending/transaction-categories',
         }"
@@ -26,7 +26,7 @@
     >
         <Column
             field="id"
-            dataType="numeric"
+            data-type="numeric"
             header="ID"
             sortable
             style="width: 10%"
@@ -45,7 +45,7 @@
             field="status"
             header="Status"
             sortable
-            :showFilterMatchModes="false"
+            :show-filter-match-modes="false"
             style="width: 10%"
         >
             <template #body="{ data }">
@@ -62,8 +62,8 @@
                             box: {
                                 class: [
                                     'border-none',
-                                    filterModel.value !== null ? filterModel.value ? 'bg-green-600' : 'bg-red-800' : ''
-                                ]
+                                    filterModel.value !== null ? filterModel.value ? 'bg-green-600' : 'bg-red-800' : '',
+                                ],
                             },
                         }"
                     />
@@ -96,22 +96,22 @@
             header="Type"
             field="transactionType"
             sortable
-            :showFilterMatchModes="false"
+            :show-filter-match-modes="false"
             style="width: 20%"
         >
             <template #body="{ data }">
                 <Tag
-                    :value="getTransactionType(data.transactionType, 'label')"
-                    :severity="getTransactionType(data.transactionType, 'color')"
+                    :value="getTransactionTypeLabel(data.transactionType)"
+                    :severity="getTransactionTypeColor(data.transactionType)"
                 />
             </template>
             <template #filter="{ filterModel }">
                 <MultiSelect
                     v-model="filterModel.value"
-                    :options="['income', 'expense', 'transfer']"
+                    :options="getTransactionTypes()"
                     placeholder="Any"
                     class="p-column-filter"
-                    :maxSelectedLabels="1"
+                    :max-selected-labels="1"
                 >
                     <template #option="slotProps">
                         <span>{{ slotProps.option }}</span>
@@ -120,9 +120,11 @@
             </template>
         </Column>
 
+
         <Column
             field="createdAt"
             header="CreatedAt"
+            data-type="date"
             sortable
             style="width: 25%"
         >
@@ -130,17 +132,18 @@
                 {{ $dayjs(data.createdAt).format('YYYY-MM-DD') }}
             </template>
             <template #filter="{ filterModel }">
-                <InputText
+                <Calendar
                     v-model="filterModel.value"
-                    class="p-column-filter"
-                    placeholder="Date..."
+                    date-format="yy-mm-dd"
+                    placeholder="2024-01-01"
+                    mask="9999-99-99"
                 />
             </template>
         </Column>
     </ContentListCard>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
 definePageMeta({
@@ -152,14 +155,15 @@ useHead({
     title: 'Transaction categories - Spending',
 });
 
-const { getTransactionCategories, deleteTransactionCategory } = useSpendingCrudStore();
-const { transactionCategories, loading }: any = storeToRefs(useSpendingCrudStore());
+const spendingManagementStore = useSpendingManagementStore();
+const { getTransactionCategories, deleteTransactionCategory } = spendingManagementStore;
+const { transactionCategories, loading } = storeToRefs(spendingManagementStore);
 
 const filters = ref({
     id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
-    createdAt: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    createdAt: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
     transactionType: { value: null, matchMode: FilterMatchMode.IN },
 });
 
@@ -167,7 +171,7 @@ onMounted(async () => {
     await getTransactionCategories();
 });
 
-async function removeTransactionCategory(id: any) {
+async function removeTransactionCategory(id: number) {
     await deleteTransactionCategory(id);
     await getTransactionCategories();
 }
@@ -175,30 +179,4 @@ async function removeTransactionCategory(id: any) {
 async function refreshTable() {
     await getTransactionCategories();
 }
-
-const getTransactionType = (transactionType: string, prop: string) => {
-    const transactionTypeObj: any = {
-        label: '',
-        color: 'info'
-    };
-
-    switch (transactionType) {
-        case 'income':
-            transactionTypeObj.label = 'INCOME';
-            transactionTypeObj.color = 'success';
-            break;
-        case 'expense':
-            transactionTypeObj.label = 'EXPENSE';
-            transactionTypeObj.color = 'danger';
-            break;
-        case 'transfer':
-            transactionTypeObj.label = 'TRANSFER';
-            transactionTypeObj.color = 'warning';
-            break;
-        default:
-            break;
-    }
-
-    return transactionTypeObj[prop];
-};
 </script>

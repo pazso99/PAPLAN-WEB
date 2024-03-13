@@ -1,32 +1,34 @@
 <template>
     <ContentBaseCard
         :title="title"
-        :navButtons="buttons"
+        :nav-buttons="navButtons"
         :loading="loading"
     >
         <DataTable
+            v-model:filters="filters"
             :value="items"
-            stripedRows
+            striped-rows
             size="small"
             paginator
-            paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
+            paginator-template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
             :rows="10"
-            :rowsPerPageOptions="[10, 25, 50, 100]"
-            sortMode="multiple"
-            :multiSortMeta="multiSortMeta"
-            removableSort
-            v-model:filters="filters"
-            filterDisplay="menu"
-            :globalFilterFields="globalFilterFields"
+            :rows-per-page-options="[10, 25, 50, 100]"
+            sort-mode="multiple"
+            :multi-sort-meta="multiSortMeta"
+            removable-sort
+            filter-display="menu"
+            :global-filter-fields="globalFilterFields"
         >
-            <template #empty>No data.</template>
+            <template #empty>
+                No data.
+            </template>
             <template #header>
                 <div class="flex justify-between pl-2">
-                    <IconField iconPosition="left">
+                    <IconField icon-position="left">
                         <InputIcon>
                             <i class="pi pi-search" />
                         </InputIcon>
-                        <InputText v-model="filters['global'].value" placeholder="Search..." />
+                        <InputText v-model="filters.global.value" placeholder="Search..." />
                     </IconField>
                     <Button
                         type="button"
@@ -40,14 +42,14 @@
                 </div>
             </template>
 
-            <slot></slot>
+            <slot />
 
             <Column
                 :style="`width: ${actionsColumnMeta.width}`"
             >
                 <template #header>
                     <div class="md:hidden flex-1 text-center">
-                        <i class="pi pi-cog"></i>
+                        <i class="pi pi-cog" />
                     </div>
                 </template>
                 <template #body="{ data }">
@@ -116,8 +118,8 @@
             <DataTable :value="new Array(10)">
                 <template #header>
                     <div class="flex justify-between pl-2 gap-5">
-                        <Skeleton width="16rem" height="2rem"></Skeleton>
-                        <Skeleton size="2rem"></Skeleton>
+                        <Skeleton width="16rem" height="2rem" />
+                        <Skeleton size="2rem" />
                     </div>
                 </template>
                 <Column
@@ -125,10 +127,10 @@
                     style="width: 10%"
                 >
                     <template #header>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                     <template #body>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                 </Column>
                 <Column
@@ -136,10 +138,10 @@
                     style="width: 30%"
                 >
                     <template #header>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                     <template #body>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                 </Column>
                 <Column
@@ -147,10 +149,10 @@
                     style="width: 20%"
                 >
                     <template #header>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                     <template #body>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                 </Column>
                 <Column
@@ -158,10 +160,10 @@
                     style="width: 15%"
                 >
                     <template #header>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                     <template #body>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                 </Column>
                 <Column
@@ -169,17 +171,17 @@
                     style="width: 15%"
                 >
                     <template #header>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                     <template #body>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                 </Column>
                 <Column
                     style="width: 10%"
                 >
                     <template #body>
-                        <Skeleton></Skeleton>
+                        <Skeleton />
                     </template>
                 </Column>
             </DataTable>
@@ -189,47 +191,58 @@
 
 <script setup lang="ts">
 import { FilterMatchMode } from 'primevue/api';
+import type { DataTableFilterMeta, DataTableSortMeta } from 'primevue/datatable';
 
-const props = defineProps([
-    'title',
-    'buttons',
-    'loading',
-    'items',
-    'multiSortMeta',
-    'globalFilterFields',
-    'filters',
-    'actionsColumnMeta'
-]);
+const props = defineProps<{
+    title: string;
+    loading: boolean;
+    navButtons: { icon: string; to: string }[];
+    items: object[];
+    multiSortMeta: DataTableSortMeta[];
+    globalFilterFields: string[];
+    filters: DataTableFilterMeta;
+    actionsColumnMeta: object;
+}>();
+
+const emit = defineEmits<{
+    (e: 'deleteItem', id: number): void;
+    (e: 'refreshTable'): void;
+}>();
 
 const filters = ref();
-const initFilters = () => {
+function initFilters() {
     filters.value = {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },
-        ...props.filters
+        ...props.filters,
     };
 };
 initFilters();
 
-const clearFilter = () => {
+function clearFilter() {
     initFilters();
-};
+}
 
-const emit = defineEmits(['deleteItem', 'refreshTable']);
 const deleteModalVisible = ref(false);
-const deletableItem = ref({ id: null });
+const deletableItem = ref<{
+    id: number;
+    [key: string]: any;
+}>({ id: -1 });
 
 async function openDeleteModal(deletableData: any) {
-    deletableItem.value = deletableData;
+    deletableItem.value = {
+        id: deletableData.id,
+        ...deletableData,
+    };
     deleteModalVisible.value = true;
 }
 
-const handleDelete = () => {
+function handleDelete() {
     emit('deleteItem', deletableItem.value.id);
-    deletableItem.value = { id: null };
+    deletableItem.value = { id: -1 };
     deleteModalVisible.value = false;
-};
+}
 
-const handleRefresh = () => {
+function handleRefresh() {
     emit('refreshTable');
-};
+}
 </script>

@@ -1,8 +1,8 @@
 <template>
     <ContentBaseCard
-        :title="'Edit Transaction'"
-        :navButtons="[
-            { icon: 'pi-chevron-left', to: '/spending/transactions' }
+        title="Edit Transaction"
+        :nav-buttons="[
+            { icon: 'pi-chevron-left', to: '/spending/transactions' },
         ]"
         :loading="loading"
     >
@@ -57,7 +57,7 @@
                     <Calendar
                         id="date"
                         v-model="date"
-                        dateFormat="yy-mm-dd"
+                        date-format="yy-mm-dd"
                     />
                 </div>
             </div>
@@ -66,17 +66,17 @@
                 <div class="flex flex-col">
                     <label for="transactionCategory" class="mb-1">Transaction category</label>
                     <Dropdown
-                        v-model="transactionCategory"
                         id="transactionCategory"
+                        v-model="transactionCategory"
                         :options="selectableTransactionCategories"
                         filter
-                        optionLabel="label"
-                        optionGroupLabel="label"
-                        optionGroupChildren="items"
+                        option-label="label"
+                        option-group-label="label"
+                        option-group-children="items"
                         placeholder="Select a category"
                         :pt="{
                             itemGroup: {
-                                class: 'p-0'
+                                class: 'p-0',
                             },
                         }"
                     >
@@ -84,8 +84,8 @@
                             <div class="py-1 text-center">
                                 <Tag
                                     class="w-full"
-                                    :value="getTransactionType(slotProps.option.group, 'label')"
-                                    :severity="getTransactionType(slotProps.option.group, 'color')"
+                                    :value="getTransactionTypeLabel(slotProps.option.transactionType)"
+                                    :severity="getTransactionTypeColor(slotProps.option.transactionType)"
                                 />
                             </div>
                         </template>
@@ -106,14 +106,16 @@
                     <Dropdown
                         id="account"
                         v-model="account"
-                        optionLabel="name"
+                        option-label="name"
                         :options="selectableAccounts"
                         placeholder="Select account"
                     >
                         <template #option="slotProps">
                             <div class="flex gap-2">
                                 <span>{{ slotProps.option.name }}</span>
-                                <Tag severity="success">{{ $formatNumber(slotProps.option.balance) }} Ft</Tag>
+                                <Tag severity="success">
+                                    {{ $formatNumber(slotProps.option.balance) }} Ft
+                                </Tag>
                             </div>
                         </template>
                     </Dropdown>
@@ -133,7 +135,7 @@
             </div>
 
             <div
-                v-if="transactionCategory?.type === 'transfer' && account"
+                v-if="transactionCategory?.transactionType === 'transfer' && account"
                 class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4"
             >
                 <div class="flex flex-col">
@@ -141,21 +143,25 @@
                     <Dropdown
                         id="account"
                         v-model="toAccount"
-                        optionLabel="name"
+                        option-label="name"
                         :options="toAccounts"
                         placeholder="Select account"
                     >
                         <template #value="slotProps">
                             <div v-if="slotProps.value" class="flex gap-2">
                                 <span>{{ slotProps.value.name }}</span>
-                                <Tag severity="success">{{ $formatNumber(slotProps.value.balance) }} Ft</Tag>
+                                <Tag severity="success">
+                                    {{ $formatNumber(slotProps.value.balance) }} Ft
+                                </Tag>
                             </div>
                             <span v-else>{{ slotProps.placeholder }}</span>
                         </template>
                         <template #option="slotProps">
                             <div class="flex gap-2">
                                 <span>{{ slotProps.option.name }}</span>
-                                <Tag severity="success">{{ $formatNumber(slotProps.option.balance) }} Ft</Tag>
+                                <Tag severity="success">
+                                    {{ $formatNumber(slotProps.option.balance) }} Ft
+                                </Tag>
                             </div>
                         </template>
                     </Dropdown>
@@ -187,18 +193,20 @@
 
 <script setup lang="ts">
 import * as yup from 'yup';
+import type { Account, AccountBasic } from '~/types/models';
 
 definePageMeta({
     middleware: 'auth',
-    layout: 'admin'
+    layout: 'admin',
 });
 
 useHead({
     title: 'Edit Transaction - Spending',
 });
 
-const { getTransaction, updateTransaction, getAccounts, getTransactionCategories } = useSpendingCrudStore();
-const { transaction, accounts, transactionCategories, loading }: any = storeToRefs(useSpendingCrudStore());
+const spendingManagementStore = useSpendingManagementStore();
+const { getTransaction, updateTransaction, getAccounts, getTransactionCategories } = spendingManagementStore;
+const { transaction, accounts, transactionCategories, loading } = storeToRefs(spendingManagementStore);
 
 const schema = yup.object({
     date: yup.date().required().label('Date'),
@@ -207,7 +215,7 @@ const schema = yup.object({
     transactionCategory: yup.object().required().label('Transaction category'),
     account: yup.object().required().label('Account'),
     comment: yup.string().nullable().label('Comment'),
-    toAccount: yup.object().when('transactionCategory.type', {
+    toAccount: yup.object().when('transactionCategory.transactionType', {
         is: 'transfer',
         then(schema) {
             return schema.required();
@@ -231,25 +239,21 @@ const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 const [toAccount] = defineField('toAccount');
 
-const toAccounts = ref([]);
+const toAccounts = ref<Account[]>([]);
 watch(account, async (newAccount) => {
     if (toAccount.value?.id === newAccount.id) {
         toAccount.value = null;
     }
-    toAccounts.value = accounts.value.filter((account: any) => account.id !== newAccount.id)
+    toAccounts.value = accounts.value.filter(account => account.id !== newAccount.id);
 });
 
-const route: any = useRoute();
+const route = useRoute();
 const dayjs = useDayjs();
-const selectableTransactionCategories: any = ref([]);
-const selectableAccounts: any = ref([]);
 
 onMounted(async () => {
-    await getTransaction(route.params.id);
+    await getTransaction(getIdFromRoute(route.params));
     await getAccounts();
     await getTransactionCategories();
-
-    toAccounts.value = accounts.value;
 
     id.value = transaction.value.id;
     status.value = transaction.value.status;
@@ -260,46 +264,16 @@ onMounted(async () => {
     comment.value = transaction.value.comment;
     account.value = transaction.value.account;
 
-    let meta: any;
-    if (transaction.value.meta !== '{}') {
-        meta = JSON.parse(transaction.value.meta);
-    }
-    if (transaction.value.transactionType === 'transfer') {
-        toAccount.value = accounts.value.find((account: any) => account.id === meta.toAccountId);
-    }
-
-    selectableAccounts.value = accounts.value.map(({ id, name, slug, balance }: any) => ({
-        id,
-        name,
-        slug,
-        balance
-    }));
-
-    const groups: any = {};
-    transactionCategories.value.forEach((item: any) => {
-        if (!groups[item.transactionType]) {
-            groups[item.transactionType] = [];
-        }
-
-        const category = {
-            label: item.name,
-            value: item.id,
-            type: item.transactionType,
-            severity: getTransactionType(item.transactionType, 'color')
-        }
-        groups[item.transactionType].push(category);
-
-        if (transaction.value.transactionCategory.id === item.id) {
-            transactionCategory.value = category;
-        }
-    });
-
-    selectableTransactionCategories.value = Object.entries(groups).map(([group, items]) => ({ group, items }));
+    setMeta();
+    setSelectableAccounts();
+    setTransactionTypeGroups();
 });
 
 const save = handleSubmit(async ({ id, account, amount, date, status, comment, transactionCategory, toAccount }) => {
-    const meta: any = {};
-    if (transactionCategory.type === 'transfer') {
+    const meta: {
+        toAccountId?: number;
+    } = {};
+    if (transactionCategory.transactionType === 'transfer') {
         meta.toAccountId = toAccount.id;
     }
 
@@ -311,33 +285,55 @@ const save = handleSubmit(async ({ id, account, amount, date, status, comment, t
         status,
         amount,
         date,
-        meta: JSON.stringify(meta)
+        meta: JSON.stringify(meta),
     });
 });
 
-const getTransactionType = (transactionType: string, prop: string) => {
-    const transactionTypeObj: any = {
-        label: '',
-        color: 'info'
-    };
-
-    switch (transactionType) {
-        case 'income':
-            transactionTypeObj.label = 'INCOME';
-            transactionTypeObj.color = 'success';
-            break;
-        case 'expense':
-            transactionTypeObj.label = 'EXPENSE';
-            transactionTypeObj.color = 'danger';
-            break;
-        case 'transfer':
-            transactionTypeObj.label = 'TRANSFER';
-            transactionTypeObj.color = 'warning';
-            break;
-        default:
-            break;
+function setMeta() {
+    let meta: any;
+    if (transaction.value.meta !== '{}') {
+        meta = JSON.parse(transaction.value.meta);
+    }
+    if (transaction.value.transactionCategory.transactionType === 'transfer') {
+        toAccount.value = accounts.value.find((account: any) => account.id === meta.toAccountId);
     }
 
-    return transactionTypeObj[prop];
-};
+    toAccounts.value = accounts.value;
+}
+
+const selectableAccounts = ref<AccountBasic[]>([]);
+function setSelectableAccounts() {
+    selectableAccounts.value = accounts.value.map(({ id, name, balance }) => ({
+        id,
+        name,
+        balance,
+    }));
+}
+
+// TODO
+const selectableTransactionCategories: any = ref([]);
+function setTransactionTypeGroups() {
+    const transactionTypeGroups: any = {};
+    transactionCategories.value.forEach((item: any) => {
+        if (!transactionTypeGroups[item.transactionType]) {
+            transactionTypeGroups[item.transactionType] = [];
+        }
+
+        const category = {
+            label: item.name,
+            value: item.id,
+            transactionType: item.transactionType,
+            severity: getTransactionTypeColor(item.transactionType),
+        };
+        transactionTypeGroups[item.transactionType].push(category);
+
+        if (transaction.value.transactionCategory.id === item.id) {
+            transactionCategory.value = category;
+        }
+    });
+
+    selectableTransactionCategories.value = Object.entries(transactionTypeGroups).map(
+        ([transactionType, items]) => ({ transactionType, items }),
+    );
+}
 </script>

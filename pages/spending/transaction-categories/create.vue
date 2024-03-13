@@ -1,8 +1,8 @@
 <template>
     <ContentBaseCard
-        :title="'Create transaction category'"
-        :navButtons="[
-            { icon: 'pi-chevron-left', to: '/spending/transaction-categories' }
+        title="Create transaction category"
+        :nav-buttons="[
+            { icon: 'pi-chevron-left', to: '/spending/transaction-categories' },
         ]"
     >
         <form class="p-5">
@@ -101,14 +101,14 @@ import * as yup from 'yup';
 
 definePageMeta({
     middleware: 'auth',
-    layout: 'admin'
+    layout: 'admin',
 });
 
 useHead({
     title: 'Create Transaction Category - Spending',
 });
 
-const transactionTypeOptions = ref(['income', 'expense', 'transfer']);
+const transactionTypeOptions = ref(getTransactionTypes());
 const schema = yup.object({
     name: yup.string().required().label('Name'),
     status: yup.boolean().label('Status'),
@@ -126,12 +126,12 @@ const [transactionType] = defineField('transactionType');
 
 status.value = true;
 
-const { createTransactionCategory } = useSpendingCrudStore();
+const { createTransactionCategory } = useSpendingManagementStore();
 const save = handleSubmit(async ({ name, status, transactionType }) => {
     await createTransactionCategory({
         name,
         status,
-        transactionType
+        transactionType,
     });
 });
 </script>
