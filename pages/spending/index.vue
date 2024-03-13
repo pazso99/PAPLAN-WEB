@@ -45,7 +45,7 @@
             </div>
 
             <Divider align="center" class="py-3">
-                <Skeleton width="6rem" height="qrem" />
+                <Skeleton width="6rem" height="1rem" />
             </Divider>
 
             <div class="flex flex-wrap justify-center mb-4">
@@ -78,16 +78,15 @@ useHead({
     title: 'Spending Dashboard',
 });
 
-const { getSpendingData, createTransaction } = useSpendingDashboardStore();
-const { spendingSelectedDate } = storeToRefs(useSpendingDashboardStore());
+const spendingDashboardStore = useSpendingDashboardStore();
+const { getSpendingData, createTransaction } = spendingDashboardStore;
+const { spendingSelectedDate } = storeToRefs(spendingDashboardStore);
 
 const dayjs = useDayjs();
 const dates = [
     ...Array.from(
         { length: dayjs().month() + 13 },
-        (_, i) => dayjs()
-            .subtract(i, 'month')
-            .format('YYYY-MM'),
+        (_, i) => dayjs().subtract(i, 'month').format('YYYY-MM'),
     ).filter(d => d.startsWith('2024')),
     '2023-12',
     '2024',
@@ -104,16 +103,6 @@ onMounted(async () => {
 watch(spendingSelectedDate, async (newSpendingSelectedDate) => {
     await getSpendingData(parseYearAndMonth(newSpendingSelectedDate));
 });
-
-function parseYearAndMonth(dateString: string | null) {
-    // TODO valid?
-    const [year, month] = dateString!.split('-');
-
-    return {
-        year,
-        month: month || '',
-    };
-}
 
 async function saveTransaction(data: SpendingTransactionCreateRequest) {
     await createTransaction(data);

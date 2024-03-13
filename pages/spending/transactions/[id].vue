@@ -193,6 +193,7 @@
 
 <script setup lang="ts">
 import * as yup from 'yup';
+import type { Account, AccountBasic } from '~/types/models';
 
 definePageMeta({
     middleware: 'auth',
@@ -203,8 +204,9 @@ useHead({
     title: 'Edit Transaction - Spending',
 });
 
-const { getTransaction, updateTransaction, getAccounts, getTransactionCategories } = useSpendingManagementStore();
-const { transaction, accounts, transactionCategories, loading }: any = storeToRefs(useSpendingManagementStore());
+const spendingManagementStore = useSpendingManagementStore();
+const { getTransaction, updateTransaction, getAccounts, getTransactionCategories } = spendingManagementStore;
+const { transaction, accounts, transactionCategories, loading } = storeToRefs(spendingManagementStore);
 
 const schema = yup.object({
     date: yup.date().required().label('Date'),
@@ -237,12 +239,12 @@ const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 const [toAccount] = defineField('toAccount');
 
-const toAccounts = ref([]);
+const toAccounts = ref<Account[]>([]);
 watch(account, async (newAccount) => {
     if (toAccount.value?.id === newAccount.id) {
         toAccount.value = null;
     }
-    toAccounts.value = accounts.value.filter((account: any) => account.id !== newAccount.id);
+    toAccounts.value = accounts.value.filter(account => account.id !== newAccount.id);
 });
 
 const route = useRoute();
@@ -268,7 +270,9 @@ onMounted(async () => {
 });
 
 const save = handleSubmit(async ({ id, account, amount, date, status, comment, transactionCategory, toAccount }) => {
-    const meta: any = {};
+    const meta: {
+        toAccountId?: number;
+    } = {};
     if (transactionCategory.transactionType === 'transfer') {
         meta.toAccountId = toAccount.id;
     }
@@ -297,15 +301,16 @@ function setMeta() {
     toAccounts.value = accounts.value;
 }
 
-const selectableAccounts: any = ref([]);
+const selectableAccounts = ref<AccountBasic[]>([]);
 function setSelectableAccounts() {
-    selectableAccounts.value = accounts.value.map(({ id, name, balance }: any) => ({
+    selectableAccounts.value = accounts.value.map(({ id, name, balance }) => ({
         id,
         name,
         balance,
     }));
 }
 
+// TODO
 const selectableTransactionCategories: any = ref([]);
 function setTransactionTypeGroups() {
     const transactionTypeGroups: any = {};

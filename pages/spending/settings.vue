@@ -205,7 +205,6 @@
 
 <script setup lang="ts">
 import type { TransactionCategory } from '~/types/models';
-import type { SpendingSettingsUpdateRequest } from '~/types/requests';
 
 definePageMeta({
     middleware: 'auth',
@@ -216,10 +215,12 @@ useHead({
     title: 'Spending settings',
 });
 
-const { getSpendingSettingsData, getSpendingActualBalances, updateSpendingSettings } = useSpendingSettingsStore();
-const { loading, actualBalances, settings } = storeToRefs(useSpendingSettingsStore());
-const { getTransactionCategories } = useSpendingManagementStore();
-const { transactionCategories } = storeToRefs(useSpendingManagementStore());
+const spendingSettingsStore = useSpendingSettingsStore();
+const spendingManagementStore = useSpendingManagementStore();
+const { getSpendingSettingsData, getSpendingActualBalances, updateSpendingSettings } = spendingSettingsStore;
+const { loading, actualBalances, settings } = storeToRefs(spendingSettingsStore);
+const { getTransactionCategories } = spendingManagementStore;
+const { transactionCategories } = storeToRefs(spendingManagementStore);
 
 const basicCategories = ref<number[]>([]);
 const premiumCategories = ref<number[]>([]);
@@ -235,14 +236,13 @@ onMounted(async () => {
 });
 
 async function handleSave() {
-    const body: SpendingSettingsUpdateRequest = {
+    await updateSpendingSettings({
         configs: {
             ...settings.value.configs,
             spending_basic_transaction_categories: basicCategories.value,
             spending_premium_transaction_categories: premiumCategories.value,
         },
         actualBalances: actualBalances.value,
-    };
-    await updateSpendingSettings(body);
+    });
 };
 </script>

@@ -1,6 +1,7 @@
 <template>
     <ContentBaseCard
         title="Account"
+        :loading="loading"
     >
         <pre>{{ user }}</pre>
     </ContentBaseCard>
@@ -16,8 +17,9 @@ useHead({
     title: 'Account',
 });
 
-const { user } = storeToRefs(useAuthStore());
-const { getUser } = useAuthStore();
+const authStore = useAuthStore();
+const { user, loading } = storeToRefs(authStore);
+const { getUser } = authStore;
 
 onMounted(async () => {
     await getUser();

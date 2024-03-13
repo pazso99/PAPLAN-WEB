@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 const items = ref([]);
-const router: any = useRouter();
+const router = useRouter();
 const { logout } = useAuthStore();
 const { toggleNav } = useNavigationStore();
 const { isNavOpen } = storeToRefs(useNavigationStore());

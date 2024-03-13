@@ -1,4 +1,5 @@
 import type { RouteParams } from 'vue-router';
+import { TransactionTypes } from '~/types/constants';
 import type { TransactionType } from '~/types/types';
 
 export function getIdFromRoute(routeParams: RouteParams) {
@@ -29,4 +30,17 @@ export function getTransactionTypeLabel(transactionType: TransactionType) {
         default:
             return '-';
     }
+}
+
+export function parseYearAndMonth(dateString: string) {
+    const [year, month] = dateString.split('-');
+
+    return {
+        year,
+        month: month || '',
+    };
+}
+
+export function getTransactionTypes() {
+    return [...TransactionTypes];
 }

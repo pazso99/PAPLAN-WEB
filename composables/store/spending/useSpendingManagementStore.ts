@@ -35,7 +35,12 @@ export const useSpendingManagementStore = defineStore('spending-management', {
             try {
                 this.loading = true;
                 const response = await useApiFetch<SpendingAccountListResponse>('spending/accounts');
-                this.accounts = response.data;
+
+                this.accounts = response.data.map(account => ({
+                    ...account,
+                    createdAt: new Date(account.createdAt),
+                    updatedAt: new Date(account.updatedAt),
+                }));
             } catch (err: any) {
                 navigateTo('/spending');
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
@@ -110,7 +115,11 @@ export const useSpendingManagementStore = defineStore('spending-management', {
             try {
                 this.loading = true;
                 const response = await useApiFetch<SpendingTransactionCategoryListResponse>('spending/transaction-categories');
-                this.transactionCategories = response.data;
+                this.transactionCategories = response.data.map(transactionCategory => ({
+                    ...transactionCategory,
+                    createdAt: new Date(transactionCategory.createdAt),
+                    updatedAt: new Date(transactionCategory.updatedAt),
+                }));
             } catch (err: any) {
                 navigateTo('/spending');
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
@@ -185,7 +194,12 @@ export const useSpendingManagementStore = defineStore('spending-management', {
             try {
                 this.loading = true;
                 const response = await useApiFetch<SpendingTransactionListResponse>('spending/transactions');
-                this.transactions = response.data;
+                this.transactions = response.data.map(transaction => ({
+                    ...transaction,
+                    date: new Date(transaction.date),
+                    createdAt: new Date(transaction.createdAt),
+                    updatedAt: new Date(transaction.updatedAt),
+                }));
             } catch (err: any) {
                 navigateTo('/spending');
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });

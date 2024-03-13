@@ -1,15 +1,10 @@
+import type { TransactionTypes } from './constants';
 import type {
     TransactionBasic,
     TransactionCategoryBasic,
 } from './models';
 
-enum TransactionTypeEnum {
-    expense,
-    income,
-    transfer,
-};
-
-type TransactionType = keyof typeof TransactionTypeEnum;
+type TransactionType = typeof TransactionTypes[number];
 
 interface SpendingDashboardData {
     totals: SpendingDashboardTotals;
@@ -61,7 +56,6 @@ interface SpendingConfigs {
 type SpendingActualBalances = Record<string, number>;
 
 export {
-    TransactionTypeEnum,
     TransactionType,
     SpendingDashboardAccountInfo,
     SpendingDashboardCategoryInfo,

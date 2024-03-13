@@ -44,7 +44,7 @@
                             <Tag
                                 class="px-2 py-1 w-full rounded-none flex justify-start cursor-pointer"
                                 :severity="item.severity"
-                                @click="openNewTransaction(item.key, account, item.severity)"
+                                @click="openNewTransaction(item.type, account, item.severity)"
                             >
                                 <span class="text-sm">{{ item.label }}</span>
                             </Tag>
@@ -108,12 +108,12 @@
                 <div>
                     New
                     <Tag
-                        :severity="selectedAccount.severity"
+                        :severity="selectedAccount!.severity"
                         :value="transactionType"
                     />
                     transaction
                     {{ transactionType === 'transfer' ? 'from' : 'for' }}
-                    <span class="font-bold">{{ selectedAccount.name }}</span>
+                    <span class="font-bold">{{ selectedAccount!.name }}</span>
                 </div>
             </template>
             <form class="p-5">
@@ -215,32 +215,40 @@
 import CountTo from 'vue-count-to/src';
 import * as yup from 'yup';
 import type { SpendingTransactionCreateRequest } from '~/types/requests';
-import type { Account, TransactionCategory } from '~/types/models';
+import type { Account, AccountBasic, TransactionCategory } from '~/types/models';
+import type { TransactionType } from '~/types/types';
 
 const emit = defineEmits<{
-    (e: 'createTransaction', data: SpendingTransactionCreateRequest): any;
+    (e: 'createTransaction', data: SpendingTransactionCreateRequest): void;
 }>();
 
-const { spendingDashboardData, spendingSelectedDate } = storeToRefs(useSpendingDashboardStore());
-const { getTransactionCategories, getAccounts } = useSpendingManagementStore();
-const { transactionCategories, accounts } = storeToRefs(useSpendingManagementStore());
+const spendingDashboardStore = useSpendingDashboardStore();
+const spendingManagementStore = useSpendingManagementStore();
+const { spendingDashboardData, spendingSelectedDate } = storeToRefs(spendingDashboardStore);
+const { getTransactionCategories, getAccounts } = spendingManagementStore;
+const { transactionCategories, accounts } = storeToRefs(spendingManagementStore);
 
 onMounted(async () => {
+    await getAccounts();
     await getTransactionCategories();
 });
 
-const quickTransactionItems = [
+const quickTransactionItems = ref<{
+    type: TransactionType;
+    label: string;
+    severity: string;
+}[]>([
     {
-        key: 'income',
+        type: 'income',
         label: 'Income',
         severity: 'success',
     },
     {
-        key: 'transfer',
+        type: 'transfer',
         label: 'Transfer',
         severity: 'warning',
     },
-];
+]);
 
 const newTransactionModalOpen = ref(false);
 const selectedAccount = ref<{
@@ -278,14 +286,15 @@ const filteredTransactionCategories = ref<TransactionCategory[]>();
 const toAccounts = ref<Account[]>();
 const transactionType = ref<string>();
 
-function openNewTransaction(type: string, account: any, severity: string) {
+function openNewTransaction(type: TransactionType, account: AccountBasic, severity: string) {
     newTransactionModalOpen.value = true;
     selectedAccount.value = {
         ...account,
         severity,
     };
-    filteredTransactionCategories.value = transactionCategories.value
-        .filter(({ transactionType }) => transactionType === type);
+    filteredTransactionCategories.value = transactionCategories.value.filter(
+        ({ transactionType }) => transactionType === type,
+    );
 
     transactionType.value = type;
     toAccounts.value = accounts.value.filter(acc => acc.id !== account.id);
@@ -298,20 +307,19 @@ function openNewTransaction(type: string, account: any, severity: string) {
 };
 
 const dayjs = useDayjs();
-const emitSave = handleSubmit(async (data) => {
+const emitSave = handleSubmit(async ({ amount, comment, date }) => {
     const meta: {
         toAccountId?: number; // TODO meta t type
     } = {};
     if (transactionType.value === 'transfer') {
         meta.toAccountId = toAccount.value.id;
-        delete data.toAccountId;
     }
 
     emit('createTransaction', {
-        amount: data.amount,
-        comment: data.comment,
         status: true,
-        date: dayjs(data.date).format('YYYY-MM-DD'),
+        amount,
+        comment,
+        date: dayjs(date).format('YYYY-MM-DD'),
         accountId: selectedAccount.value!.id,
         transactionCategoryId: transactionCategory.value.id,
         meta: JSON.stringify(meta),
@@ -330,4 +338,3 @@ const emitSave = handleSubmit(async (data) => {
     }
 }
 </style>
-~/types/models

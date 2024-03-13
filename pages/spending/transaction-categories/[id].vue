@@ -136,11 +136,11 @@ useHead({
     title: 'Edit Transaction Category - Spending',
 });
 
-const route = useRoute();
-const { getTransactionCategory, updateTransactionCategory } = useSpendingManagementStore();
-const { transactionCategory, loading }: any = storeToRefs(useSpendingManagementStore());
+const spendingManagementStore = useSpendingManagementStore();
+const { getTransactionCategory, updateTransactionCategory } = spendingManagementStore;
+const { transactionCategory, loading } = storeToRefs(spendingManagementStore);
 
-const transactionTypeOptions = ref(['income', 'expense', 'transfer']);
+const transactionTypeOptions = ref(getTransactionTypes());
 const schema = yup.object({
     name: yup.string().required().label('Name'),
     status: yup.boolean().label('Status'),
@@ -159,6 +159,7 @@ const [transactionType] = defineField('transactionType');
 const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 
+const route = useRoute();
 const dayjs = useDayjs();
 onMounted(async () => {
     await getTransactionCategory(getIdFromRoute(route.params));
@@ -170,7 +171,12 @@ onMounted(async () => {
     updatedAt.value = dayjs(transactionCategory.value.updatedAt).format('YYYY-MM-DD HH:mm');
 });
 
-const save = handleSubmit(async (data: any) => {
-    await updateTransactionCategory(data);
+const save = handleSubmit(async ({ id, status, name, transactionType }) => {
+    await updateTransactionCategory({
+        id,
+        status,
+        name,
+        transactionType,
+    });
 });
 </script>

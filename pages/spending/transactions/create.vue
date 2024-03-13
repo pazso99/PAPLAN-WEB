@@ -173,6 +173,8 @@
 
 <script setup lang="ts">
 import * as yup from 'yup';
+import type { Account, TransactionCategory } from '~/types/models';
+import type { TransactionType } from '~/types/types';
 
 definePageMeta({
     middleware: 'auth',
@@ -183,10 +185,9 @@ useHead({
     title: 'Create Transaction - Spending',
 });
 
-const dayjs = useDayjs();
-
-const { createTransaction, getAccounts, getTransactionCategories } = useSpendingManagementStore();
-const { accounts, transactionCategories, loading }: any = storeToRefs(useSpendingManagementStore());
+const spendingManagementStore = useSpendingManagementStore();
+const { createTransaction, getAccounts, getTransactionCategories } = spendingManagementStore;
+const { accounts, transactionCategories, loading } = storeToRefs(spendingManagementStore);
 
 const schema = yup.object({
     date: yup.date().required().label('Date'),
@@ -216,12 +217,13 @@ const [transactionCategory] = defineField('transactionCategory');
 const [account] = defineField('account');
 const [toAccount] = defineField('toAccount');
 
-const toAccounts = ref([]);
+const dayjs = useDayjs();
+const toAccounts = ref<Account[]>([]);
 watch(account, async (newAccount) => {
     if (toAccount.value?.id === newAccount.id) {
         toAccount.value = null;
     }
-    toAccounts.value = accounts.value.filter((account: any) => account.id !== newAccount.id);
+    toAccounts.value = accounts.value.filter(account => account.id !== newAccount.id);
 });
 
 status.value = true;
@@ -237,7 +239,9 @@ onMounted(async () => {
 });
 
 const save = handleSubmit(async ({ account, amount, date, status, comment, transactionCategory, toAccount }) => {
-    const meta: any = {};
+    const meta: {
+        toAccountId?: number;
+    } = {};
     if (transactionCategory.transactionType === 'transfer') {
         meta.toAccountId = toAccount.id;
     }
@@ -253,6 +257,7 @@ const save = handleSubmit(async ({ account, amount, date, status, comment, trans
     });
 });
 
+// TODO
 const selectableTransactionCategories: any = ref([]);
 function setTransactionTypeGroups() {
     const transactionTypeGroups: any = {};

@@ -77,9 +77,11 @@
             </template>
         </Column>
 
+
         <Column
             field="date"
             header="Date"
+            data-type="date"
             sortable
             style="width: 10%"
         >
@@ -87,10 +89,11 @@
                 {{ $dayjs(data.date).format('YYYY-MM-DD') }}
             </template>
             <template #filter="{ filterModel }">
-                <InputText
+                <Calendar
                     v-model="filterModel.value"
-                    class="p-column-filter"
-                    placeholder="Date..."
+                    date-format="yy-mm-dd"
+                    placeholder="2024-01-01"
+                    mask="9999-99-99"
                 />
             </template>
         </Column>
@@ -99,17 +102,24 @@
             field="account.name"
             header="Account"
             sortable
+            :show-filter-match-modes="false"
             style="width: 15%"
         >
             <template #body="{ data }">
                 {{ data.account.name }}
             </template>
             <template #filter="{ filterModel }">
-                <InputText
+                <MultiSelect
                     v-model="filterModel.value"
+                    :options="accountNameOptions"
+                    placeholder="Any"
                     class="p-column-filter"
-                    placeholder="Account..."
-                />
+                    :max-selected-labels="1"
+                >
+                    <template #option="slotProps">
+                        <span>{{ slotProps.option }}</span>
+                    </template>
+                </MultiSelect>
             </template>
         </Column>
 
@@ -147,7 +157,7 @@
             <template #filter="{ filterModel }">
                 <MultiSelect
                     v-model="filterModel.value"
-                    :options="['income', 'expense', 'transfer']"
+                    :options="getTransactionTypes()"
                     placeholder="Any"
                     class="p-column-filter"
                     :max-selected-labels="1"
@@ -163,7 +173,6 @@
             header="Category"
             field="transactionCategory.name"
             sortable
-            sort-field="transactionCategory.name"
             :show-filter-match-modes="false"
             style="width: 15%"
         >
@@ -175,7 +184,7 @@
             <template #filter="{ filterModel }">
                 <MultiSelect
                     v-model="filterModel.value"
-                    :options="transactionCategoryOptions"
+                    :options="transactionCategoryNameOptions"
                     placeholder="Any"
                     class="p-column-filter"
                     :max-selected-labels="1"
@@ -222,14 +231,14 @@ useHead({
     title: 'Transactions - Spending',
 });
 
-const { getTransactions, deleteTransaction, getTransactionCategories } = useSpendingManagementStore();
-const { transactions, transactionCategories, loading } = storeToRefs(useSpendingManagementStore());
-const transactionCategoryOptions = ref<{ id: number; name: string; slug: string }[]>([]);
+const spendingManagementStore = useSpendingManagementStore();
+const { getTransactions, getAccounts, deleteTransaction, getTransactionCategories } = spendingManagementStore;
+const { transactions, accounts, transactionCategories, loading } = storeToRefs(spendingManagementStore);
 
 const filters = ref({
     'id': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-    'account.name': { value: null, matchMode: FilterMatchMode.CONTAINS },
-    'date': { value: null, matchMode: FilterMatchMode.CONTAINS },
+    'account.name': { value: null, matchMode: FilterMatchMode.IN },
+    'date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
     'transactionCategory.transactionType': { value: null, matchMode: FilterMatchMode.IN },
     'transactionCategory.name': { value: null, matchMode: FilterMatchMode.IN },
     'status': { value: null, matchMode: FilterMatchMode.EQUALS },
@@ -237,11 +246,15 @@ const filters = ref({
     'comment': { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
 
+const transactionCategoryNameOptions = ref<string[]>();
+const accountNameOptions = ref<string[]>();
 onMounted(async () => {
     await getTransactions();
+    await getAccounts();
     await getTransactionCategories();
 
-    transactionCategoryOptions.value = transactionCategories.value.map(({ id, name, slug }) => ({ id, name, slug }));
+    accountNameOptions.value = accounts.value.map(({ name }) => (name));
+    transactionCategoryNameOptions.value = transactionCategories.value.map(({ name }) => (name));
 });
 
 async function removeTransaction(id: number) {
@@ -254,11 +267,17 @@ async function refreshTable() {
 }
 
 // TODO meta type
-function getMetaDescription(data: { meta: string; transactionCategory: { transactionType: string } }) {
+function getMetaDescription(
+    data: {
+        meta: string;
+        transactionCategory: {
+            transactionType: string;
+        };
+    },
+) {
     const meta = JSON.parse(data.meta);
     if (data.transactionCategory.transactionType === 'transfer') {
         return `to: ${meta.toAccountId}`;
-        // TODO majd NAME
     }
 };
 </script>

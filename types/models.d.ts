@@ -1,13 +1,13 @@
 import type { TransactionType } from './types';
 
 interface User {
-    id: string;
+    id: number;
     name: string;
     email: string;
 };
 
 interface AccountBasic {
-    id: string;
+    id: number;
     name: string;
     balance: number;
 };
@@ -15,8 +15,8 @@ interface AccountBasic {
 interface Account extends AccountBasic {
     status: boolean;
     slug: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 interface TransactionCategoryBasic {
@@ -28,13 +28,13 @@ interface TransactionCategoryBasic {
 interface TransactionCategory extends TransactionCategoryBasic {
     status: boolean;
     slug: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 interface TransactionBasic {
     id: number;
-    date: string;
+    date: Date;
     amount: number;
     transactionCategory: TransactionCategoryBasic;
     account: AccountBasic;
@@ -44,8 +44,8 @@ interface TransactionBasic {
 
 interface Transaction extends TransactionBasic {
     status: boolean;
-    createdAt: string;
-    updatedAt: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export {

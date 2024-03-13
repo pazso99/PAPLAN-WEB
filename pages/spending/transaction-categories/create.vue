@@ -108,7 +108,7 @@ useHead({
     title: 'Create Transaction Category - Spending',
 });
 
-const transactionTypeOptions = ref(['income', 'expense', 'transfer']);
+const transactionTypeOptions = ref(getTransactionTypes());
 const schema = yup.object({
     name: yup.string().required().label('Name'),
     status: yup.boolean().label('Status'),

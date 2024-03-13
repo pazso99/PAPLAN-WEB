@@ -7,6 +7,7 @@ definePageMeta({
     middleware: 'auth',
     layout: 'admin',
 });
-const router: any = useRouter();
+
+const router = useRouter();
 router.push('/spending');
 </script>

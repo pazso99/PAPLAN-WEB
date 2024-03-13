@@ -4,7 +4,6 @@
         :nav-buttons="[
             { icon: 'pi-chevron-left', to: '/spending/accounts' },
         ]"
-        :loading="false"
     >
         <form class="p-5">
             <div class="flex flex-col mb-4">
@@ -93,6 +92,10 @@ status.value = true;
 
 const { createAccount } = useSpendingManagementStore();
 const save = handleSubmit(async ({ name, status, balance }) => {
-    await createAccount({ name, status, balance });
+    await createAccount({
+        name,
+        status,
+        balance,
+    });
 });
 </script>

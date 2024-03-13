@@ -32,7 +32,7 @@
                     background-class="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
                     :number="spendingDashboardData.totals.basicExpense"
                     number-class="text-red-500"
-                    label="Basic kiadás"
+                    label="Basic expense"
                     label-class="mb-0 font-weight-bolder"
                     :duration="300"
                     suffix="Ft"
@@ -42,7 +42,7 @@
                     background-class="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
                     :number="spendingDashboardData.totals.premiumExpense"
                     number-class="text-red-500"
-                    label="Prémium kiadás"
+                    label="Premium expense"
                     label-class="mb-0 font-weight-bolder"
                     :duration="300"
                     suffix="Ft"
@@ -81,7 +81,8 @@
 import Chart from 'primevue/chart';
 import type { SpendingDashboardCategoryInfo, SpendingDashboardData } from '~/types/types';
 
-const { spendingDashboardData } = storeToRefs(useSpendingDashboardStore());
+const spendingDashboardStore = useSpendingDashboardStore();
+const { spendingDashboardData } = storeToRefs(spendingDashboardStore);
 const chartData = ref();
 const chartOptions = ref();
 const expenseCategories = ref<SpendingDashboardCategoryInfo[]>();

@@ -205,8 +205,8 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    (e: 'deleteItem', id: number): any;
-    (e: 'refreshTable'): any;
+    (e: 'deleteItem', id: number): void;
+    (e: 'refreshTable'): void;
 }>();
 
 const filters = ref();
@@ -223,10 +223,16 @@ function clearFilter() {
 }
 
 const deleteModalVisible = ref(false);
-const deletableItem = ref<{ id: number }>({ id: -1 });
+const deletableItem = ref<{
+    id: number;
+    [key: string]: any;
+}>({ id: -1 });
 
 async function openDeleteModal(deletableData: any) {
-    deletableItem.value = deletableData;
+    deletableItem.value = {
+        id: deletableData.id,
+        ...deletableData,
+    };
     deleteModalVisible.value = true;
 }
 

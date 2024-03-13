@@ -101,8 +101,9 @@ useHead({
     title: 'Edit Account - Spending',
 });
 
-const { getAccount, updateAccount } = useSpendingManagementStore();
-const { account, loading } = storeToRefs(useSpendingManagementStore());
+const spendingManagementStore = useSpendingManagementStore();
+const { getAccount, updateAccount } = spendingManagementStore;
+const { account, loading } = storeToRefs(spendingManagementStore);
 
 const schema = yup.object({
     name: yup.string().required().label('Name'),
@@ -135,6 +136,11 @@ onMounted(async () => {
 });
 
 const save = handleSubmit(async ({ id, status, name, balance }) => {
-    await updateAccount({ id, status, name, balance });
+    await updateAccount({
+        id,
+        status,
+        name,
+        balance,
+    });
 });
 </script>

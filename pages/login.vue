@@ -65,8 +65,7 @@ useHead({
 });
 
 const toast = useToast();
-const route: any = useRoute();
-
+const route = useRoute();
 onMounted(() => {
     nextTick(() => {
         if (route.query.expired == '1') {
@@ -88,8 +87,11 @@ const [name] = defineField('name');
 const [password] = defineField('password');
 
 const { login } = useAuthStore();
-const onSubmit = handleSubmit(async (data: any) => {
+const onSubmit = handleSubmit(async ({ name, password }) => {
     resetForm();
-    await login(data);
+    await login({
+        name,
+        password,
+    });
 });
 </script>

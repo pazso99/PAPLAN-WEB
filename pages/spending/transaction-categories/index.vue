@@ -108,7 +108,7 @@
             <template #filter="{ filterModel }">
                 <MultiSelect
                     v-model="filterModel.value"
-                    :options="['income', 'expense', 'transfer']"
+                    :options="getTransactionTypes()"
                     placeholder="Any"
                     class="p-column-filter"
                     :max-selected-labels="1"
@@ -120,9 +120,11 @@
             </template>
         </Column>
 
+
         <Column
             field="createdAt"
             header="CreatedAt"
+            data-type="date"
             sortable
             style="width: 25%"
         >
@@ -130,10 +132,11 @@
                 {{ $dayjs(data.createdAt).format('YYYY-MM-DD') }}
             </template>
             <template #filter="{ filterModel }">
-                <InputText
+                <Calendar
                     v-model="filterModel.value"
-                    class="p-column-filter"
-                    placeholder="Date..."
+                    date-format="yy-mm-dd"
+                    placeholder="2024-01-01"
+                    mask="9999-99-99"
                 />
             </template>
         </Column>
@@ -152,14 +155,15 @@ useHead({
     title: 'Transaction categories - Spending',
 });
 
-const { getTransactionCategories, deleteTransactionCategory } = useSpendingManagementStore();
-const { transactionCategories, loading } = storeToRefs(useSpendingManagementStore());
+const spendingManagementStore = useSpendingManagementStore();
+const { getTransactionCategories, deleteTransactionCategory } = spendingManagementStore;
+const { transactionCategories, loading } = storeToRefs(spendingManagementStore);
 
 const filters = ref({
     id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
-    createdAt: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    createdAt: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
     transactionType: { value: null, matchMode: FilterMatchMode.IN },
 });
 
