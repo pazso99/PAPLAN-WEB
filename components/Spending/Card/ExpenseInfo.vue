@@ -11,22 +11,24 @@
                 {{ "" }}
                 <span class="text-lg ms-n1">{{ suffix }}</span>
             </h1>
-            <h6 :class="labelClass">{{ label }}</h6>
+            <h6 :class="labelClass">
+                {{ label }}
+            </h6>
         </div>
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import CountTo from 'vue-count-to/src';
 
-defineProps([
-    'containerClass',
-    'backgroundClass',
-    'number',
-    'numberClass',
-    'label',
-    'labelClass',
-    'duration',
-    'suffix'
-]);
+defineProps<{
+    containerClass: string;
+    backgroundClass: string;
+    number: number;
+    numberClass: string;
+    label: string;
+    labelClass: string;
+    duration: number;
+    suffix: string;
+}>();
 </script>

@@ -1,11 +1,13 @@
 <template>
-    <div></div>
+    <div />
 </template>
+
 <script setup lang="ts">
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
 });
-const router: any = useRouter();
+
+const router = useRouter();
 router.push('/spending');
 </script>

@@ -1,8 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     ssr: false,
+    imports: {
+        dirs: [
+            'composables',
+            'composables/*/index.{ts,js,mjs,mts}',
+            'composables/**',
+        ],
+    },
     devtools: {
-        enabled: true
+        enabled: true,
     },
     app: {
         head: {
@@ -45,6 +52,6 @@ export default defineNuxtConfig({
         '@nuxtjs/tailwindcss',
         '@vee-validate/nuxt',
         'dayjs-nuxt',
-        'nuxt-primevue'
-    ]
+        'nuxt-primevue',
+    ],
 });

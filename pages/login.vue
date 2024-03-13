@@ -1,14 +1,16 @@
 <template>
     <div class="relative flex flex-col items-center min-w-0 break-words bg-transparent border-0 shadow-none lg:py4 dark:bg-slate-850 rounded-2xl bg-clip-border">
         <div class="p-6 pb-0 mb-0">
-            <h1 class="font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-r to-cyan-100 from-blue-800">PAPLAN</h1>
+            <h1 class="font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-r to-cyan-100 from-blue-800">
+                PAPLAN
+            </h1>
         </div>
         <Divider class="mt-6">
             <div class="h-2 w-2 rounded-full bg-blue-400" />
         </Divider>
         <form @submit.prevent="onSubmit">
             <div class="mb-4">
-                <IconField iconPosition="left">
+                <IconField icon-position="left">
                     <InputIcon>
                         <i class="pi pi-user" />
                     </InputIcon>
@@ -24,7 +26,7 @@
                 </small>
             </div>
             <div class="mb-4">
-                <IconField iconPosition="left">
+                <IconField icon-position="left">
                     <InputIcon>
                         <i class="pi pi-lock" />
                     </InputIcon>
@@ -63,13 +65,14 @@ useHead({
 });
 
 const toast = useToast();
-const route: any = useRoute();
+const route = useRoute();
 onMounted(() => {
     nextTick(() => {
-        if (route.query.expired == "1") {
+        if (route.query.expired == '1') {
             toast.add({ severity: 'error', summary: 'Error!', detail: 'Token expired!', life: 3000 });
+            useRouter().push({ query: {} });
         }
-    })
+    });
 });
 
 const schema = yup.object({
@@ -84,8 +87,11 @@ const [name] = defineField('name');
 const [password] = defineField('password');
 
 const { login } = useAuthStore();
-const onSubmit = handleSubmit(async (data: any) => {
+const onSubmit = handleSubmit(async ({ name, password }) => {
     resetForm();
-    await login(data);
+    await login({
+        name,
+        password,
+    });
 });
 </script>

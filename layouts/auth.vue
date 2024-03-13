@@ -7,7 +7,7 @@
                 </div>
                 <div class="absolute top-0 right-0 flex-col justify-center hidden w-6/12 h-full max-w-full px-3 pr-0 my-auto text-center flex-0 lg:flex">
                     <div class="relative flex flex-col justify-center h-full px-24 bg-cover paplan-bg">
-                        <span class="absolute top-0 left-0 w-full h-full bg-cover opacity-60 bg-gradient-to-tl from-blue-500 to-violet-500"></span>
+                        <span class="absolute top-0 left-0 w-full h-full bg-cover opacity-60 bg-gradient-to-tl from-blue-500 to-violet-500" />
                     </div>
                 </div>
             </div>
@@ -16,10 +16,10 @@
     <Toast position="top-center" />
 </template>
 
-<script setup>
+<script setup lang="ts">
 useHead({
     titleTemplate: (titleChunk) => {
         return titleChunk ? `${titleChunk} - Paplan` : 'Paplan';
-    }
-})
+    },
+});
 </script>

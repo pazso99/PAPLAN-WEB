@@ -31,7 +31,7 @@
                     />
                     <Sidebar v-model:visible="isNavOpen">
                         <template #container>
-                            <NavigationMenu :isMobile="true" />
+                            <NavigationMenu :is-mobile="true" />
                         </template>
                     </Sidebar>
                 </div>
@@ -42,7 +42,7 @@
 
 <script setup lang="ts">
 const items = ref([]);
-const router: any = useRouter();
+const router = useRouter();
 const { logout } = useAuthStore();
 const { toggleNav } = useNavigationStore();
 const { isNavOpen } = storeToRefs(useNavigationStore());

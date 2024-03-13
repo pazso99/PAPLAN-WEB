@@ -1,14 +1,14 @@
 <template>
     <ContentListCard
-        :title="'Accounts'"
-        :buttons="[
+        title="Accounts"
+        :nav-buttons="[
             { icon: 'pi-plus', to: '/spending/accounts/create' },
-            { icon: 'pi-chevron-left', to: '/spending' }
+            { icon: 'pi-chevron-left', to: '/spending' },
         ]"
         :items="accounts"
         :loading="loading"
         :multi-sort-meta="[
-            { field: 'id', order: -1 }
+            { field: 'id', order: -1 },
         ]"
         :global-filter-fields="[
             'id',
@@ -17,7 +17,7 @@
             'createdAt',
         ]"
         :filters="filters"
-        :actionsColumnMeta="{
+        :actions-column-meta="{
             width: '5%',
             editUrl: '/spending/accounts',
         }"
@@ -26,7 +26,7 @@
     >
         <Column
             field="id"
-            dataType="numeric"
+            data-type="numeric"
             header="ID"
             sortable
             style="width: 10%"
@@ -45,7 +45,7 @@
             field="status"
             header="Status"
             sortable
-            :showFilterMatchModes="false"
+            :show-filter-match-modes="false"
             style="width: 10%"
         >
             <template #body="{ data }">
@@ -62,8 +62,8 @@
                             box: {
                                 class: [
                                     'border-none',
-                                    filterModel.value !== null ? filterModel.value ? 'bg-green-600' : 'bg-red-800' : ''
-                                ]
+                                    filterModel.value !== null ? filterModel.value ? 'bg-green-600' : 'bg-red-800' : '',
+                                ],
                             },
                         }"
                     />
@@ -95,7 +95,7 @@
         <Column
             field="balance"
             header="Balance"
-            dataType="numeric"
+            data-type="numeric"
             sortable
             style="width: 25%"
         >
@@ -113,6 +113,7 @@
         <Column
             field="createdAt"
             header="CreatedAt"
+            data-type="date"
             sortable
             style="width: 25%"
         >
@@ -120,17 +121,18 @@
                 {{ $dayjs(data.createdAt).format('YYYY-MM-DD') }}
             </template>
             <template #filter="{ filterModel }">
-                <InputText
+                <Calendar
                     v-model="filterModel.value"
-                    class="p-column-filter"
-                    placeholder="Date..."
+                    date-format="yy-mm-dd"
+                    placeholder="2024-01-01"
+                    mask="9999-99-99"
                 />
             </template>
         </Column>
     </ContentListCard>
 </template>
 
-<script lang="ts" setup>
+<script setup lang="ts">
 import { FilterMatchMode, FilterOperator } from 'primevue/api';
 
 definePageMeta({
@@ -142,14 +144,14 @@ useHead({
     title: 'Accounts - Spending',
 });
 
-const { getAccounts, deleteAccount } = useSpendingCrudStore();
-const { accounts, loading }: any = storeToRefs(useSpendingCrudStore());
+const { getAccounts, deleteAccount } = useSpendingManagementStore();
+const { accounts, loading } = storeToRefs(useSpendingManagementStore());
 
 const filters = ref({
     id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
-    createdAt: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    createdAt: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
     balance: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
 });
 
@@ -157,7 +159,7 @@ onMounted(async () => {
     await getAccounts();
 });
 
-async function removeAccount(id: any) {
+async function removeAccount(id: number) {
     await deleteAccount(id);
     await getAccounts();
 }

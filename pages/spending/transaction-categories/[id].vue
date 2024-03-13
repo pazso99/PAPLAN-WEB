@@ -1,8 +1,8 @@
 <template>
     <ContentBaseCard
-        :title="'Edit Transaction Category'"
-        :navButtons="[
-            { icon: 'pi-chevron-left', to: '/spending/transaction-categories' }
+        title="Edit Transaction Category"
+        :nav-buttons="[
+            { icon: 'pi-chevron-left', to: '/spending/transaction-categories' },
         ]"
         :loading="loading"
     >
@@ -129,18 +129,18 @@ import * as yup from 'yup';
 
 definePageMeta({
     middleware: 'auth',
-    layout: 'admin'
+    layout: 'admin',
 });
 
 useHead({
     title: 'Edit Transaction Category - Spending',
 });
 
-const route: any = useRoute();
-const { getTransactionCategory, updateTransactionCategory } = useSpendingCrudStore();
-const { transactionCategory, loading }: any = storeToRefs(useSpendingCrudStore());
+const spendingManagementStore = useSpendingManagementStore();
+const { getTransactionCategory, updateTransactionCategory } = spendingManagementStore;
+const { transactionCategory, loading } = storeToRefs(spendingManagementStore);
 
-const transactionTypeOptions = ref(['income', 'expense', 'transfer']);
+const transactionTypeOptions = ref(getTransactionTypes());
 const schema = yup.object({
     name: yup.string().required().label('Name'),
     status: yup.boolean().label('Status'),
@@ -159,9 +159,10 @@ const [transactionType] = defineField('transactionType');
 const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 
+const route = useRoute();
 const dayjs = useDayjs();
 onMounted(async () => {
-    await getTransactionCategory(route.params.id);
+    await getTransactionCategory(getIdFromRoute(route.params));
     id.value = transactionCategory.value.id;
     name.value = transactionCategory.value.name;
     status.value = transactionCategory.value.status;
@@ -170,7 +171,12 @@ onMounted(async () => {
     updatedAt.value = dayjs(transactionCategory.value.updatedAt).format('YYYY-MM-DD HH:mm');
 });
 
-const save = handleSubmit(async (data: any) => {
-    await updateTransactionCategory(data);
+const save = handleSubmit(async ({ id, status, name, transactionType }) => {
+    await updateTransactionCategory({
+        id,
+        status,
+        name,
+        transactionType,
+    });
 });
 </script>

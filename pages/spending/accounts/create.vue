@@ -1,8 +1,8 @@
 <template>
     <ContentBaseCard
-        :title="'Create account'"
-        :navButtons="[
-            { icon: 'pi-chevron-left', to: '/spending/accounts' }
+        title="Create account"
+        :nav-buttons="[
+            { icon: 'pi-chevron-left', to: '/spending/accounts' },
         ]"
     >
         <form class="p-5">
@@ -66,7 +66,7 @@ import * as yup from 'yup';
 
 definePageMeta({
     middleware: 'auth',
-    layout: 'admin'
+    layout: 'admin',
 });
 
 useHead({
@@ -90,8 +90,12 @@ const [balance] = defineField('balance');
 
 status.value = true;
 
-const { createAccount } = useSpendingCrudStore();
-const save = handleSubmit(async (data: any) => {
-    await createAccount(data);
+const { createAccount } = useSpendingManagementStore();
+const save = handleSubmit(async ({ name, status, balance }) => {
+    await createAccount({
+        name,
+        status,
+        balance,
+    });
 });
 </script>
