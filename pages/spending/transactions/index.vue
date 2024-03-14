@@ -23,6 +23,7 @@
         :actions-column-meta="{
             width: '5%',
             editUrl: '/spending/transactions',
+            canDelete: true,
         }"
         @refresh-table="refreshTable"
         @delete-item="removeTransaction"
@@ -200,6 +201,7 @@
             field="comment"
             header="Comment"
             sortable
+            :show-filter-match-modes="false"
             style="width: 10%"
         >
             <template #body="{ data }">
@@ -237,11 +239,11 @@ const { transactions, accounts, transactionCategories, loading } = storeToRefs(s
 
 const filters = ref({
     'id': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-    'account.name': { value: null, matchMode: FilterMatchMode.IN },
+    'status': { value: null, matchMode: FilterMatchMode.EQUALS },
     'date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+    'account.name': { value: null, matchMode: FilterMatchMode.IN },
     'transactionCategory.transactionType': { value: null, matchMode: FilterMatchMode.IN },
     'transactionCategory.name': { value: null, matchMode: FilterMatchMode.IN },
-    'status': { value: null, matchMode: FilterMatchMode.EQUALS },
     'amount': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     'comment': { value: null, matchMode: FilterMatchMode.CONTAINS },
 });

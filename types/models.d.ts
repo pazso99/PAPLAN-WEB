@@ -48,6 +48,20 @@ interface Transaction extends TransactionBasic {
     updatedAt: Date;
 }
 
+interface RecipeBasic {
+    id: number;
+    name: string;
+    time: string;
+    description: string;
+};
+
+interface Recipe extends RecipeBasic {
+    status: boolean;
+    slug: string;
+    createdAt: Date;
+    updatedAt: Date;
+};
+
 export {
     User,
     AccountBasic,
@@ -56,4 +70,6 @@ export {
     TransactionCategory,
     TransactionBasic,
     Transaction,
+    RecipeBasic,
+    Recipe,
 };

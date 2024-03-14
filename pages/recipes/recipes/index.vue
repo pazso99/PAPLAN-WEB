@@ -1,11 +1,11 @@
 <template>
     <ContentListCard
-        title="Transaction categories"
+        title="Recipes"
         :nav-buttons="[
-            { icon: 'pi-plus', to: '/spending/transaction-categories/create' },
-            { icon: 'pi-chevron-left', to: '/spending' },
+            { icon: 'pi-plus', to: '/recipes/recipes/create' },
+            { icon: 'pi-chevron-left', to: '/recipes' },
         ]"
-        :items="transactionCategories"
+        :items="recipes"
         :loading="loading"
         :multi-sort-meta="[
             { field: 'id', order: -1 },
@@ -13,17 +13,18 @@
         :global-filter-fields="[
             'id',
             'name',
-            'transactionType',
+            'time',
             'createdAt',
         ]"
         :filters="filters"
         :actions-column-meta="{
             width: '5%',
-            editUrl: '/spending/transaction-categories',
+            editUrl: '/recipes/recipes',
+            showUrl: '/recipes/recipes',
             canDelete: true,
         }"
         @refresh-table="refreshTable"
-        @delete-item="removeTransactionCategory"
+        @delete-item="removeRecipe"
     >
         <Column
             field="id"
@@ -95,33 +96,23 @@
         </Column>
 
         <Column
-            header="Type"
-            field="transactionType"
+            field="time"
+            header="Time"
             sortable
             :show-filter-match-modes="false"
-            style="width: 20%"
+            style="width: 25%"
         >
             <template #body="{ data }">
-                <Tag
-                    :value="getTransactionTypeLabel(data.transactionType)"
-                    :severity="getTransactionTypeColor(data.transactionType)"
-                />
+                {{ data.time }}
             </template>
             <template #filter="{ filterModel }">
-                <MultiSelect
+                <InputText
                     v-model="filterModel.value"
-                    :options="getTransactionTypes()"
-                    placeholder="Any"
                     class="p-column-filter"
-                    :max-selected-labels="1"
-                >
-                    <template #option="slotProps">
-                        <span>{{ slotProps.option }}</span>
-                    </template>
-                </MultiSelect>
+                    placeholder="Time..."
+                />
             </template>
         </Column>
-
 
         <Column
             field="createdAt"
@@ -154,31 +145,31 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Transaction categories - Spending',
+    title: 'Recipes - Recipes',
 });
 
-const spendingManagementStore = useSpendingManagementStore();
-const { getTransactionCategories, deleteTransactionCategory } = spendingManagementStore;
-const { transactionCategories, loading } = storeToRefs(spendingManagementStore);
+const recipesManagementStore = useRecipesManagementStore();
+const { getRecipes, deleteRecipe } = recipesManagementStore;
+const { recipes, loading } = storeToRefs(recipesManagementStore);
 
 const filters = ref({
     id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    transactionType: { value: null, matchMode: FilterMatchMode.IN },
+    time: { value: null, matchMode: FilterMatchMode.CONTAINS },
     createdAt: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
 });
 
 onMounted(async () => {
-    await getTransactionCategories();
+    await getRecipes();
 });
 
-async function removeTransactionCategory(id: number) {
-    await deleteTransactionCategory(id);
-    await getTransactionCategories();
+async function removeRecipe(id: number) {
+    await deleteRecipe(id);
+    await getRecipes();
 }
 
 async function refreshTable() {
-    await getTransactionCategories();
+    await getRecipes();
 }
 </script>

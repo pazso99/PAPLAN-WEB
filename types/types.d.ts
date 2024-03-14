@@ -1,5 +1,6 @@
 import type { TransactionTypes } from './constants';
 import type {
+    RecipeBasic,
     TransactionBasic,
     TransactionCategoryBasic,
 } from './models';
@@ -55,6 +56,10 @@ interface SpendingConfigs {
 
 type SpendingActualBalances = Record<string, number>;
 
+interface RecipesDashboardData {
+    recipes: RecipeBasic[];
+};
+
 export {
     TransactionType,
     SpendingDashboardAccountInfo,
@@ -63,4 +68,5 @@ export {
     SpendingConfigs,
     SpendingSettings,
     SpendingActualBalances,
+    RecipesDashboardData,
 };

@@ -36,7 +36,7 @@ export const useSpendingDashboardStore = defineStore('spending-dashboard', {
                     method: 'POST',
                     body: data,
                 });
-                toast.add({ summary: 'Transaction created!', severity: 'success', detail: 'Succesfull', life: 3000 });
+                toast.add({ summary: 'Transaction created!', severity: 'success', detail: 'Successfull', life: 3000 });
             } catch (err: any) {
                 toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when creating transaction data!', life: 3000 });
             } finally {

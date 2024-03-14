@@ -20,6 +20,7 @@
         :actions-column-meta="{
             width: '5%',
             editUrl: '/spending/accounts',
+            canDelete: true,
         }"
         @refresh-table="refreshTable"
         @delete-item="removeAccount"
@@ -78,6 +79,7 @@
             field="name"
             header="Name"
             sortable
+            :show-filter-match-modes="false"
             style="width: 25%"
         >
             <template #body="{ data }">
@@ -144,15 +146,16 @@ useHead({
     title: 'Accounts - Spending',
 });
 
-const { getAccounts, deleteAccount } = useSpendingManagementStore();
-const { accounts, loading } = storeToRefs(useSpendingManagementStore());
+const spendingManagementStore = useSpendingManagementStore();
+const { getAccounts, deleteAccount } = spendingManagementStore;
+const { accounts, loading } = storeToRefs(spendingManagementStore);
 
 const filters = ref({
     id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
-    name: { value: null, matchMode: FilterMatchMode.CONTAINS },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
-    createdAt: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
+    name: { value: null, matchMode: FilterMatchMode.CONTAINS },
     balance: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+    createdAt: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
 });
 
 onMounted(async () => {
