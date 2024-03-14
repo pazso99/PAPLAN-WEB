@@ -123,17 +123,21 @@ const [balance] = defineField('balance');
 const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 
-const dayjs = useDayjs();
 const route = useRoute();
 onMounted(async () => {
     await getAccount(getIdFromRoute(route.params));
+    setData();
+});
+
+const dayjs = useDayjs();
+function setData() {
     id.value = account.value.id;
     name.value = account.value.name;
     status.value = account.value.status;
     balance.value = account.value.balance;
     createdAt.value = dayjs(account.value.createdAt).format('YYYY-MM-DD HH:mm');
     updatedAt.value = dayjs(account.value.updatedAt).format('YYYY-MM-DD HH:mm');
-});
+}
 
 const save = handleSubmit(async ({ id, status, name, balance }) => {
     await updateAccount({
@@ -142,5 +146,6 @@ const save = handleSubmit(async ({ id, status, name, balance }) => {
         name,
         balance,
     });
+    setData();
 });
 </script>

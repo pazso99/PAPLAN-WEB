@@ -70,7 +70,7 @@ export const useSpendingManagementStore = defineStore('spending-management', {
                     body: data,
                 });
                 this.account = response.data;
-                toast.add({ summary: 'Record created!', severity: 'success', detail: 'Succesful', life: 3000 });
+                toast.add({ summary: 'Record created!', severity: 'success', detail: 'Successful', life: 3000 });
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
@@ -87,7 +87,7 @@ export const useSpendingManagementStore = defineStore('spending-management', {
                     body: data,
                 });
                 this.account = response.data;
-                toast.add({ summary: 'Record updated', severity: 'success', detail: 'Succesful', life: 3000 });
+                toast.add({ summary: 'Record updated', severity: 'success', detail: 'Successful', life: 3000 });
             } catch (err: any) {
                 navigateTo('/spending/accounts');
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
@@ -102,7 +102,7 @@ export const useSpendingManagementStore = defineStore('spending-management', {
                 await useApiFetch<SpendingAccountResponse>(`spending/accounts/${id}`, {
                     method: 'DELETE',
                 });
-                toast.add({ summary: 'Record deleted!', severity: 'success', detail: 'Succesful', life: 3000 });
+                toast.add({ summary: 'Record deleted!', severity: 'success', detail: 'Successful', life: 3000 });
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
@@ -149,7 +149,7 @@ export const useSpendingManagementStore = defineStore('spending-management', {
                     body: data,
                 });
                 this.transactionCategory = response.data;
-                toast.add({ summary: 'Record created!', severity: 'success', detail: 'Succesful', life: 3000 });
+                toast.add({ summary: 'Record created!', severity: 'success', detail: 'Successful', life: 3000 });
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
@@ -166,7 +166,7 @@ export const useSpendingManagementStore = defineStore('spending-management', {
                     body: data,
                 });
                 this.transactionCategory = response.data;
-                toast.add({ summary: 'Record updated', severity: 'success', detail: 'Succesful', life: 3000 });
+                toast.add({ summary: 'Record updated', severity: 'success', detail: 'Successful', life: 3000 });
             } catch (err: any) {
                 navigateTo('/spending/transaction-categories');
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
@@ -181,7 +181,7 @@ export const useSpendingManagementStore = defineStore('spending-management', {
                 await useApiFetch<SpendingTransactionCategoryResponse>(`spending/transaction-categories/${id}`, {
                     method: 'DELETE',
                 });
-                toast.add({ summary: 'Record deleted!', severity: 'success', detail: 'Succesful', life: 3000 });
+                toast.add({ summary: 'Record deleted!', severity: 'success', detail: 'Successful', life: 3000 });
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
@@ -229,7 +229,7 @@ export const useSpendingManagementStore = defineStore('spending-management', {
                     body: data,
                 });
                 this.transaction = response.data;
-                toast.add({ summary: 'Record created!', severity: 'success', detail: 'Succesful', life: 3000 });
+                toast.add({ summary: 'Record created!', severity: 'success', detail: 'Successful', life: 3000 });
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
@@ -246,7 +246,7 @@ export const useSpendingManagementStore = defineStore('spending-management', {
                     body: data,
                 });
                 this.transaction = response.data;
-                toast.add({ summary: 'Record updated', severity: 'success', detail: 'Succesful', life: 3000 });
+                toast.add({ summary: 'Record updated', severity: 'success', detail: 'Successful', life: 3000 });
             } catch (err: any) {
                 navigateTo('/spending/transactions');
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
@@ -261,7 +261,7 @@ export const useSpendingManagementStore = defineStore('spending-management', {
                 await useApiFetch<SpendingTransactionResponse>(`spending/transactions/${id}`, {
                     method: 'DELETE',
                 });
-                toast.add({ summary: 'Record deleted!', severity: 'success', detail: 'Succesful', life: 3000 });
+                toast.add({ summary: 'Record deleted!', severity: 'success', detail: 'Successful', life: 3000 });
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {

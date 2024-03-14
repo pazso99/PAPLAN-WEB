@@ -45,6 +45,7 @@
             <slot />
 
             <Column
+                v-if="actionsColumnMeta"
                 :style="`width: ${actionsColumnMeta.width}`"
             >
                 <template #header>
@@ -54,7 +55,21 @@
                 </template>
                 <template #body="{ data }">
                     <div class="flex justify-end">
-                        <NuxtLink :to="`${actionsColumnMeta.editUrl}/${data.id}`">
+                        <NuxtLink
+                            v-if="actionsColumnMeta.showUrl"
+                            :to="`${actionsColumnMeta.showUrl}/${data.id}/show`"
+                        >
+                            <Button
+                                icon="pi pi-eye"
+                                severity="contrast"
+                                text
+                                rounded
+                            />
+                        </NuxtLink>
+                        <NuxtLink
+                            v-if="actionsColumnMeta.editUrl"
+                            :to="`${actionsColumnMeta.editUrl}/${data.id}`"
+                        >
                             <Button
                                 icon="pi pi-pencil"
                                 severity="contrast"
@@ -63,6 +78,7 @@
                             />
                         </NuxtLink>
                         <Button
+                            v-if="actionsColumnMeta.canDelete"
                             icon="pi pi-trash"
                             severity="danger"
                             text
@@ -201,7 +217,7 @@ const props = defineProps<{
     multiSortMeta: DataTableSortMeta[];
     globalFilterFields: string[];
     filters: DataTableFilterMeta;
-    actionsColumnMeta: object;
+    actionsColumnMeta?: { width: string; editUrl?: string; showUrl?: string; canDelete?: boolean };
 }>();
 
 const emit = defineEmits<{
