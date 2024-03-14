@@ -1,5 +1,6 @@
 import type {
     Account,
+    Recipe,
     Transaction,
     TransactionCategory,
 } from './models';
@@ -7,6 +8,7 @@ import type {
     SpendingDashboardData,
     SpendingSettings,
     SpendingActualBalances,
+    RecipesDashboardData,
 } from './types';
 
 interface ErrorResponse {
@@ -33,6 +35,10 @@ type SpendingTransactionCategoryListResponse = ApiSuccessResponse<TransactionCat
 type SpendingTransactionResponse = ApiSuccessResponse<Transaction>;
 type SpendingTransactionListResponse = ApiSuccessResponse<Transaction[]>;
 
+type RecipesRecipeResponse = ApiSuccessResponse<Recipe>;
+type RecipesRecipeListResponse = ApiSuccessResponse<Recipe[]>;
+type RecipesDashboardResponse = ApiSuccessResponse<RecipesDashboardData>;
+
 export {
     ErrorResponse,
     TokenResponse,
@@ -46,4 +52,7 @@ export {
     SpendingTransactionCategoryListResponse,
     SpendingTransactionResponse,
     SpendingTransactionListResponse,
+    RecipesRecipeResponse,
+    RecipesRecipeListResponse,
+    RecipesDashboardResponse,
 };

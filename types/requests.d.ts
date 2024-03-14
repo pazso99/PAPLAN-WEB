@@ -66,6 +66,21 @@ interface SpendingTransactionUpdateRequest {
     meta: string | null;
 };
 
+interface RecipesRecipeCreateRequest {
+    status: boolean;
+    name: string;
+    time: string;
+    description: string;
+};
+
+interface RecipesRecipeUpdateRequest {
+    id: number;
+    status: boolean;
+    name: string;
+    time: string;
+    description: string;
+};
+
 export {
     UserLoginRequest,
     SpendingSettingsUpdateRequest,
@@ -76,4 +91,6 @@ export {
     SpendingTransactionCategoryUpdateRequest,
     SpendingTransactionCreateRequest,
     SpendingTransactionUpdateRequest,
+    RecipesRecipeCreateRequest,
+    RecipesRecipeUpdateRequest,
 };

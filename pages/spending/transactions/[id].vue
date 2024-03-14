@@ -248,13 +248,16 @@ watch(account, async (newAccount) => {
 });
 
 const route = useRoute();
-const dayjs = useDayjs();
-
 onMounted(async () => {
     await getTransaction(getIdFromRoute(route.params));
-    await getAccounts();
     await getTransactionCategories();
+    await getAccounts();
 
+    setData();
+});
+
+const dayjs = useDayjs();
+function setData() {
     id.value = transaction.value.id;
     status.value = transaction.value.status;
     createdAt.value = dayjs(transaction.value.createdAt).format('YYYY-MM-DD HH:mm');
@@ -264,10 +267,10 @@ onMounted(async () => {
     comment.value = transaction.value.comment;
     account.value = transaction.value.account;
 
-    setMeta();
-    setSelectableAccounts();
     setTransactionTypeGroups();
-});
+    setSelectableAccounts();
+    setMeta();
+}
 
 const save = handleSubmit(async ({ id, account, amount, date, status, comment, transactionCategory, toAccount }) => {
     const meta: {
@@ -287,6 +290,8 @@ const save = handleSubmit(async ({ id, account, amount, date, status, comment, t
         date,
         meta: JSON.stringify(meta),
     });
+    await getAccounts();
+    setData();
 });
 
 function setMeta() {

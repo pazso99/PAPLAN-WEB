@@ -10,8 +10,8 @@
                 </span>
             </template>
             <PanelMenu
-                v-model:expandedKeys="expandedKeys"
-                :model="items"
+                v-model:expandedKeys="spendingExpandedKeys"
+                :model="spendingItems"
                 unstyled
             >
                 <template #item="{ item, root, active }">
@@ -20,6 +20,43 @@
                         :to="item.route"
                         class="flex items-center justify-between px-3 py-2 cursor-pointer"
                         :class="route.name === 'spending' ? item.key === 'spending-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
+                        @click="isMobile && toggleNav()"
+                    >
+                        <span class="text-sm" :class="[root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
+                    </NuxtLink>
+                    <a
+                        v-else
+                        v-ripple
+                        class="flex items-center justify-between px-3 py-2 cursor-pointer text-zinc-400"
+                    >
+                        <span class="ml-2 text-sm">{{ item.label }}</span>
+                        <span>
+                            <i v-if="active" class="pi pi-angle-up" />
+                            <i v-else class="pi pi-angle-down" />
+                        </span>
+                    </a>
+                </template>
+            </PanelMenu>
+        </AccordionTab>
+
+        <AccordionTab>
+            <template #header>
+                <span class="flex items-center gap-2 text-[15px]">
+                    <i class="pi pi-book text-yellow-600" />
+                    <span class="font-bold white-space-nowrap">Recipes</span>
+                </span>
+            </template>
+            <PanelMenu
+                v-model:expandedKeys="recipesExpandedKeys"
+                :model="recipesItems"
+                unstyled
+            >
+                <template #item="{ item, root, active }">
+                    <NuxtLink
+                        v-if="item.route"
+                        :to="item.route"
+                        class="flex items-center justify-between px-3 py-2 cursor-pointer"
+                        :class="route.name === 'recipes' ? item.key === 'recipes-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
                         @click="isMobile && toggleNav()"
                     >
                         <span class="text-sm" :class="[root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
@@ -51,15 +88,6 @@
         <AccordionTab>
             <template #header>
                 <span class="flex items-center gap-2 text-[15px]">
-                    <i class="pi pi-book" />
-                    <span class="font-bold white-space-nowrap">Recipes</span>
-                </span>
-            </template>
-        </AccordionTab>
-
-        <AccordionTab>
-            <template #header>
-                <span class="flex items-center gap-2 text-[15px]">
                     <i class="pi pi-table" />
                     <span class="font-bold white-space-nowrap">Notes</span>
                 </span>
@@ -75,7 +103,7 @@ defineProps<{
 
 const { toggleNav } = useNavigationStore();
 
-const items = ref([
+const spendingItems = ref([
     {
         key: 'spending-dashboard',
         label: 'Dashboard',
@@ -109,13 +137,33 @@ const items = ref([
     },
 ]);
 
+const recipesItems = ref([
+    {
+        key: 'recipes-dashboard',
+        label: 'Dashboard',
+        route: '/recipes',
+    },
+    {
+        key: 'recipes-management',
+        label: 'Management',
+        items: [
+            {
+                key: 'recipes-recipes',
+                label: 'Recipes',
+                route: '/recipes/recipes',
+            },
+        ],
+    },
+]);
+
 const route = useRoute();
 const activeIndex = ref(0);
-if (route.fullPath.startsWith('/inventory')) {
+if (route.fullPath.startsWith('/recipes')) {
     activeIndex.value = 1;
 }
 
-const expandedKeys = ref({});
+const spendingExpandedKeys = ref({});
+const recipesExpandedKeys = ref({});
 watch(() => route.name, () => {
     if (
         [
@@ -124,8 +172,16 @@ watch(() => route.name, () => {
             'spending-transactions',
         ].some(e => route.name && typeof route.name === 'string' && route.name.includes(e))
     ) {
-        expandedKeys.value = {
+        spendingExpandedKeys.value = {
             'spending-management': true,
+        };
+    } else if (
+        [
+            'recipes-recipes',
+        ].some(e => route.name && typeof route.name === 'string' && route.name.includes(e))
+    ) {
+        recipesExpandedKeys.value = {
+            'recipes-management': true,
         };
     }
 }, { immediate: true });

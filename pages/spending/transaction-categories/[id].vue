@@ -160,16 +160,20 @@ const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 
 const route = useRoute();
-const dayjs = useDayjs();
 onMounted(async () => {
     await getTransactionCategory(getIdFromRoute(route.params));
+    setData();
+});
+
+const dayjs = useDayjs();
+function setData() {
     id.value = transactionCategory.value.id;
     name.value = transactionCategory.value.name;
     status.value = transactionCategory.value.status;
     transactionType.value = transactionCategory.value.transactionType;
     createdAt.value = dayjs(transactionCategory.value.createdAt).format('YYYY-MM-DD HH:mm');
     updatedAt.value = dayjs(transactionCategory.value.updatedAt).format('YYYY-MM-DD HH:mm');
-});
+}
 
 const save = handleSubmit(async ({ id, status, name, transactionType }) => {
     await updateTransactionCategory({
@@ -178,5 +182,6 @@ const save = handleSubmit(async ({ id, status, name, transactionType }) => {
         name,
         transactionType,
     });
+    setData();
 });
 </script>
