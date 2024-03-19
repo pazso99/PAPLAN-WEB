@@ -1,11 +1,17 @@
-import type { TransactionTypes } from './constants';
 import type {
-    RecipeBasic,
+    TransactionTypes,
+    NotePriorities,
+} from './constants';
+import type {
     TransactionBasic,
     TransactionCategoryBasic,
+    RecipeBasic,
+    NoteBasic,
 } from './models';
 
 type TransactionType = typeof TransactionTypes[number];
+
+type NotePriority = typeof NotePriorities[number];
 
 interface SpendingDashboardData {
     totals: SpendingDashboardTotals;
@@ -60,8 +66,13 @@ interface RecipesDashboardData {
     recipes: RecipeBasic[];
 };
 
+interface NotesDashboardData {
+    notes: NoteBasic[];
+};
+
 export {
     TransactionType,
+    NotePriority,
     SpendingDashboardAccountInfo,
     SpendingDashboardCategoryInfo,
     SpendingDashboardData,
@@ -69,4 +80,5 @@ export {
     SpendingSettings,
     SpendingActualBalances,
     RecipesDashboardData,
+    NotesDashboardData,
 };

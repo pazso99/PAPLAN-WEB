@@ -1,6 +1,6 @@
 <template>
     <ContentBaseCard
-        title="Recipes dashboard"
+        title="Notes dashboard"
         :loading="loading"
     >
         <DataView
@@ -9,7 +9,7 @@
             data-key="id"
             paginator
             :rows="9"
-            :rows-per-page-options="[9, 18, recipes.length]"
+            :rows-per-page-options="[9, 18, notes.length]"
         >
             <template #header>
                 <div class="flex flex-col md:flex-row gap-2 justify-between items-center">
@@ -34,18 +34,25 @@
                         :key="index"
                         class="flex justify-between p-4 bg-gradient-to-tl from-gray-700 to-gray-800"
                     >
-                        <div>
-                            <div class="text-xl">{{ item.name }}</div>
+                        <div class="flex flex-col gap-2">
+                            <div class="flex flex-row gap-2">
+                                <span class="text-xl">{{ item.name }}</span>
+                                <Tag
+                                    :value="getNotePriorityLabel(item.priority)"
+                                    :severity="getNotePriorityColor(item.priority)"
+                                />
+                            </div>
                             <div
-                                v-if="item.time"
+                                v-if="item.dueDate"
                                 class="text-gray-400"
                             >
                                 <i class="pi pi-stopwatch" />
-                                {{ item.time }}
+                                {{ $dayjs(item.dueDate).format('YYYY-MM-DD') }}
+                                (<b>{{ $dayjs(item.dueDate).diff($dayjs(), 'days') }}</b> days left)
                             </div>
                         </div>
                         <div class="flex justify-end mt-1">
-                            <NuxtLink :to="`/recipes/recipes/${item.id}/show`">
+                            <NuxtLink :to="`/notes/notes/${item.id}/show`">
                                 <Button icon="pi pi-eye" rounded />
                             </NuxtLink>
                         </div>
@@ -66,17 +73,24 @@
                         }"
                     >
                         <template #title>
-                            {{ item.name }}
+                            <div class="flex justify-between">
+                                <span>{{ item.name }}</span>
+                                <Tag
+                                    :value="getNotePriorityLabel(item.priority)"
+                                    :severity="getNotePriorityColor(item.priority)"
+                                />
+                            </div>
                         </template>
                         <template #subtitle>
-                            <div v-if="item.time">
+                            <div v-if="item.dueDate">
                                 <i class="pi pi-stopwatch" />
-                                {{ item.time }}
+                                {{ $dayjs(item.dueDate).format('YYYY-MM-DD') }}
+                                (<b>{{ $dayjs(item.dueDate).diff($dayjs(), 'days') }}</b> days left)
                             </div>
                         </template>
                         <template #footer>
                             <div class="flex justify-end mt-1">
-                                <NuxtLink :to="`/recipes/recipes/${item.id}/show`">
+                                <NuxtLink :to="`/notes/notes/${item.id}/show`">
                                     <Button icon="pi pi-eye" rounded />
                                 </NuxtLink>
                             </div>
@@ -109,7 +123,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RecipeBasic } from '~/types/models';
+import type { NoteBasic } from '~/types/models';
 
 definePageMeta({
     middleware: 'auth',
@@ -117,24 +131,24 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Recipes Dashboard',
+    title: 'Notes Dashboard',
 });
 
 const layout = ref<'list' | 'grid'>('grid');
 
-const recipesDashboardStore = useRecipesDashboardStore();
-const { getRecipeDashboardData } = recipesDashboardStore;
-const { recipes, loading } = storeToRefs(recipesDashboardStore);
+const notesDashboardStore = useNotesDashboardStore();
+const { getNoteDashboardData } = notesDashboardStore;
+const { notes, loading } = storeToRefs(notesDashboardStore);
 
-const filteredItems = ref<RecipeBasic[]>([]);
+const filteredItems = ref<NoteBasic[]>([]);
 
 onMounted(async () => {
-    await getRecipeDashboardData();
-    filteredItems.value = recipes.value;
+    await getNoteDashboardData();
+    filteredItems.value = notes.value;
 });
 
 const filter = ref<string>('');
 function filterList() {
-    filteredItems.value = recipes.value.filter(recipe => recipe.name.toLowerCase().includes(filter.value.toLowerCase()));
+    filteredItems.value = notes.value.filter(note => note.name.toLowerCase().includes(filter.value.toLowerCase()));
 };
 </script>

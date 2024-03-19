@@ -1,11 +1,11 @@
 <template>
     <ContentListCard
-        title="Transaction categories"
+        title="Notes"
         :nav-buttons="[
-            { icon: 'pi-plus', to: '/spending/transaction-categories/create' },
-            { icon: 'pi-chevron-left', to: '/spending' },
+            { icon: 'pi-plus', to: '/notes/notes/create' },
+            { icon: 'pi-chevron-left', to: '/notes' },
         ]"
-        :items="transactionCategories"
+        :items="notes"
         :loading="loading"
         :multi-sort-meta="[
             { field: 'id', order: -1 },
@@ -13,17 +13,19 @@
         :global-filter-fields="[
             'id',
             'name',
-            'transactionType',
+            'priority',
+            'dueDate',
             'createdAt',
         ]"
         :filters="filters"
         :actions-column-meta="{
             width: '5%',
-            editUrl: '/spending/transaction-categories',
+            editUrl: '/notes/notes',
+            showUrl: '/notes/notes',
             canDelete: true,
         }"
         @refresh-table="refreshTable"
-        @delete-item="removeTransactionCategory"
+        @delete-item="removeNote"
     >
         <Column
             field="id"
@@ -95,22 +97,22 @@
         </Column>
 
         <Column
-            header="Type"
-            field="transactionType"
+            header="Priority"
+            field="priority"
             sortable
             :show-filter-match-modes="false"
-            style="width: 20%"
+            style="width: 15%"
         >
             <template #body="{ data }">
                 <Tag
-                    :value="getTransactionTypeLabel(data.transactionType)"
-                    :severity="getTransactionTypeColor(data.transactionType)"
+                    :value="getNotePriorityLabel(data.priority)"
+                    :severity="getNotePriorityColor(data.priority)"
                 />
             </template>
             <template #filter="{ filterModel }">
                 <MultiSelect
                     v-model="filterModel.value"
-                    :options="getTransactionTypes()"
+                    :options="getNotePriorities()"
                     placeholder="Any"
                     class="p-column-filter"
                     :max-selected-labels="1"
@@ -123,11 +125,34 @@
         </Column>
 
         <Column
+            field="dueDate"
+            header="DueDate"
+            data-type="date"
+            sortable
+            style="width: 20%"
+        >
+            <template #body="{ data }">
+                <div v-if="data.dueDate">
+                    {{ $dayjs(data.dueDate).format('YYYY-MM-DD') }}
+                    (<b>{{ $dayjs(data.dueDate).diff($dayjs(), 'days') }}</b> left)
+                </div>
+            </template>
+            <template #filter="{ filterModel }">
+                <Calendar
+                    v-model="filterModel.value"
+                    date-format="yy-mm-dd"
+                    placeholder="2024-01-01"
+                    mask="9999-99-99"
+                />
+            </template>
+        </Column>
+
+        <Column
             field="createdAt"
             header="CreatedAt"
             data-type="date"
             sortable
-            style="width: 25%"
+            style="width: 15%"
         >
             <template #body="{ data }">
                 {{ $dayjs(data.createdAt).format('YYYY-MM-DD') }}
@@ -153,31 +178,32 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Transaction categories - Spending',
+    title: 'Notes - Notes',
 });
 
-const spendingManagementStore = useSpendingManagementStore();
-const { getTransactionCategories, deleteTransactionCategory } = spendingManagementStore;
-const { transactionCategories, loading } = storeToRefs(spendingManagementStore);
+const notesManagementStore = useNotesManagementStore();
+const { getNotes, deleteNote } = notesManagementStore;
+const { notes, loading } = storeToRefs(notesManagementStore);
 
 const filters = ref({
     id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },
-    transactionType: { value: null, matchMode: FilterMatchMode.IN },
+    priority: { value: null, matchMode: FilterMatchMode.IN },
+    dueDate: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
     createdAt: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
 });
 
 onMounted(async () => {
-    await getTransactionCategories();
+    await getNotes();
 });
 
-async function removeTransactionCategory(id: number) {
-    await deleteTransactionCategory(id);
-    await getTransactionCategories();
+async function removeNote(id: number) {
+    await deleteNote(id);
+    await getNotes();
 }
 
 async function refreshTable() {
-    await getTransactionCategories();
+    await getNotes();
 }
 </script>

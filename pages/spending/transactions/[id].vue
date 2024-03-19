@@ -287,7 +287,7 @@ const save = handleSubmit(async ({ id, account, amount, date, status, comment, t
         comment,
         status,
         amount,
-        date,
+        date: dayjs(date).format('YYYY-MM-DD'),
         meta: JSON.stringify(meta),
     });
     await getAccounts();
