@@ -252,7 +252,7 @@ const save = handleSubmit(async ({ account, amount, date, status, comment, trans
         comment,
         status,
         amount,
-        date,
+        date: dayjs(date).format('YYYY-MM-DD'),
         meta: JSON.stringify(meta),
     });
 });

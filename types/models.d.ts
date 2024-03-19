@@ -1,4 +1,7 @@
-import type { TransactionType } from './types';
+import type {
+    TransactionType,
+    NotePriority,
+} from './types';
 
 interface User {
     id: number;
@@ -62,6 +65,20 @@ interface Recipe extends RecipeBasic {
     updatedAt: Date;
 };
 
+interface NoteBasic {
+    id: number;
+    name: string;
+    dueDate: Date | null;
+    priority: NotePriority;
+    description: string;
+};
+
+interface Note extends NoteBasic {
+    status: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+};
+
 export {
     User,
     AccountBasic,
@@ -72,4 +89,6 @@ export {
     Transaction,
     RecipeBasic,
     Recipe,
+    NoteBasic,
+    Note,
 };

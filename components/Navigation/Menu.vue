@@ -79,17 +79,45 @@
         <AccordionTab>
             <template #header>
                 <span class="flex items-center gap-2 text-[15px]">
-                    <i class="pi pi-home" />
-                    <span class="font-bold white-space-nowrap">Inventory</span>
+                    <i class="pi pi-table text-blue-600" />
+                    <span class="font-bold white-space-nowrap">Notes</span>
                 </span>
             </template>
+            <PanelMenu
+                v-model:expandedKeys="notesExpandedKeys"
+                :model="notesItems"
+                unstyled
+            >
+                <template #item="{ item, root, active }">
+                    <NuxtLink
+                        v-if="item.route"
+                        :to="item.route"
+                        class="flex items-center justify-between px-3 py-2 cursor-pointer"
+                        :class="route.name === 'notes' ? item.key === 'notes-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
+                        @click="isMobile && toggleNav()"
+                    >
+                        <span class="text-sm" :class="[root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
+                    </NuxtLink>
+                    <a
+                        v-else
+                        v-ripple
+                        class="flex items-center justify-between px-3 py-2 cursor-pointer text-zinc-400"
+                    >
+                        <span class="ml-2 text-sm">{{ item.label }}</span>
+                        <span>
+                            <i v-if="active" class="pi pi-angle-up" />
+                            <i v-else class="pi pi-angle-down" />
+                        </span>
+                    </a>
+                </template>
+            </PanelMenu>
         </AccordionTab>
 
         <AccordionTab>
             <template #header>
                 <span class="flex items-center gap-2 text-[15px]">
-                    <i class="pi pi-table" />
-                    <span class="font-bold white-space-nowrap">Notes</span>
+                    <i class="pi pi-home" />
+                    <span class="font-bold white-space-nowrap">Inventory</span>
                 </span>
             </template>
         </AccordionTab>
@@ -156,14 +184,36 @@ const recipesItems = ref([
     },
 ]);
 
+const notesItems = ref([
+    {
+        key: 'notes-dashboard',
+        label: 'Dashboard',
+        route: '/notes',
+    },
+    {
+        key: 'notes-management',
+        label: 'Management',
+        items: [
+            {
+                key: 'notes-notes',
+                label: 'Notes',
+                route: '/notes/notes',
+            },
+        ],
+    },
+]);
+
 const route = useRoute();
 const activeIndex = ref(0);
 if (route.fullPath.startsWith('/recipes')) {
     activeIndex.value = 1;
+} else if (route.fullPath.startsWith('/notes')) {
+    activeIndex.value = 2;
 }
 
 const spendingExpandedKeys = ref({});
 const recipesExpandedKeys = ref({});
+const notesExpandedKeys = ref({});
 watch(() => route.name, () => {
     if (
         [
@@ -182,6 +232,14 @@ watch(() => route.name, () => {
     ) {
         recipesExpandedKeys.value = {
             'recipes-management': true,
+        };
+    } else if (
+        [
+            'notes-notes',
+        ].some(e => route.name && typeof route.name === 'string' && route.name.includes(e))
+    ) {
+        notesExpandedKeys.value = {
+            'notes-management': true,
         };
     }
 }, { immediate: true });

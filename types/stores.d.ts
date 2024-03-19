@@ -1,5 +1,18 @@
-import type { Account, RecipeBasic, Transaction, TransactionCategory, User } from './models';
-import type { SpendingActualBalances, SpendingDashboardData, SpendingSettings } from './types';
+import type {
+    User,
+    Account,
+    Transaction,
+    TransactionCategory,
+    Recipe,
+    RecipeBasic,
+    Note,
+    NotesBasic,
+} from './models';
+import type {
+    SpendingActualBalances,
+    SpendingDashboardData,
+    SpendingSettings,
+} from './types';
 
 interface NavigationState {
     isNavOpen: boolean;
@@ -45,6 +58,17 @@ interface RecipesDashboardState {
     recipes: RecipeBasic[];
 };
 
+interface NotesManagementState {
+    loading: boolean;
+    notes: Note[];
+    note: Note;
+};
+
+interface NotesDashboardState {
+    loading: boolean;
+    notes: NoteBasic[];
+};
+
 export {
     NavigationState,
     AuthState,
@@ -53,4 +77,6 @@ export {
     SpendingSettingsState,
     RecipesManagementState,
     RecipesDashboardState,
+    NotesManagementState,
+    NotesDashboardState,
 };
