@@ -2,6 +2,7 @@ import type {
     SpendingActualBalances,
     SpendingConfigs,
     TransactionType,
+    NotePriority,
 } from './types';
 
 interface UserLoginRequest {
@@ -81,6 +82,23 @@ interface RecipesRecipeUpdateRequest {
     description: string;
 };
 
+interface NotesNoteCreateRequest {
+    status: boolean;
+    name: string;
+    dueDate: string | null;
+    priority: NotePriority;
+    description: string;
+};
+
+interface NotesNoteUpdateRequest {
+    id: number;
+    status: boolean;
+    name: string;
+    dueDate: string | null;
+    priority: NotePriority;
+    description: string;
+};
+
 export {
     UserLoginRequest,
     SpendingSettingsUpdateRequest,
@@ -93,4 +111,6 @@ export {
     SpendingTransactionUpdateRequest,
     RecipesRecipeCreateRequest,
     RecipesRecipeUpdateRequest,
+    NotesNoteCreateRequest,
+    NotesNoteUpdateRequest,
 };

@@ -1,14 +1,16 @@
 import type {
     Account,
-    Recipe,
     Transaction,
     TransactionCategory,
+    Recipe,
+    Note,
 } from './models';
 import type {
     SpendingDashboardData,
     SpendingSettings,
     SpendingActualBalances,
     RecipesDashboardData,
+    NotesDashboardData,
 } from './types';
 
 interface ErrorResponse {
@@ -39,6 +41,10 @@ type RecipesRecipeResponse = ApiSuccessResponse<Recipe>;
 type RecipesRecipeListResponse = ApiSuccessResponse<Recipe[]>;
 type RecipesDashboardResponse = ApiSuccessResponse<RecipesDashboardData>;
 
+type NotesNoteResponse = ApiSuccessResponse<Note>;
+type NotesNoteListResponse = ApiSuccessResponse<Note[]>;
+type NotesDashboardResponse = ApiSuccessResponse<NotesDashboardData>;
+
 export {
     ErrorResponse,
     TokenResponse,
@@ -55,4 +61,7 @@ export {
     RecipesRecipeResponse,
     RecipesRecipeListResponse,
     RecipesDashboardResponse,
+    NotesNoteResponse,
+    NotesNoteListResponse,
+    NotesDashboardResponse,
 };

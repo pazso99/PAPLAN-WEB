@@ -48,37 +48,16 @@
                     >
                         <template #value="slotProps">
                             <Tag
-                                v-if="slotProps.value === 'income'"
-                                value="income"
-                                severity="success"
+                                v-if="slotProps.value"
+                                :value="getTransactionTypeLabel(slotProps.value)"
+                                :severity="getTransactionTypeColor(slotProps.value)"
                             />
-                            <Tag
-                                v-else-if="slotProps.value === 'expense'"
-                                value="expense"
-                                severity="danger"
-                            />
-                            <Tag
-                                v-else-if="slotProps.value === 'transfer'"
-                                value="transfer"
-                                severity="warning"
-                            />
-                            <span v-else>{{ slotProps.placeholder }}</span>
                         </template>
                         <template #option="slotProps">
                             <Tag
-                                v-if="slotProps.option === 'income'"
-                                value="income"
-                                severity="success"
-                            />
-                            <Tag
-                                v-else-if="slotProps.option === 'expense'"
-                                value="expense"
-                                severity="danger"
-                            />
-                            <Tag
-                                v-else-if="slotProps.option === 'transfer'"
-                                value="transfer"
-                                severity="warning"
+                                v-if="slotProps.option"
+                                :value="getTransactionTypeLabel(slotProps.option)"
+                                :severity="getTransactionTypeColor(slotProps.option)"
                             />
                         </template>
                     </Dropdown>
