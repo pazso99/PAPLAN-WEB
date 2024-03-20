@@ -4,6 +4,10 @@ import type {
     TransactionCategory,
     Recipe,
     Note,
+    PackageUnit,
+    ItemType,
+    Item,
+    PurchasedItem,
 } from './models';
 import type {
     SpendingDashboardData,
@@ -11,6 +15,7 @@ import type {
     SpendingActualBalances,
     RecipesDashboardData,
     NotesDashboardData,
+    InventoryDashboardData,
 } from './types';
 
 interface ErrorResponse {
@@ -45,6 +50,16 @@ type NotesNoteResponse = ApiSuccessResponse<Note>;
 type NotesNoteListResponse = ApiSuccessResponse<Note[]>;
 type NotesDashboardResponse = ApiSuccessResponse<NotesDashboardData>;
 
+type InventoryDashboardResponse = ApiSuccessResponse<InventoryDashboardData>;
+type InventoryPackageUnitResponse = ApiSuccessResponse<PackageUnit>;
+type InventoryPackageUnitListResponse = ApiSuccessResponse<PackageUnit[]>;
+type InventoryItemTypeResponse = ApiSuccessResponse<ItemType>;
+type InventoryItemTypeListResponse = ApiSuccessResponse<ItemType[]>;
+type InventoryItemResponse = ApiSuccessResponse<Item>;
+type InventoryItemListResponse = ApiSuccessResponse<Item[]>;
+type InventoryPurchasedItemResponse = ApiSuccessResponse<PurchasedItem>;
+type InventoryPurchasedItemListResponse = ApiSuccessResponse<PurchasedItem[]>;
+
 export {
     ErrorResponse,
     TokenResponse,
@@ -64,4 +79,13 @@ export {
     NotesNoteResponse,
     NotesNoteListResponse,
     NotesDashboardResponse,
+    InventoryDashboardResponse,
+    InventoryPackageUnitResponse,
+    InventoryPackageUnitListResponse,
+    InventoryItemTypeResponse,
+    InventoryItemTypeListResponse,
+    InventoryItemResponse,
+    InventoryItemListResponse,
+    InventoryPurchasedItemResponse,
+    InventoryPurchasedItemListResponse,
 };

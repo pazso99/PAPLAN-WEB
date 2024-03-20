@@ -99,6 +99,71 @@ interface NotesNoteUpdateRequest {
     description: string;
 };
 
+interface InventoryPackageUnitCreateRequest {
+    status: boolean;
+    name: string;
+};
+
+interface InventoryPackageUnitUpdateRequest {
+    id: number;
+    status: boolean;
+    name: string;
+};
+
+interface InventoryItemTypeCreateRequest {
+    status: boolean;
+    name: string;
+};
+
+interface InventoryItemTypeUpdateRequest {
+    id: number;
+    status: boolean;
+    name: string;
+};
+
+interface InventoryItemCreateRequest {
+    status: boolean;
+    name: string;
+    itemTypeId: number;
+    packageUnitIds: number[];
+    expectedLifetimeInDays: number;
+    recommendedStock: number;
+};
+
+interface InventoryItemUpdateRequest {
+    id: number;
+    status: boolean;
+    name: string;
+    itemTypeId: number;
+    packageUnitIds: number[];
+    expectedLifetimeInDays: number;
+    recommendedStock: number;
+};
+
+interface InventoryPurchasedItemCreateRequest {
+    status: boolean;
+    itemId: number;
+    packageUnitId: number;
+    amount: number;
+    price: number | null;
+    purchaseDate: string | null;
+    expirationDate: string | null;
+    leftoverAmountPercentage: number;
+    createAmount: number;
+};
+
+interface InventoryPurchasedItemUpdateRequest {
+    id: number;
+    status: boolean;
+    itemId: number;
+    packageUnitId: number;
+    amount: number;
+    price: number | null;
+    purchaseDate: string | null;
+    expirationDate: string | null;
+    leftoverAmountPercentage: number;
+};
+
 export {
     UserLoginRequest,
     SpendingSettingsUpdateRequest,
@@ -113,4 +178,12 @@ export {
     RecipesRecipeUpdateRequest,
     NotesNoteCreateRequest,
     NotesNoteUpdateRequest,
+    InventoryPackageUnitCreateRequest,
+    InventoryPackageUnitUpdateRequest,
+    InventoryItemTypeCreateRequest,
+    InventoryItemTypeUpdateRequest,
+    InventoryItemCreateRequest,
+    InventoryItemUpdateRequest,
+    InventoryPurchasedItemCreateRequest,
+    InventoryPurchasedItemUpdateRequest,
 };

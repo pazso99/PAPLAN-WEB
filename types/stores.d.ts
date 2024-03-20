@@ -7,6 +7,10 @@ import type {
     RecipeBasic,
     Note,
     NotesBasic,
+    PackageUnit,
+    ItemType,
+    Item,
+    PurchasedItem,
 } from './models';
 import type {
     SpendingActualBalances,
@@ -69,6 +73,23 @@ interface NotesDashboardState {
     notes: NoteBasic[];
 };
 
+interface InventoryManagementState {
+    loading: boolean;
+    packageUnits: PackageUnit[];
+    packageUnit: PackageUnit;
+    itemTypes: ItemType[];
+    itemType: ItemType;
+    items: Item[];
+    item: Item;
+    purchasedItems: PurchasedItem[];
+    purchasedItem: PurchasedItem;
+};
+
+interface InventoryDashboardState {
+    loading: boolean;
+    inventory: any; // TODO
+};
+
 export {
     NavigationState,
     AuthState,
@@ -79,4 +100,6 @@ export {
     RecipesDashboardState,
     NotesManagementState,
     NotesDashboardState,
+    InventoryManagementState,
+    InventoryDashboardState,
 };

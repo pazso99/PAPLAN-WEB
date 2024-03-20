@@ -5,7 +5,6 @@
             <InputNumber
                 :model-value="modelValue"
                 placeholder="Amount..."
-                integeronly
                 @update:model-value="(newValue: string) => $emit('update:modelValue', newValue)"
             />
             <InputGroupAddon>

@@ -70,6 +70,10 @@ interface NotesDashboardData {
     notes: NoteBasic[];
 };
 
+interface InventoryDashboardData {
+    inventory: any; // TODO
+};
+
 export {
     TransactionType,
     NotePriority,
@@ -81,4 +85,5 @@ export {
     SpendingActualBalances,
     RecipesDashboardData,
     NotesDashboardData,
+    InventoryDashboardData,
 };

@@ -1,8 +1,8 @@
 <template>
     <ContentBaseCard
-        title="Create account"
+        title="Create package unit"
         :nav-buttons="[
-            { icon: 'pi-chevron-left', to: '/spending/accounts' },
+            { icon: 'pi-chevron-left', to: '/inventory/package-units' },
         ]"
     >
         <form class="p-5">
@@ -31,21 +31,9 @@
                         v-model="name"
                         name="name"
                         :class="{ 'p-invalid': errors.name }"
-                        placeholder="Account name..."
+                        placeholder="Name..."
                     />
                     <small class="p-error">{{ errors.name }}</small>
-                </div>
-
-                <div class="flex flex-col">
-                    <label for="balance" class="mb-1">Balance</label>
-                    <InputNumber
-                        id="balance"
-                        v-model="balance"
-                        placeholder="Balance..."
-                        suffix=" Ft"
-                        :class="{ 'p-invalid': errors.balance }"
-                    />
-                    <small class="p-error">{{ errors.balance }}</small>
                 </div>
             </div>
 
@@ -69,13 +57,12 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Create Account - Spending',
+    title: 'Create Package unit - Inventory',
 });
 
 const schema = yup.object({
     name: yup.string().required().label('Name'),
     status: yup.boolean().label('Status'),
-    balance: yup.number().required().label('Balance'),
 });
 
 const { defineField, handleSubmit, errors } = useForm({
@@ -85,16 +72,14 @@ const { defineField, handleSubmit, errors } = useForm({
 const isValid = useIsFormValid();
 const [name] = defineField('name');
 const [status] = defineField('status');
-const [balance] = defineField('balance');
 
 status.value = true;
 
-const { createAccount } = useSpendingManagementStore();
-const save = handleSubmit(async ({ name, status, balance }) => {
-    await createAccount({
+const { createPackageUnit } = useInventoryManagementStore();
+const save = handleSubmit(async ({ name, status }) => {
+    await createPackageUnit({
         name,
         status,
-        balance,
     });
 });
 </script>

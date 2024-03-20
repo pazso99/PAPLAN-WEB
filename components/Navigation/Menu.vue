@@ -42,7 +42,7 @@
         <AccordionTab>
             <template #header>
                 <span class="flex items-center gap-2 text-[15px]">
-                    <i class="pi pi-book text-yellow-600" />
+                    <i class="pi pi-book text-gray-400" />
                     <span class="font-bold white-space-nowrap">Recipes</span>
                 </span>
             </template>
@@ -116,10 +116,38 @@
         <AccordionTab>
             <template #header>
                 <span class="flex items-center gap-2 text-[15px]">
-                    <i class="pi pi-home" />
+                    <i class="pi pi-box text-yellow-600" />
                     <span class="font-bold white-space-nowrap">Inventory</span>
                 </span>
             </template>
+            <PanelMenu
+                v-model:expandedKeys="inventoryExpandedKeys"
+                :model="inventoryItems"
+                unstyled
+            >
+                <template #item="{ item, root, active }">
+                    <NuxtLink
+                        v-if="item.route"
+                        :to="item.route"
+                        class="flex items-center justify-between px-3 py-2 cursor-pointer"
+                        :class="route.name === 'inventory' ? item.key === 'inventory-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
+                        @click="isMobile && toggleNav()"
+                    >
+                        <span class="text-sm" :class="[root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
+                    </NuxtLink>
+                    <a
+                        v-else
+                        v-ripple
+                        class="flex items-center justify-between px-3 py-2 cursor-pointer text-zinc-400"
+                    >
+                        <span class="ml-2 text-sm">{{ item.label }}</span>
+                        <span>
+                            <i v-if="active" class="pi pi-angle-up" />
+                            <i v-else class="pi pi-angle-down" />
+                        </span>
+                    </a>
+                </template>
+            </PanelMenu>
         </AccordionTab>
     </Accordion>
 </template>
@@ -203,17 +231,54 @@ const notesItems = ref([
     },
 ]);
 
+const inventoryItems = ref([
+    {
+        key: 'inventory-dashboard',
+        label: 'Dashboard',
+        route: '/inventory',
+    },
+    {
+        key: 'inventory-management',
+        label: 'Management',
+        items: [
+            {
+                key: 'inventory-package-units',
+                label: 'Package units',
+                route: '/inventory/package-units',
+            },
+            {
+                key: 'inventory-item-types',
+                label: 'Item types',
+                route: '/inventory/item-types',
+            },
+            {
+                key: 'inventory-items',
+                label: 'Items',
+                route: '/inventory/items',
+            },
+            {
+                key: 'inventory-purchased-items',
+                label: 'Purchased items',
+                route: '/inventory/purchased-items',
+            },
+        ],
+    },
+]);
+
 const route = useRoute();
 const activeIndex = ref(0);
 if (route.fullPath.startsWith('/recipes')) {
     activeIndex.value = 1;
 } else if (route.fullPath.startsWith('/notes')) {
     activeIndex.value = 2;
+} else if (route.fullPath.startsWith('/inventory')) {
+    activeIndex.value = 3;
 }
 
 const spendingExpandedKeys = ref({});
 const recipesExpandedKeys = ref({});
 const notesExpandedKeys = ref({});
+const inventoryExpandedKeys = ref({});
 watch(() => route.name, () => {
     if (
         [
@@ -240,6 +305,17 @@ watch(() => route.name, () => {
     ) {
         notesExpandedKeys.value = {
             'notes-management': true,
+        };
+    } else if (
+        [
+            'inventory-item-types',
+            'inventory-package-units',
+            'inventory-items',
+            'inventory-purchased-items',
+        ].some(e => route.name && typeof route.name === 'string' && route.name.includes(e))
+    ) {
+        inventoryExpandedKeys.value = {
+            'inventory-management': true,
         };
     }
 }, { immediate: true });

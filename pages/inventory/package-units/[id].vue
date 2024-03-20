@@ -1,8 +1,8 @@
 <template>
     <ContentBaseCard
-        title="Edit account"
+        title="Edit Package unit"
         :nav-buttons="[
-            { icon: 'pi-chevron-left', to: '/spending/accounts' },
+            { icon: 'pi-chevron-left', to: '/inventory/package-units' },
         ]"
         :loading="loading"
     >
@@ -59,21 +59,9 @@
                         v-model="name"
                         name="name"
                         :class="{ 'p-invalid': errors.name }"
-                        placeholder="Account name..."
+                        placeholder="PackageUnit name..."
                     />
                     <small class="p-error">{{ errors.name }}</small>
-                </div>
-
-                <div class="flex flex-col">
-                    <label for="balance" class="mb-1">Balance</label>
-                    <InputNumber
-                        id="balance"
-                        v-model="balance"
-                        placeholder="Balance..."
-                        suffix=" Ft"
-                        :class="{ 'p-invalid': errors.balance }"
-                    />
-                    <small class="p-error">{{ errors.balance }}</small>
                 </div>
             </div>
 
@@ -97,17 +85,16 @@ definePageMeta({
 });
 
 useHead({
-    title: 'Edit Account - Spending',
+    title: 'Edit Package unit - Inventory',
 });
 
-const spendingManagementStore = useSpendingManagementStore();
-const { getAccount, updateAccount } = spendingManagementStore;
-const { account, loading } = storeToRefs(spendingManagementStore);
+const inventoryManagementStore = useInventoryManagementStore();
+const { getPackageUnit, updatePackageUnit } = inventoryManagementStore;
+const { packageUnit, loading } = storeToRefs(inventoryManagementStore);
 
 const schema = yup.object({
     name: yup.string().required().label('Name'),
     status: yup.boolean().label('Status'),
-    balance: yup.number().required().label('Balance'),
 });
 
 const { defineField, handleSubmit, errors } = useForm({
@@ -118,32 +105,29 @@ const isValid = useIsFormValid();
 const [id] = defineField('id');
 const [name] = defineField('name');
 const [status] = defineField('status');
-const [balance] = defineField('balance');
 const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 
 const route = useRoute();
 onMounted(async () => {
-    await getAccount(getIdFromRoute(route.params));
+    await getPackageUnit(getIdFromRoute(route.params));
     setData();
 });
 
 const dayjs = useDayjs();
 function setData() {
-    id.value = account.value.id;
-    name.value = account.value.name;
-    status.value = account.value.status;
-    balance.value = account.value.balance;
-    createdAt.value = dayjs(account.value.createdAt).format('YYYY-MM-DD HH:mm');
-    updatedAt.value = dayjs(account.value.updatedAt).format('YYYY-MM-DD HH:mm');
+    id.value = packageUnit.value.id;
+    name.value = packageUnit.value.name;
+    status.value = packageUnit.value.status;
+    createdAt.value = dayjs(packageUnit.value.createdAt).format('YYYY-MM-DD HH:mm');
+    updatedAt.value = dayjs(packageUnit.value.updatedAt).format('YYYY-MM-DD HH:mm');
 }
 
-const save = handleSubmit(async ({ id, status, name, balance }) => {
-    await updateAccount({
+const save = handleSubmit(async ({ id, status, name }) => {
+    await updatePackageUnit({
         id,
         status,
         name,
-        balance,
     });
     setData();
 });

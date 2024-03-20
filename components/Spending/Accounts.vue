@@ -147,7 +147,6 @@
                             v-model="amount"
                             suffix=" Ft"
                             placeholder="Amount..."
-                            integeronly
                             :class="{ 'p-invalid': errors.amount }"
                         />
                         <small class="p-error">{{ errors.amount }}</small>

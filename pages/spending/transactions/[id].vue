@@ -127,7 +127,6 @@
                         v-model="amount"
                         suffix=" Ft"
                         placeholder="Amount..."
-                        integeronly
                         :class="{ 'p-invalid': errors.amount }"
                     />
                     <small class="p-error">{{ errors.amount }}</small>
@@ -141,7 +140,7 @@
                 <div class="flex flex-col">
                     <label for="toAccount" class="mb-1">To Account</label>
                     <Dropdown
-                        id="account"
+                        id="toAccount"
                         v-model="toAccount"
                         option-label="name"
                         :options="toAccounts"
