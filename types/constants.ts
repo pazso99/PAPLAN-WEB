@@ -12,7 +12,14 @@ const NotePriorities = [
     'critical',
 ] as const;
 
+const ItemStockStatuses = [
+    'in_stock',
+    'running_out',
+    'out',
+] as const;
+
 export {
     TransactionTypes,
     NotePriorities,
+    ItemStockStatuses,
 };

@@ -1,17 +1,23 @@
 import type {
     TransactionTypes,
     NotePriorities,
+    ItemStockStatuses,
 } from './constants';
 import type {
     TransactionBasic,
     TransactionCategoryBasic,
     RecipeBasic,
     NoteBasic,
+    ItemTypeBasic,
+    PurchasedItemWithRelations,
+    PurchasedItemBasic,
 } from './models';
 
 type TransactionType = typeof TransactionTypes[number];
 
 type NotePriority = typeof NotePriorities[number];
+
+type ItemStockStatus = typeof ItemStockStatuses[number];
 
 interface SpendingDashboardData {
     totals: SpendingDashboardTotals;
@@ -70,9 +76,36 @@ interface NotesDashboardData {
     notes: NoteBasic[];
 };
 
+interface InventoryDashboardData {
+    inventoryItemTypes: InventoryItemTypeWithItems[];
+};
+
+interface InventoryItemTypeWithItems extends ItemTypeBasic {
+    items: InventoryItem[];
+    outOfStockNumber: number;
+    inStockNumber: number;
+};
+
+interface InventoryItem extends ItemTypeBasic {
+    id: number;
+    name: string;
+    recommendedStock: number;
+    isEssential: boolean;
+    stockStatus: ItemStockStatus;
+    ranOutDate: Date | null;
+    expectedRunOutDate: Date | null;
+    inStockItems: InventoryItemWithUnit[];
+    usedItems: InventoryItemWithUnit[];
+};
+
+interface InventoryItemWithUnit extends PurchasedItemBasic {
+    packageUnit: string;
+};
+
 export {
     TransactionType,
     NotePriority,
+    ItemStockStatus,
     SpendingDashboardAccountInfo,
     SpendingDashboardCategoryInfo,
     SpendingDashboardData,
@@ -81,4 +114,8 @@ export {
     SpendingActualBalances,
     RecipesDashboardData,
     NotesDashboardData,
+    InventoryItemWithUnit,
+    InventoryItem,
+    InventoryItemTypeWithItems,
+    InventoryDashboardData,
 };

@@ -102,7 +102,7 @@
         <Dialog
             v-model:visible="newTransactionModalOpen"
             modal
-            class="w-[50rem]"
+            class="w-full md:w-[50rem]"
         >
             <template #header>
                 <div>
@@ -147,7 +147,6 @@
                             v-model="amount"
                             suffix=" Ft"
                             placeholder="Amount..."
-                            integeronly
                             :class="{ 'p-invalid': errors.amount }"
                         />
                         <small class="p-error">{{ errors.amount }}</small>

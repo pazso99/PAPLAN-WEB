@@ -95,7 +95,7 @@ export const useSpendingManagementStore = defineStore('spending-management', {
                 this.loading = false;
             }
         },
-        async deleteAccount(id: number) {
+        async deleteAccount(id: number, navigate: boolean = false) {
             const toast = useToastService();
             try {
                 this.loading = true;
@@ -106,6 +106,9 @@ export const useSpendingManagementStore = defineStore('spending-management', {
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
+                if (navigate) {
+                    navigateTo('/spending/accounts');
+                }
                 this.loading = false;
             }
         },
@@ -174,7 +177,7 @@ export const useSpendingManagementStore = defineStore('spending-management', {
                 this.loading = false;
             }
         },
-        async deleteTransactionCategory(id: number) {
+        async deleteTransactionCategory(id: number, navigate: boolean = false) {
             const toast = useToastService();
             try {
                 this.loading = true;
@@ -185,6 +188,9 @@ export const useSpendingManagementStore = defineStore('spending-management', {
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
+                if (navigate) {
+                    navigateTo('/spending/transaction-categories');
+                }
                 this.loading = false;
             }
         },
@@ -254,7 +260,7 @@ export const useSpendingManagementStore = defineStore('spending-management', {
                 this.loading = false;
             }
         },
-        async deleteTransaction(id: number) {
+        async deleteTransaction(id: number, navigate: boolean = false) {
             const toast = useToastService();
             try {
                 this.loading = true;
@@ -265,6 +271,9 @@ export const useSpendingManagementStore = defineStore('spending-management', {
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
+                if (navigate) {
+                    navigateTo('/spending/transactions');
+                }
                 this.loading = false;
             }
         },

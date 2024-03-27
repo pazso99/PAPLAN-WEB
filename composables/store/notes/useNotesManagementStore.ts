@@ -83,7 +83,7 @@ export const useNotesManagementStore = defineStore('notes-management', {
                 this.loading = false;
             }
         },
-        async deleteNote(id: number) {
+        async deleteNote(id: number, navigate: boolean = false) {
             const toast = useToastService();
             try {
                 this.loading = true;
@@ -94,6 +94,9 @@ export const useNotesManagementStore = defineStore('notes-management', {
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
+                if (navigate) {
+                    navigateTo('/notes/notes');
+                }
                 this.loading = false;
             }
         },

@@ -79,6 +79,66 @@ interface Note extends NoteBasic {
     updatedAt: Date;
 };
 
+interface PackageUnitBasic {
+    id: number;
+    name: string;
+};
+
+interface PackageUnit extends PackageUnitBasic {
+    status: boolean;
+    slug: string;
+    createdAt: Date;
+    updatedAt: Date;
+};
+
+interface ItemTypeBasic {
+    id: number;
+    name: string;
+};
+
+interface ItemType extends ItemTypeBasic {
+    status: boolean;
+    slug: string;
+    items: Item[];
+    createdAt: Date;
+    updatedAt: Date;
+};
+
+interface ItemBasic {
+    id: number;
+    name: string;
+    itemType: ItemTypeBasic;
+    expectedLifetimeInDays: number;
+    recommendedStock: number;
+    isEssential: boolean;
+};
+
+interface Item extends ItemBasic {
+    status: boolean;
+    slug: string;
+    packageUnits: PackageUnit[];
+    createdAt: Date;
+    updatedAt: Date;
+};
+
+interface PurchasedItemBasic {
+    id: number;
+    amount: number;
+    price: number;
+    purchaseDate: Date;
+    expirationDate: Date;
+    leftoverAmountPercentage: number;
+    comment: string;
+};
+
+interface PurchasedItem extends PurchasedItemBasic {
+    item: ItemBasic;
+    packageUnit: PackageUnitBasic;
+    status: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+};
+
 export {
     User,
     AccountBasic,
@@ -91,4 +151,12 @@ export {
     Recipe,
     NoteBasic,
     Note,
+    PackageUnitBasic,
+    PackageUnit,
+    ItemTypeBasic,
+    ItemType,
+    ItemBasic,
+    Item,
+    PurchasedItemBasic,
+    PurchasedItem,
 };
