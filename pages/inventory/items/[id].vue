@@ -22,6 +22,20 @@
                         :severity="status ? 'success' : 'danger'"
                     />
                 </div>
+                <label for="isEssential" class="my-2">Essential</label>
+                <div class="flex items-center gap-2">
+                    <InputSwitch
+                        id="isEssential"
+                        v-model="isEssential"
+                        :pt="{
+                            slider: { class: isEssential ? 'bg-yellow-600' : 'bg-red-800' },
+                        }"
+                    />
+                    <Tag
+                        :value="isEssential ? 'ESSENTIAL' : 'FALSE'"
+                        :severity="isEssential ? 'warning' : 'danger'"
+                    />
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
@@ -95,7 +109,7 @@
                     <InputNumber
                         id="expectedLifetimeInDays"
                         v-model="expectedLifetimeInDays"
-                        suffix=" day"
+                        :suffix="` day${expectedLifetimeInDays > 1 ? 's' : ''}`"
                         placeholder="Expected lifetime..."
                         :class="{ 'p-invalid': errors.expectedLifetimeInDays }"
                     />
@@ -117,15 +131,27 @@
                 size="small"
                 label="Save"
                 type="submit"
+                icon="pi pi-check"
                 :disabled="!isValid"
                 @click="save"
             />
+
+            <Button
+                class="ml-4"
+                size="small"
+                label="Delete"
+                severity="danger"
+                icon="pi pi-trash"
+                @click="handleDelete"
+            />
         </form>
+        <ConfirmDialog group="positioned" />
     </ContentBaseCard>
 </template>
 
 <script setup lang="ts">
 import * as yup from 'yup';
+import { useConfirm } from 'primevue/useconfirm';
 import type { ItemTypeBasic } from '~/types/models';
 
 definePageMeta({
@@ -138,7 +164,7 @@ useHead({
 });
 
 const inventoryManagementStore = useInventoryManagementStore();
-const { getItem, getItemTypes, getPackageUnits, updateItem } = inventoryManagementStore;
+const { getItem, getItemTypes, getPackageUnits, updateItem, deleteItem } = inventoryManagementStore;
 const { item, itemTypes, packageUnits, loading } = storeToRefs(inventoryManagementStore);
 const schema = yup.object({
     name: yup.string().required().label('Name'),
@@ -146,6 +172,7 @@ const schema = yup.object({
     itemType: yup.object().required().label('Item type'),
     expectedLifetimeInDays: yup.number().nullable().label('Expected lifetime'),
     recommendedStock: yup.number().nullable().label('Recommended stock'),
+    isEssential: yup.boolean().label('Essential'),
 });
 
 const { defineField, handleSubmit, errors } = useForm({
@@ -159,12 +186,15 @@ const [status] = defineField('status');
 const [itemType] = defineField('itemType');
 const [expectedLifetimeInDays] = defineField('expectedLifetimeInDays');
 const [recommendedStock] = defineField('recommendedStock');
+const [isEssential] = defineField('isEssential');
 const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 
+const routeId = ref();
 const route = useRoute();
 onMounted(async () => {
-    await getItem(getIdFromRoute(route.params));
+    routeId.value = getIdFromRoute(route.params);
+    await getItem(routeId.value);
     await getItemTypes();
     await getPackageUnits();
     setData();
@@ -178,6 +208,7 @@ function setData() {
     itemType.value = item.value.itemType;
     expectedLifetimeInDays.value = item.value.expectedLifetimeInDays;
     recommendedStock.value = item.value.recommendedStock;
+    isEssential.value = item.value.isEssential;
     createdAt.value = dayjs(item.value.createdAt).format('YYYY-MM-DD HH:mm');
     updatedAt.value = dayjs(item.value.updatedAt).format('YYYY-MM-DD HH:mm');
     setSelectablePackageUnits();
@@ -197,7 +228,7 @@ function setSelectableItemTypes() {
     }));
 }
 
-const save = handleSubmit(async ({ id, status, name, itemType, expectedLifetimeInDays, recommendedStock }) => {
+const save = handleSubmit(async ({ id, status, name, itemType, expectedLifetimeInDays, recommendedStock, isEssential }) => {
     await updateItem({
         id,
         name,
@@ -206,7 +237,24 @@ const save = handleSubmit(async ({ id, status, name, itemType, expectedLifetimeI
         packageUnitIds: selectedPackageUnits.value,
         expectedLifetimeInDays,
         recommendedStock,
+        isEssential,
     });
     setData();
 });
+
+const confirm = useConfirm();
+function handleDelete() {
+    confirm.require({
+        message: 'Are you sure you want to delete this item?',
+        group: 'positioned',
+        header: 'Attention!',
+        position: 'center',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'bg-red-400 border-none',
+        acceptLabel: 'Delete',
+        accept: async () => {
+            await deleteItem(routeId.value, true);
+        },
+    });
+};
 </script>

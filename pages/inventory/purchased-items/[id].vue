@@ -1,6 +1,6 @@
 <template>
     <ContentBaseCard
-        title="Edit purchased item"
+        title="Edit stock item"
         :nav-buttons="[
             { icon: 'pi-chevron-left', to: '/inventory/purchased-items' },
         ]"
@@ -57,10 +57,27 @@
                     <Dropdown
                         id="item"
                         v-model="item"
+                        :options="selectableItems"
+                        filter
                         option-label="name"
-                        :options="itemOptions"
+                        option-group-label="label"
+                        option-group-children="items"
                         placeholder="Select item"
-                    />
+                        :pt="{
+                            itemGroup: {
+                                class: 'p-0',
+                            },
+                        }"
+                    >
+                        <template #optiongroup="slotProps">
+                            <div class="py-1 text-center">
+                                <Tag
+                                    class="w-full"
+                                    :value="slotProps.option.itemType"
+                                />
+                            </div>
+                        </template>
+                    </Dropdown>
                 </div>
 
                 <div
@@ -144,19 +161,43 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="flex flex-col">
+                    <label for="comment" class="mb-1">Comment</label>
+                    <Textarea
+                        id="comment"
+                        v-model="comment"
+                        rows="5"
+                        cols="30"
+                    />
+                </div>
+            </div>
+
             <Button
                 size="small"
                 label="Save"
                 type="submit"
+                icon="pi pi-check"
                 :disabled="!isValid"
                 @click="save"
             />
+
+            <Button
+                class="ml-4"
+                size="small"
+                label="Delete"
+                severity="danger"
+                icon="pi pi-trash"
+                @click="handleDelete"
+            />
         </form>
+        <ConfirmDialog group="positioned" />
     </ContentBaseCard>
 </template>
 
 <script setup lang="ts">
 import * as yup from 'yup';
+import { useConfirm } from 'primevue/useconfirm';
 import type { ItemBasic, PackageUnit, PackageUnitBasic } from '~/types/models';
 
 definePageMeta({
@@ -177,6 +218,7 @@ const schema = yup.object({
     purchaseDate: yup.date().nullable().label('Purchase date'),
     expirationDate: yup.date().nullable().label('Expiration date'),
     leftoverAmountPercentage: yup.number().nullable().label('Leftover amount percentage'),
+    comment: yup.string().nullable().label('Comment'),
 });
 
 const { defineField, handleSubmit, errors } = useForm({
@@ -193,6 +235,7 @@ const [price] = defineField('price');
 const [purchaseDate] = defineField('purchaseDate');
 const [expirationDate] = defineField('expirationDate');
 const [leftoverAmountPercentage] = defineField('leftoverAmountPercentage');
+const [comment] = defineField('comment');
 const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 
@@ -200,12 +243,14 @@ status.value = true;
 leftoverAmountPercentage.value = 100;
 
 const inventoryManagementStore = useInventoryManagementStore();
-const { updatePurchasedItem, getPurchasedItem, getItems } = inventoryManagementStore;
+const { updatePurchasedItem, getPurchasedItem, getItems, deletePurchasedItem } = inventoryManagementStore;
 const { purchasedItem, items, loading } = storeToRefs(inventoryManagementStore);
 
+const routeId = ref();
 const route = useRoute();
 onMounted(async () => {
-    await getPurchasedItem(getIdFromRoute(route.params));
+    routeId.value = getIdFromRoute(route.params);
+    await getPurchasedItem(routeId.value);
     await getItems();
     setData();
 });
@@ -221,29 +266,25 @@ function setData() {
     purchaseDate.value = purchasedItem.value.purchaseDate ? dayjs(purchasedItem.value.purchaseDate).format('YYYY-MM-DD') : null;
     expirationDate.value = purchasedItem.value.expirationDate ? dayjs(purchasedItem.value.expirationDate).format('YYYY-MM-DD') : null;
     leftoverAmountPercentage.value = purchasedItem.value.leftoverAmountPercentage;
+    comment.value = purchasedItem.value.comment;
     createdAt.value = dayjs(purchasedItem.value.createdAt).format('YYYY-MM-DD HH:mm');
     updatedAt.value = dayjs(purchasedItem.value.updatedAt).format('YYYY-MM-DD HH:mm');
 
-    setItemOptions();
-}
-
-const itemOptions = ref<ItemBasic[]>([]);
-function setItemOptions() {
-    itemOptions.value = items.value.map(({ id, name, itemType, expectedLifetimeInDays, recommendedStock }) => ({
-        id,
-        name,
-        itemType,
-        expectedLifetimeInDays,
-        recommendedStock,
-    }));
+    setItemGroups();
 }
 
 const packageUnitOptions = ref<PackageUnitBasic[]>([]);
+const firstLoad = ref(true);
 watch(item, async (newItem) => {
+    if (!firstLoad.value) {
+        packageUnit.value = null;
+        amount.value = null;
+    }
     packageUnitOptions.value = items.value.find(i => i.id === newItem.id)!.packageUnits.map(({ id, name }) => ({ id, name }));
+    firstLoad.value = false;
 });
 
-const save = handleSubmit(async ({ id, status, item, packageUnit, amount, price, purchaseDate, expirationDate, leftoverAmountPercentage }) => {
+const save = handleSubmit(async ({ id, status, item, packageUnit, amount, price, purchaseDate, expirationDate, leftoverAmountPercentage, comment }) => {
     await updatePurchasedItem({
         id,
         status,
@@ -254,6 +295,46 @@ const save = handleSubmit(async ({ id, status, item, packageUnit, amount, price,
         purchaseDate: purchaseDate ? dayjs(purchaseDate).format('YYYY-MM-DD') : null,
         expirationDate: expirationDate ? dayjs(expirationDate).format('YYYY-MM-DD') : null,
         leftoverAmountPercentage,
+        comment,
     });
 });
+
+const selectableItems: any = ref([]);
+function setItemGroups() {
+    const itemGroups: any = {};
+    items.value.forEach((item: any) => {
+        if (!itemGroups[item.itemType.name]) {
+            itemGroups[item.itemType.name] = [];
+        }
+
+        itemGroups[item.itemType.name].push({
+            id: item.id,
+            name: item.name,
+            itemType: item.itemType,
+            expectedLifetimeInDays: item.expectedLifetimeInDays,
+            recommendedStock: item.recommendedStock,
+            isEssential: item.isEssential,
+        });
+    });
+
+    selectableItems.value = Object.entries(itemGroups).map(
+        ([itemType, items]) => ({ itemType, items }),
+    );
+}
+
+const confirm = useConfirm();
+function handleDelete() {
+    confirm.require({
+        message: 'Are you sure you want to delete this item?',
+        group: 'positioned',
+        header: 'Attention!',
+        position: 'center',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'bg-red-400 border-none',
+        acceptLabel: 'Delete',
+        accept: async () => {
+            await deletePurchasedItem(routeId.value, true);
+        },
+    });
+};
 </script>

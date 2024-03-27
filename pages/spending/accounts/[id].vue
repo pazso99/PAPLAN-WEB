@@ -81,15 +81,27 @@
                 size="small"
                 label="Save"
                 type="submit"
+                icon="pi pi-check"
                 :disabled="!isValid"
                 @click="save"
             />
+
+            <Button
+                class="ml-4"
+                size="small"
+                label="Delete"
+                severity="danger"
+                icon="pi pi-trash"
+                @click="handleDelete"
+            />
         </form>
+        <ConfirmDialog group="positioned" />
     </ContentBaseCard>
 </template>
 
 <script setup lang="ts">
 import * as yup from 'yup';
+import { useConfirm } from 'primevue/useconfirm';
 
 definePageMeta({
     middleware: 'auth',
@@ -101,7 +113,7 @@ useHead({
 });
 
 const spendingManagementStore = useSpendingManagementStore();
-const { getAccount, updateAccount } = spendingManagementStore;
+const { getAccount, updateAccount, deleteAccount } = spendingManagementStore;
 const { account, loading } = storeToRefs(spendingManagementStore);
 
 const schema = yup.object({
@@ -122,9 +134,11 @@ const [balance] = defineField('balance');
 const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 
+const routeId = ref();
 const route = useRoute();
 onMounted(async () => {
-    await getAccount(getIdFromRoute(route.params));
+    routeId.value = getIdFromRoute(route.params);
+    await getAccount(routeId.value);
     setData();
 });
 
@@ -147,4 +161,20 @@ const save = handleSubmit(async ({ id, status, name, balance }) => {
     });
     setData();
 });
+
+const confirm = useConfirm();
+function handleDelete() {
+    confirm.require({
+        message: 'Are you sure you want to delete this item?',
+        group: 'positioned',
+        header: 'Attention!',
+        position: 'center',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'bg-red-400 border-none',
+        acceptLabel: 'Delete',
+        accept: async () => {
+            await deleteAccount(routeId.value, true);
+        },
+    });
+};
 </script>

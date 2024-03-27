@@ -128,6 +128,7 @@ interface InventoryItemCreateRequest {
     packageUnitIds: number[];
     expectedLifetimeInDays: number;
     recommendedStock: number;
+    isEssential: boolean;
 };
 
 interface InventoryItemUpdateRequest {
@@ -138,6 +139,7 @@ interface InventoryItemUpdateRequest {
     packageUnitIds: number[];
     expectedLifetimeInDays: number;
     recommendedStock: number;
+    isEssential: boolean;
 };
 
 interface InventoryPurchasedItemCreateRequest {
@@ -149,6 +151,7 @@ interface InventoryPurchasedItemCreateRequest {
     purchaseDate: string | null;
     expirationDate: string | null;
     leftoverAmountPercentage: number;
+    comment: string;
     createAmount: number;
 };
 
@@ -162,6 +165,7 @@ interface InventoryPurchasedItemUpdateRequest {
     purchaseDate: string | null;
     expirationDate: string | null;
     leftoverAmountPercentage: number;
+    comment: string;
 };
 
 export {

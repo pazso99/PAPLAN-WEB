@@ -106,7 +106,7 @@ export const useInventoryManagementStore = defineStore('inventory-management', {
                 this.loading = false;
             }
         },
-        async deletePackageUnit(id: number) {
+        async deletePackageUnit(id: number, navigate: boolean = false) {
             const toast = useToastService();
             try {
                 this.loading = true;
@@ -117,6 +117,9 @@ export const useInventoryManagementStore = defineStore('inventory-management', {
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
+                if (navigate) {
+                    navigateTo('/inventory/package-units');
+                }
                 this.loading = false;
             }
         },
@@ -186,7 +189,7 @@ export const useInventoryManagementStore = defineStore('inventory-management', {
                 this.loading = false;
             }
         },
-        async deleteItemType(id: number) {
+        async deleteItemType(id: number, navigate: boolean = false) {
             const toast = useToastService();
             try {
                 this.loading = true;
@@ -197,6 +200,9 @@ export const useInventoryManagementStore = defineStore('inventory-management', {
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
+                if (navigate) {
+                    navigateTo('/inventory/item-types');
+                }
                 this.loading = false;
             }
         },
@@ -266,7 +272,7 @@ export const useInventoryManagementStore = defineStore('inventory-management', {
                 this.loading = false;
             }
         },
-        async deleteItem(id: number) {
+        async deleteItem(id: number, navigate: boolean = false) {
             const toast = useToastService();
             try {
                 this.loading = true;
@@ -277,6 +283,9 @@ export const useInventoryManagementStore = defineStore('inventory-management', {
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
+                if (navigate) {
+                    navigateTo('/inventory/items');
+                }
                 this.loading = false;
             }
         },
@@ -312,7 +321,7 @@ export const useInventoryManagementStore = defineStore('inventory-management', {
                 this.loading = false;
             }
         },
-        async createPurchasedItem(data: InventoryPurchasedItemCreateRequest) {
+        async createPurchasedItem(data: InventoryPurchasedItemCreateRequest, navigate: boolean = true) {
             const toast = useToastService();
             try {
                 this.loading = true;
@@ -325,7 +334,9 @@ export const useInventoryManagementStore = defineStore('inventory-management', {
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
-                navigateTo('/inventory/purchased-items');
+                if (navigate) {
+                    navigateTo('/inventory/purchased-items');
+                }
                 this.loading = false;
             }
         },
@@ -346,7 +357,7 @@ export const useInventoryManagementStore = defineStore('inventory-management', {
                 this.loading = false;
             }
         },
-        async deletePurchasedItem(id: number) {
+        async deletePurchasedItem(id: number, navigate: boolean = false) {
             const toast = useToastService();
             try {
                 this.loading = true;
@@ -357,6 +368,9 @@ export const useInventoryManagementStore = defineStore('inventory-management', {
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
+                if (navigate) {
+                    navigateTo('/inventory/purchased-items');
+                }
                 this.loading = false;
             }
         },

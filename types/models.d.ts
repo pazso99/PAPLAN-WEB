@@ -110,6 +110,7 @@ interface ItemBasic {
     itemType: ItemTypeBasic;
     expectedLifetimeInDays: number;
     recommendedStock: number;
+    isEssential: boolean;
 };
 
 interface Item extends ItemBasic {
@@ -122,17 +123,17 @@ interface Item extends ItemBasic {
 
 interface PurchasedItemBasic {
     id: number;
-    name: string;
-    item: ItemBasic;
-    packageUnit: PackageUnitBasic;
     amount: number;
     price: number;
     purchaseDate: Date;
     expirationDate: Date;
     leftoverAmountPercentage: number;
+    comment: string;
 };
 
 interface PurchasedItem extends PurchasedItemBasic {
+    item: ItemBasic;
+    packageUnit: PackageUnitBasic;
     status: boolean;
     createdAt: Date;
     updatedAt: Date;

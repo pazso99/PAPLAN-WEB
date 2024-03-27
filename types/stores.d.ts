@@ -16,6 +16,7 @@ import type {
     SpendingActualBalances,
     SpendingDashboardData,
     SpendingSettings,
+    InventoryItemTypeWithItems,
 } from './types';
 
 interface NavigationState {
@@ -87,7 +88,8 @@ interface InventoryManagementState {
 
 interface InventoryDashboardState {
     loading: boolean;
-    inventory: any; // TODO
+    inventoryItemTypes: InventoryItemTypeWithItems[];
+    activeTabs: integer[];
 };
 
 export {

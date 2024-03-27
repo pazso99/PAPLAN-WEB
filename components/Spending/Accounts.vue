@@ -102,7 +102,7 @@
         <Dialog
             v-model:visible="newTransactionModalOpen"
             modal
-            class="w-[50rem]"
+            class="w-full md:w-[50rem]"
         >
             <template #header>
                 <div>

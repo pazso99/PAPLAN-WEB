@@ -125,15 +125,27 @@
                 size="small"
                 label="Save"
                 type="submit"
+                icon="pi pi-check"
                 :disabled="!isValid"
                 @click="save"
             />
+
+            <Button
+                class="ml-4"
+                size="small"
+                label="Delete"
+                severity="danger"
+                icon="pi pi-trash"
+                @click="handleDelete"
+            />
         </form>
+        <ConfirmDialog group="positioned" />
     </ContentBaseCard>
 </template>
 
 <script setup lang="ts">
 import * as yup from 'yup';
+import { useConfirm } from 'primevue/useconfirm';
 import Editor from 'primevue/editor';
 
 definePageMeta({
@@ -146,7 +158,7 @@ useHead({
 });
 
 const recipesManagementStore = useRecipesManagementStore();
-const { getRecipe, updateRecipe } = recipesManagementStore;
+const { getRecipe, updateRecipe, deleteRecipe } = recipesManagementStore;
 const { recipe, loading } = storeToRefs(recipesManagementStore);
 
 const schema = yup.object({
@@ -169,9 +181,11 @@ const [description] = defineField('description');
 const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 
+const routeId = ref();
 const route = useRoute();
 onMounted(async () => {
-    await getRecipe(getIdFromRoute(route.params));
+    routeId.value = getIdFromRoute(route.params);
+    await getRecipe(routeId.value);
     setData();
 });
 
@@ -196,4 +210,20 @@ const save = handleSubmit(async ({ id, status, name, time, description }) => {
     });
     setData();
 });
+
+const confirm = useConfirm();
+function handleDelete() {
+    confirm.require({
+        message: 'Are you sure you want to delete this item?',
+        group: 'positioned',
+        header: 'Attention!',
+        position: 'center',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'bg-red-400 border-none',
+        acceptLabel: 'Delete',
+        accept: async () => {
+            await deleteRecipe(routeId.value, true);
+        },
+    });
+};
 </script>

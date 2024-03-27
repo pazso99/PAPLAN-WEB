@@ -22,6 +22,20 @@
                         :severity="status ? 'success' : 'danger'"
                     />
                 </div>
+                <label for="isEssential" class="my-2">Essential</label>
+                <div class="flex items-center gap-2">
+                    <InputSwitch
+                        id="isEssential"
+                        v-model="isEssential"
+                        :pt="{
+                            slider: { class: isEssential ? 'bg-yellow-600' : 'bg-red-800' },
+                        }"
+                    />
+                    <Tag
+                        :value="isEssential ? 'ESSENTIAL' : 'FALSE'"
+                        :severity="isEssential ? 'warning' : 'danger'"
+                    />
+                </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
@@ -68,7 +82,7 @@
                     <InputNumber
                         id="expectedLifetimeInDays"
                         v-model="expectedLifetimeInDays"
-                        suffix=" day"
+                        :suffix="` day${expectedLifetimeInDays > 1 ? 's' : ''}`"
                         placeholder="Expected lifetime..."
                         :class="{ 'p-invalid': errors.expectedLifetimeInDays }"
                     />
@@ -115,6 +129,7 @@ const schema = yup.object({
     itemType: yup.object().required().label('Item type'),
     expectedLifetimeInDays: yup.number().nullable().label('Expected lifetime'),
     recommendedStock: yup.number().nullable().label('Recommended stock'),
+    isEssential: yup.boolean().label('Essential'),
 });
 
 const { defineField, handleSubmit, errors } = useForm({
@@ -127,9 +142,11 @@ const [status] = defineField('status');
 const [itemType] = defineField('itemType');
 const [expectedLifetimeInDays] = defineField('expectedLifetimeInDays');
 const [recommendedStock] = defineField('recommendedStock');
+const [isEssential] = defineField('isEssential');
 const selectedPackageUnits = ref<number[]>([]);
 
 status.value = true;
+isEssential.value = false;
 
 const inventoryManagementStore = useInventoryManagementStore();
 const { createItem, getItemTypes, getPackageUnits } = inventoryManagementStore;
@@ -140,7 +157,7 @@ onMounted(async () => {
     await getPackageUnits();
 });
 
-const save = handleSubmit(async ({ name, status, itemType, expectedLifetimeInDays, recommendedStock }) => {
+const save = handleSubmit(async ({ name, status, itemType, expectedLifetimeInDays, recommendedStock, isEssential }) => {
     await createItem({
         name,
         status,
@@ -148,6 +165,7 @@ const save = handleSubmit(async ({ name, status, itemType, expectedLifetimeInDay
         packageUnitIds: selectedPackageUnits.value,
         expectedLifetimeInDays,
         recommendedStock,
+        isEssential,
     });
 });
 </script>

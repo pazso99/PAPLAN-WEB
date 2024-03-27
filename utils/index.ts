@@ -88,3 +88,13 @@ export function getNotePriorityLabel(priority: NotePriority) {
             return 'none';
     }
 }
+
+export function getLeftoverPercentageClass(leftoverAmountPercentage: number) {
+    if (leftoverAmountPercentage >= 50) {
+        return 'bg-green-600';
+    } else if (leftoverAmountPercentage >= 25) {
+        return 'bg-yellow-600';
+    } else {
+        return 'bg-red-600';
+    }
+}

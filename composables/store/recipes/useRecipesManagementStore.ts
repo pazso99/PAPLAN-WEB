@@ -82,7 +82,7 @@ export const useRecipesManagementStore = defineStore('recipes-management', {
                 this.loading = false;
             }
         },
-        async deleteRecipe(id: number) {
+        async deleteRecipe(id: number, navigate: boolean = false) {
             const toast = useToastService();
             try {
                 this.loading = true;
@@ -93,6 +93,9 @@ export const useRecipesManagementStore = defineStore('recipes-management', {
             } catch (err: any) {
                 toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
             } finally {
+                if (navigate) {
+                    navigateTo('/recipes/recipes');
+                }
                 this.loading = false;
             }
         },

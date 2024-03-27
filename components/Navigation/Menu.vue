@@ -122,7 +122,7 @@
             </template>
             <PanelMenu
                 v-model:expandedKeys="inventoryExpandedKeys"
-                :model="inventoryItems"
+                :model="inventoryItemTypes"
                 unstyled
             >
                 <template #item="{ item, root, active }">
@@ -231,7 +231,7 @@ const notesItems = ref([
     },
 ]);
 
-const inventoryItems = ref([
+const inventoryItemTypes = ref([
     {
         key: 'inventory-dashboard',
         label: 'Dashboard',
@@ -258,7 +258,7 @@ const inventoryItems = ref([
             },
             {
                 key: 'inventory-purchased-items',
-                label: 'Purchased items',
+                label: 'Stock items',
                 route: '/inventory/purchased-items',
             },
         ],

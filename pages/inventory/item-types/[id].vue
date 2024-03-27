@@ -69,15 +69,27 @@
                 size="small"
                 label="Save"
                 type="submit"
+                icon="pi pi-check"
                 :disabled="!isValid"
                 @click="save"
             />
+
+            <Button
+                class="ml-4"
+                size="small"
+                label="Delete"
+                severity="danger"
+                icon="pi pi-trash"
+                @click="handleDelete"
+            />
         </form>
+        <ConfirmDialog group="positioned" />
     </ContentBaseCard>
 </template>
 
 <script setup lang="ts">
 import * as yup from 'yup';
+import { useConfirm } from 'primevue/useconfirm';
 
 definePageMeta({
     middleware: 'auth',
@@ -89,7 +101,7 @@ useHead({
 });
 
 const inventoryManagementStore = useInventoryManagementStore();
-const { getItemType, updateItemType } = inventoryManagementStore;
+const { getItemType, updateItemType, deleteItemType } = inventoryManagementStore;
 const { itemType, loading } = storeToRefs(inventoryManagementStore);
 
 const schema = yup.object({
@@ -108,9 +120,11 @@ const [status] = defineField('status');
 const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 
+const routeId = ref();
 const route = useRoute();
 onMounted(async () => {
-    await getItemType(getIdFromRoute(route.params));
+    routeId.value = getIdFromRoute(route.params);
+    await getItemType(routeId.value);
     setData();
 });
 
@@ -131,4 +145,20 @@ const save = handleSubmit(async ({ id, status, name }) => {
     });
     setData();
 });
+
+const confirm = useConfirm();
+function handleDelete() {
+    confirm.require({
+        message: 'Are you sure you want to delete this item?',
+        group: 'positioned',
+        header: 'Attention!',
+        position: 'center',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'bg-red-400 border-none',
+        acceptLabel: 'Delete',
+        accept: async () => {
+            await deleteItemType(routeId.value, true);
+        },
+    });
+};
 </script>

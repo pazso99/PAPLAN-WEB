@@ -77,11 +77,45 @@
         </Column>
 
         <Column
+            field="isEssential"
+            header="Essential"
+            sortable
+            :show-filter-match-modes="false"
+            style="width: 10%"
+        >
+            <template #body="{ data }">
+                <Tag
+                    v-if="data.isEssential"
+                    value="ESSENTIAL"
+                    severity="warning"
+                />
+            </template>
+            <template #filter="{ filterModel }">
+                <div class="flex gap-2 items-center">
+                    <TriStateCheckbox
+                        v-model="filterModel.value"
+                        :pt="{
+                            box: {
+                                class: [
+                                    'border-none',
+                                    filterModel.value !== null ? filterModel.value ? 'bg-yellow-600' : 'bg-red-800' : '',
+                                ],
+                            },
+                        }"
+                    />
+                    <Tag v-if="filterModel.value === true" value="ESSENTIAL" severity="warning" />
+                    <Tag v-else-if="filterModel.value === false" value="FALSE" severity="danger" />
+                    <Tag v-else value="All" severity="info" />
+                </div>
+            </template>
+        </Column>
+
+        <Column
             field="name"
             header="Name"
             sortable
             :show-filter-match-modes="false"
-            style="width: 20%"
+            style="width: 15%"
         >
             <template #body="{ data }">
                 {{ data.name }}
@@ -125,10 +159,13 @@
             header="Expected Lifetime"
             data-type="numeric"
             sortable
-            style="width: 20%"
+            style="width: 16%"
         >
             <template #body="{ data }">
                 {{ data.expectedLifetimeInDays }}
+                <span v-if="data.expectedLifetimeInDays">
+                    day<template v-if="data.expectedLifetimeInDays > 1">s</template>
+                </span>
             </template>
             <template #filter="{ filterModel }">
                 <InputNumber
@@ -143,7 +180,7 @@
             header="Recommended Stock"
             data-type="numeric"
             sortable
-            style="width: 20%"
+            style="width: 18%"
         >
             <template #body="{ data }">
                 {{ data.recommendedStock }}
@@ -181,6 +218,7 @@ const filters = ref({
     'itemType.name': { value: null, matchMode: FilterMatchMode.IN },
     'expectedLifetimeInDays': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     'recommendedStock': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
+    'isEssential': { value: null, matchMode: FilterMatchMode.EQUALS },
 });
 
 const itemTypeOptions = ref<string[]>();

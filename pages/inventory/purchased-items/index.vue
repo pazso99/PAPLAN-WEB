@@ -1,6 +1,6 @@
 <template>
     <ContentListCard
-        title="Purchased items"
+        title="Stock items"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/inventory/purchased-items/create' },
             { icon: 'pi-chevron-left', to: '/inventory' },
@@ -19,6 +19,7 @@
             'price',
             'purchaseDate',
             'expirationDate',
+            'comment',
         ]"
         :filters="filters"
         :actions-column-meta="{
@@ -188,7 +189,19 @@
             style="width: 15%"
         >
             <template #body="{ data }">
-                {{ data.leftoverAmountPercentage }} %
+                <div class="flex items-center">
+                    <div class="w-1/5 text-xs">{{ data.leftoverAmountPercentage }}</div>
+                    <ProgressBar
+                        class="w-4/5"
+                        :value="data.leftoverAmountPercentage"
+                        :show-value="false"
+                        :pt="{
+                            value: {
+                                class: getLeftoverPercentageClass(data.leftoverAmountPercentage),
+                            },
+                        }"
+                    />
+                </div>
             </template>
             <template #filter="{ filterModel }">
                 <InputNumber
@@ -226,7 +239,6 @@ const filters = ref({
     'expirationDate': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
     'leftoverAmountPercentage': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
 });
-
 
 const itemNameOptions = ref<string[]>();
 onMounted(async () => {

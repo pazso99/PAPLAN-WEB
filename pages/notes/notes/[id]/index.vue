@@ -147,15 +147,27 @@
                 size="small"
                 label="Save"
                 type="submit"
+                icon="pi pi-check"
                 :disabled="!isValid"
                 @click="save"
             />
+
+            <Button
+                class="ml-4"
+                size="small"
+                label="Delete"
+                severity="danger"
+                icon="pi pi-trash"
+                @click="handleDelete"
+            />
         </form>
+        <ConfirmDialog group="positioned" />
     </ContentBaseCard>
 </template>
 
 <script setup lang="ts">
 import * as yup from 'yup';
+import { useConfirm } from 'primevue/useconfirm';
 import Editor from 'primevue/editor';
 
 definePageMeta({
@@ -168,7 +180,7 @@ useHead({
 });
 
 const notesManagementStore = useNotesManagementStore();
-const { getNote, updateNote } = notesManagementStore;
+const { getNote, updateNote, deleteNote } = notesManagementStore;
 const { note, loading } = storeToRefs(notesManagementStore);
 
 const priorityOptions = ref(getNotePriorities());
@@ -194,9 +206,11 @@ const [description] = defineField('description');
 const [createdAt] = defineField('createdAt');
 const [updatedAt] = defineField('updatedAt');
 
+const routeId = ref();
 const route = useRoute();
 onMounted(async () => {
-    await getNote(getIdFromRoute(route.params));
+    routeId.value = getIdFromRoute(route.params);
+    await getNote(routeId.value);
     setData();
 });
 
@@ -223,4 +237,20 @@ const save = handleSubmit(async ({ id, status, name, priority, dueDate, descript
     });
     setData();
 });
+
+const confirm = useConfirm();
+function handleDelete() {
+    confirm.require({
+        message: 'Are you sure you want to delete this item?',
+        group: 'positioned',
+        header: 'Attention!',
+        position: 'center',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'bg-red-400 border-none',
+        acceptLabel: 'Delete',
+        accept: async () => {
+            await deleteNote(routeId.value, true);
+        },
+    });
+};
 </script>

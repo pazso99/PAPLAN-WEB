@@ -1,6 +1,6 @@
 <template>
     <ContentBaseCard
-        title="Create purchased item"
+        title="Create stock item"
         :nav-buttons="[
             { icon: 'pi-chevron-left', to: '/inventory/purchased-items' },
         ]"
@@ -30,10 +30,27 @@
                     <Dropdown
                         id="item"
                         v-model="item"
+                        :options="selectableItems"
+                        filter
                         option-label="name"
-                        :options="items"
+                        option-group-label="label"
+                        option-group-children="items"
                         placeholder="Select item"
-                    />
+                        :pt="{
+                            itemGroup: {
+                                class: 'p-0',
+                            },
+                        }"
+                    >
+                        <template #optiongroup="slotProps">
+                            <div class="py-1 text-center">
+                                <Tag
+                                    class="w-full"
+                                    :value="slotProps.option.itemType"
+                                />
+                            </div>
+                        </template>
+                    </Dropdown>
                 </div>
 
                 <div
@@ -48,6 +65,7 @@
                         :options="packageUnitOptions"
                         placeholder="Select unit"
                     />
+                    <small class="p-error">{{ errors.packageUnit }}</small>
                 </div>
 
                 <div
@@ -117,13 +135,33 @@
                 </div>
             </div>
 
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="flex flex-col">
+                    <label for="comment" class="mb-1">Comment</label>
+                    <Textarea
+                        id="comment"
+                        v-model="comment"
+                        rows="5"
+                        cols="30"
+                    />
+                </div>
+            </div>
+
             <div class="flex items-center gap-3">
                 <InputNumber
                     id="createAmount"
                     v-model="createAmount"
-                    :min="0"
+                    show-buttons
+                    :min="1"
                     :max="99"
-                />
+                >
+                    <template #incrementbuttonicon>
+                        <span class="pi pi-plus" />
+                    </template>
+                    <template #decrementbuttonicon>
+                        <span class="pi pi-minus" />
+                    </template>
+                </InputNumber>
                 <Button
                     size="small"
                     label="Save"
@@ -158,6 +196,7 @@ const schema = yup.object({
     purchaseDate: yup.date().nullable().label('Purchase date'),
     expirationDate: yup.date().nullable().label('Expiration date'),
     leftoverAmountPercentage: yup.number().nullable().label('Leftover amount percentage'),
+    comment: yup.string().label('Comment'),
 });
 
 const { defineField, handleSubmit, errors } = useForm({
@@ -173,6 +212,7 @@ const [price] = defineField('price');
 const [purchaseDate] = defineField('purchaseDate');
 const [expirationDate] = defineField('expirationDate');
 const [leftoverAmountPercentage] = defineField('leftoverAmountPercentage');
+const [comment] = defineField('comment');
 const createAmount = ref(1);
 
 status.value = true;
@@ -184,6 +224,8 @@ const { items, loading } = storeToRefs(inventoryManagementStore);
 
 onMounted(async () => {
     await getItems();
+
+    setItemGroups();
 });
 
 const packageUnitOptions = ref<PackageUnit[]>([]);
@@ -194,7 +236,7 @@ watch(item, async (newItem) => {
 });
 
 const dayjs = useDayjs();
-const save = handleSubmit(async ({ status, item, packageUnit, amount, price, purchaseDate, expirationDate, leftoverAmountPercentage }) => {
+const save = handleSubmit(async ({ status, item, packageUnit, amount, price, purchaseDate, expirationDate, leftoverAmountPercentage, comment }) => {
     await createPurchasedItem({
         status,
         itemId: item.id,
@@ -204,17 +246,38 @@ const save = handleSubmit(async ({ status, item, packageUnit, amount, price, pur
         purchaseDate: purchaseDate ? dayjs(purchaseDate).format('YYYY-MM-DD') : null,
         expirationDate: expirationDate ? dayjs(expirationDate).format('YYYY-MM-DD') : null,
         leftoverAmountPercentage,
+        comment,
         createAmount: createAmount.value,
     });
 });
+
+const selectableItems: any = ref([]);
+function setItemGroups() {
+    const itemGroups: any = {};
+    items.value.forEach((item: any) => {
+        if (!itemGroups[item.itemType.name]) {
+            itemGroups[item.itemType.name] = [];
+        }
+
+        itemGroups[item.itemType.name].push(item);
+    });
+
+    selectableItems.value = Object.entries(itemGroups).map(
+        ([itemType, items]) => ({ itemType, items }),
+    );
+}
 </script>
 
 <style lang="scss" scoped>
 :deep(#createAmount) {
-    width: 3rem;
+    width: 5rem;
 
     & input {
         width: 100% !important;
+    }
+
+    & span.pi {
+        font-size: 10px !important;
     }
 }
 </style>
