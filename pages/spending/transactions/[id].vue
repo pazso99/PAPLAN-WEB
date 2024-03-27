@@ -127,7 +127,6 @@
                         v-model="amount"
                         suffix=" Ft"
                         placeholder="Amount..."
-                        integeronly
                         :class="{ 'p-invalid': errors.amount }"
                     />
                     <small class="p-error">{{ errors.amount }}</small>
@@ -141,7 +140,7 @@
                 <div class="flex flex-col">
                     <label for="toAccount" class="mb-1">To Account</label>
                     <Dropdown
-                        id="account"
+                        id="toAccount"
                         v-model="toAccount"
                         option-label="name"
                         :options="toAccounts"
@@ -184,15 +183,27 @@
                 size="small"
                 label="Save"
                 type="submit"
+                icon="pi pi-check"
                 :disabled="!isValid"
                 @click="save"
             />
+
+            <Button
+                class="ml-4"
+                size="small"
+                label="Delete"
+                severity="danger"
+                icon="pi pi-trash"
+                @click="handleDelete"
+            />
         </form>
+        <ConfirmDialog group="positioned" />
     </ContentBaseCard>
 </template>
 
 <script setup lang="ts">
 import * as yup from 'yup';
+import { useConfirm } from 'primevue/useconfirm';
 import type { Account, AccountBasic } from '~/types/models';
 
 definePageMeta({
@@ -205,7 +216,7 @@ useHead({
 });
 
 const spendingManagementStore = useSpendingManagementStore();
-const { getTransaction, updateTransaction, getAccounts, getTransactionCategories } = spendingManagementStore;
+const { getTransaction, updateTransaction, getAccounts, getTransactionCategories, deleteTransaction } = spendingManagementStore;
 const { transaction, accounts, transactionCategories, loading } = storeToRefs(spendingManagementStore);
 
 const schema = yup.object({
@@ -247,9 +258,11 @@ watch(account, async (newAccount) => {
     toAccounts.value = accounts.value.filter(account => account.id !== newAccount.id);
 });
 
+const routeId = ref();
 const route = useRoute();
 onMounted(async () => {
-    await getTransaction(getIdFromRoute(route.params));
+    routeId.value = getIdFromRoute(route.params);
+    await getTransaction(routeId.value);
     await getTransactionCategories();
     await getAccounts();
 
@@ -341,4 +354,20 @@ function setTransactionTypeGroups() {
         ([transactionType, items]) => ({ transactionType, items }),
     );
 }
+
+const confirm = useConfirm();
+function handleDelete() {
+    confirm.require({
+        message: 'Are you sure you want to delete this item?',
+        group: 'positioned',
+        header: 'Attention!',
+        position: 'center',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'bg-red-400 border-none',
+        acceptLabel: 'Delete',
+        accept: async () => {
+            await deleteTransaction(routeId.value, true);
+        },
+    });
+};
 </script>

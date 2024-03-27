@@ -109,7 +109,7 @@
             v-model:visible="deleteModalVisible"
             modal
             header="Warning!"
-            class="w-[25rem]"
+            class="w-full md:w-[25rem]"
         >
             <span class="p-text-secondary block mb-5">
                 Are you sure want to delete this item? (<b>{{ deletableItem.id }}</b>)

@@ -7,11 +7,16 @@ import type {
     RecipeBasic,
     Note,
     NotesBasic,
+    PackageUnit,
+    ItemType,
+    Item,
+    PurchasedItem,
 } from './models';
 import type {
     SpendingActualBalances,
     SpendingDashboardData,
     SpendingSettings,
+    InventoryItemTypeWithItems,
 } from './types';
 
 interface NavigationState {
@@ -69,6 +74,24 @@ interface NotesDashboardState {
     notes: NoteBasic[];
 };
 
+interface InventoryManagementState {
+    loading: boolean;
+    packageUnits: PackageUnit[];
+    packageUnit: PackageUnit;
+    itemTypes: ItemType[];
+    itemType: ItemType;
+    items: Item[];
+    item: Item;
+    purchasedItems: PurchasedItem[];
+    purchasedItem: PurchasedItem;
+};
+
+interface InventoryDashboardState {
+    loading: boolean;
+    inventoryItemTypes: InventoryItemTypeWithItems[];
+    activeTabs: integer[];
+};
+
 export {
     NavigationState,
     AuthState,
@@ -79,4 +102,6 @@ export {
     RecipesDashboardState,
     NotesManagementState,
     NotesDashboardState,
+    InventoryManagementState,
+    InventoryDashboardState,
 };
