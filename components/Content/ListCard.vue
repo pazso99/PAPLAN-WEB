@@ -5,6 +5,7 @@
         :loading="loading"
     >
         <DataTable
+            ref="table"
             v-model:filters="filters"
             :value="items"
             striped-rows
@@ -18,6 +19,7 @@
             removable-sort
             filter-display="menu"
             :global-filter-fields="globalFilterFields"
+            :export-filename="getExportFilename()"
         >
             <template #empty>
                 No data.
@@ -90,18 +92,19 @@
             </Column>
 
             <template #paginatorstart>
-                <!-- <Button
-                    type="button"
-                    severity="contrast"
-                    icon="pi pi-download"
-                    text
-                /> -->
                 <Button
                     type="button"
                     severity="contrast"
                     icon="pi pi-refresh"
                     text
                     @click="handleRefresh"
+                />
+                <Button
+                    type="button"
+                    severity="contrast"
+                    icon="pi pi-download"
+                    text
+                    @click="exportCSV"
                 />
             </template>
         </DataTable>
@@ -218,6 +221,7 @@ const props = defineProps<{
     globalFilterFields: string[];
     filters: DataTableFilterMeta;
     actionsColumnMeta?: { width: string; editUrl?: string; showUrl?: string; canDelete?: boolean };
+    exportFilename: string;
 }>();
 
 const emit = defineEmits<{
@@ -260,5 +264,15 @@ function handleDelete() {
 
 function handleRefresh() {
     emit('refreshTable');
+}
+
+const dayjs = useDayjs();
+function getExportFilename() {
+    return `${props.exportFilename}_${dayjs().format('YYYY_MM_DD_HHmm')}`;
+}
+
+const table = ref();
+function exportCSV() {
+    table.value.exportCSV();
 }
 </script>
