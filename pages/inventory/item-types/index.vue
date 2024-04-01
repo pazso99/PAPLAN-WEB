@@ -21,6 +21,7 @@
             editUrl: '/inventory/item-types',
             canDelete: true,
         }"
+        export-filename="item_types"
         @refresh-table="refreshTable"
         @delete-item="removeItemType"
     >

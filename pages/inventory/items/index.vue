@@ -23,6 +23,7 @@
             editUrl: '/inventory/items',
             canDelete: true,
         }"
+        export-filename="items"
         @refresh-table="refreshTable"
         @delete-item="removeItem"
     >

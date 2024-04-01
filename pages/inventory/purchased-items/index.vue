@@ -27,6 +27,7 @@
             editUrl: '/inventory/purchased-items',
             canDelete: true,
         }"
+        export-filename="stock_items"
         @refresh-table="refreshTable"
         @delete-item="removePurchasedItem"
     >

@@ -22,6 +22,7 @@
             editUrl: '/spending/accounts',
             canDelete: true,
         }"
+        export-filename="accounts"
         @refresh-table="refreshTable"
         @delete-item="removeAccount"
     >

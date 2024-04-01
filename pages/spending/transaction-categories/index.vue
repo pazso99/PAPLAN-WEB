@@ -22,6 +22,7 @@
             editUrl: '/spending/transaction-categories',
             canDelete: true,
         }"
+        export-filename="transaction_categories"
         @refresh-table="refreshTable"
         @delete-item="removeTransactionCategory"
     >
