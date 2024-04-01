@@ -24,6 +24,7 @@
             showUrl: '/notes/notes',
             canDelete: true,
         }"
+        export-filename="notes"
         @refresh-table="refreshTable"
         @delete-item="removeNote"
     >

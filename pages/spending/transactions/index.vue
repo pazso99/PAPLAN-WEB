@@ -25,6 +25,7 @@
             editUrl: '/spending/transactions',
             canDelete: true,
         }"
+        export-filename="transactions"
         @refresh-table="refreshTable"
         @delete-item="removeTransaction"
     >

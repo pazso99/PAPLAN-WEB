@@ -23,6 +23,7 @@
             showUrl: '/recipes/recipes',
             canDelete: true,
         }"
+        export-filename="recipes"
         @refresh-table="refreshTable"
         @delete-item="removeRecipe"
     >

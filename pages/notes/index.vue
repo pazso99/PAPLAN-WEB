@@ -9,7 +9,7 @@
             data-key="id"
             paginator
             :rows="9"
-            :rows-per-page-options="[9, 18, notes.length]"
+            :rows-per-page-options="[9, 18, 50]"
         >
             <template #header>
                 <div class="flex flex-col md:flex-row gap-2 justify-between items-center">

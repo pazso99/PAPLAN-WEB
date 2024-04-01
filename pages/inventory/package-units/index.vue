@@ -21,6 +21,7 @@
             editUrl: '/inventory/package-units',
             canDelete: true,
         }"
+        export-filename="package_units"
         @refresh-table="refreshTable"
         @delete-item="removePackageUnit"
     >
