@@ -50,6 +50,7 @@ interface SpendingSettingsState {
     loading: boolean;
     actualBalances: SpendingActualBalances;
     settings: SpendingSettings;
+    monthlyMetadata: any[];
 };
 
 interface RecipesManagementState {

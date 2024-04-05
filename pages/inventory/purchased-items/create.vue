@@ -249,6 +249,7 @@ const save = handleSubmit(async ({ status, item, packageUnit, amount, price, pur
         comment,
         createAmount: createAmount.value,
     });
+    createAmount.value = 1;
 });
 
 const selectableItems: any = ref([]);

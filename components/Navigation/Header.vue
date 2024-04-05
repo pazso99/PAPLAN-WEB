@@ -24,7 +24,7 @@
                     rounded
                     @click="handleLogout"
                 />
-                <div class="md:hidden">
+                <div class="lg:hidden">
                     <Button
                         icon="pi pi-bars"
                         @click="toggleNav"

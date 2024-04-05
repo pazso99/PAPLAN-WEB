@@ -438,7 +438,7 @@ function openItemListDialog(item: InventoryItem, stockType: 'inStock' | 'used') 
     itemListDialog.value = true;
 }
 
-function getCardClass(item: InventoryItem) {
+function getCardClass(item: InventoryItem) { // TODO
     switch (item.stockStatus) {
         case 'in_stock':
             return 'from-green-900 to-green-950';
@@ -451,7 +451,7 @@ function getCardClass(item: InventoryItem) {
     }
 }
 
-function getCardClass2(item: InventoryItem) {
+function getCardClass2(item: InventoryItem) { // TODO
     let className = '';
 
     if (item.isEssential) {
@@ -515,6 +515,7 @@ const save = handleSubmit(async ({ packageUnit, amount, price, purchaseDate, exp
     }, false);
     await getInventoryDashboardData();
     newItemDialog.value = false;
+    createAmount.value = 1;
 });
 
 const confirm = useConfirm();

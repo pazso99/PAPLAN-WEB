@@ -9,6 +9,7 @@ export const useSpendingSettingsStore = defineStore('spending-settings', {
         loading: true,
         actualBalances: <SpendingActualBalances>{},
         settings: <SpendingSettings>{},
+        monthlyMetadata: [],
     } as SpendingSettingsState),
     actions: {
         async getSpendingSettingsData() {
@@ -45,6 +46,54 @@ export const useSpendingSettingsStore = defineStore('spending-settings', {
                 });
 
                 this.settings = response.data;
+                toast.add({ severity: 'success', summary: 'succcess!', detail: 'Settings updated!', life: 3000 });
+            } catch (err: any) {
+                toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when updating settings!', life: 3000 });
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        // TODO ?
+        /* async calculateMonthMetadata(data: any) {
+            const toast = useToastService();
+            this.loading = true;
+            try {
+                const response = await useApiFetch<any>('spending/calculate-month-metadata', {
+                    method: 'POST',
+                    body: data,
+                });
+
+                toast.add({ severity: 'success', summary: 'succcess!', detail: 'Settings updated!', life: 3000 });
+            } catch (err: any) {
+                toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when updating settings!', life: 3000 });
+            } finally {
+                this.loading = false;
+            }
+        }, */
+        // TODO
+        async getMonthsMetadata() {
+            const toast = useToastService();
+            this.loading = true;
+            try {
+                const response = await useApiFetch<any>('spending/months-metadata');
+                this.monthlyMetadata = response.data.monthlyMetadata;
+                toast.add({ severity: 'success', summary: 'succcess!', detail: 'Settings updated!', life: 3000 });
+            } catch (err: any) {
+                toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when updating settings!', life: 3000 });
+            } finally {
+                this.loading = false;
+            }
+        },
+        async updateMonthMetadata(data: any) {
+            const toast = useToastService();
+            this.loading = true;
+            try {
+                const response = await useApiFetch<any>(`spending/update-month-metadata/${data.id}`, {
+                    method: 'POST',
+                    body: data,
+                });
+
                 toast.add({ severity: 'success', summary: 'succcess!', detail: 'Settings updated!', life: 3000 });
             } catch (err: any) {
                 toast.add({ severity: 'error', summary: 'Error!', detail: 'There was an error when updating settings!', life: 3000 });
