@@ -11,8 +11,8 @@
                 <label for="status" class="mb-1">Status</label>
                 <div class="flex items-center gap-2">
                     <InputSwitch
-                        id="status"
                         v-model="status"
+                        input-id="status"
                         :pt="{
                             slider: { class: status ? 'bg-green-600' : 'bg-red-800' },
                         }"
@@ -28,8 +28,8 @@
                 <div class="flex flex-col">
                     <label for="item" class="mb-1">Item</label>
                     <Dropdown
-                        id="item"
                         v-model="item"
+                        input-id="item"
                         :options="selectableItems"
                         filter
                         option-label="name"
@@ -59,8 +59,8 @@
                 >
                     <label for="packageUnit" class="mb-1">Unit</label>
                     <Dropdown
-                        id="packageUnit"
                         v-model="packageUnit"
+                        input-id="packageUnit"
                         option-label="name"
                         :options="packageUnitOptions"
                         placeholder="Select unit"
@@ -74,9 +74,8 @@
                 >
                     <label for="amount" class="mb-1">Amount</label>
                     <InputNumber
-                        id="amount"
                         v-model="amount"
-                        input-id="minmaxfraction"
+                        input-id="amount"
                         :suffix="` ${packageUnit.name}`"
                         :max-fraction-digits="3"
                         placeholder="Amount..."
@@ -90,8 +89,8 @@
                 <div class="flex flex-col">
                     <label for="price" class="mb-1">Price</label>
                     <InputNumber
-                        id="price"
                         v-model="price"
+                        input-id="price"
                         suffix=" Ft"
                         placeholder="Price..."
                         :class="{ 'p-invalid': errors.price }"
@@ -101,8 +100,8 @@
                 <div class="flex flex-col">
                     <label for="purchaseDate" class="mb-1">Purchase date</label>
                     <Calendar
-                        id="purchaseDate"
                         v-model="purchaseDate"
+                        input-id="purchaseDate"
                         date-format="yy-mm-dd"
                     />
                     <small class="p-error">{{ errors.purchaseDate }}</small>
@@ -110,8 +109,8 @@
                 <div class="flex flex-col">
                     <label for="expirationDate" class="mb-1">Expiration date</label>
                     <Calendar
-                        id="expirationDate"
                         v-model="expirationDate"
+                        input-id="expirationDate"
                         date-format="yy-mm-dd"
                     />
                     <small class="p-error">{{ errors.expirationDate }}</small>
@@ -122,8 +121,8 @@
                 <div class="flex flex-col">
                     <label for="leftoverAmountPercentage" class="mb-1">Leftover Amount</label>
                     <InputNumber
-                        id="leftoverAmountPercentage"
                         v-model="leftoverAmountPercentage"
+                        input-id="leftoverAmountPercentage"
                         suffix=" %"
                         :min="0"
                         :max="100"
@@ -139,8 +138,8 @@
                 <div class="flex flex-col">
                     <label for="comment" class="mb-1">Comment</label>
                     <Textarea
-                        id="comment"
                         v-model="comment"
+                        input-id="comment"
                         rows="5"
                         cols="30"
                     />

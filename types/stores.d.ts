@@ -13,9 +13,9 @@ import type {
     PurchasedItem,
 } from './models';
 import type {
-    SpendingActualBalances,
     SpendingDashboardData,
     SpendingSettings,
+    SpendingMonthlyMetadata,
     InventoryItemTypeWithItems,
 } from './types';
 
@@ -48,9 +48,8 @@ interface SpendingDashboardState {
 
 interface SpendingSettingsState {
     loading: boolean;
-    actualBalances: SpendingActualBalances;
     settings: SpendingSettings;
-    monthlyMetadata: any[];
+    monthlyMetadata: SpendingMonthlyMetadata[];
 };
 
 interface RecipesManagementState {

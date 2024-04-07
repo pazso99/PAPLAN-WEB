@@ -12,7 +12,7 @@ import type {
 import type {
     SpendingDashboardData,
     SpendingSettings,
-    SpendingActualBalances,
+    SpendingMonthlyData,
     RecipesDashboardData,
     NotesDashboardData,
     InventoryDashboardData,
@@ -33,7 +33,7 @@ type TokenResponse = ApiSuccessResponse<{
 
 type UserResponse = ApiSuccessResponse<User>;
 type SpendingSettingsResponse = ApiSuccessResponse<SpendingSettings>;
-type SpendingActualBalancesResponse = ApiSuccessResponse<SpendingActualBalances>;
+type SpendingMonthlyDataResponse = ApiSuccessResponse<SpendingMonthlyData>;
 type SpendingDashboardResponse = ApiSuccessResponse<SpendingDashboardData>;
 type SpendingAccountResponse = ApiSuccessResponse<Account>;
 type SpendingAccountListResponse = ApiSuccessResponse<Account[]>;
@@ -64,7 +64,7 @@ export {
     ErrorResponse,
     TokenResponse,
     SpendingSettingsResponse,
-    SpendingActualBalancesResponse,
+    SpendingMonthlyDataResponse,
     SpendingDashboardResponse,
     UserResponse,
     SpendingAccountResponse,

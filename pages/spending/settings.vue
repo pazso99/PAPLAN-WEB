@@ -35,6 +35,12 @@
                         />
                     </div>
                 </div>
+
+                <Button
+                    size="small"
+                    label="Save"
+                    @click="handleSave"
+                />
             </div>
             <div class="w-full max-w-full sm:px-3 mb-6 p-4 bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-slate-800">
                 <h2 class="font-bold mb-1 text-xl">
@@ -42,7 +48,7 @@
                 </h2>
                 <div class="flex flex-wrap flex-col md:flex-row">
                     <div
-                        v-for="monthMetadata in monthlyMetadata"
+                        v-for="(monthMetadata, index) in monthlyMetadata"
                         :key="monthMetadata.id"
                         class="p-2 w-full xl:w-1/2"
                     >
@@ -61,50 +67,77 @@
                                             {{ monthMetadata.year }}-{{ monthMetadata.month }}
                                         </p>
                                         <div>
-                                            <label for="totalBalance" class="block mb-1">totalBalance</label>
-                                            <InputNumber v-model="monthMetadata.totalBalance" suffix=" Ft" class="w-40" input-id="totalBalance" />
+                                            <label for="totalBalance" class="block mb-1">Total balance:</label>
+                                            <InputNumber
+                                                v-model="monthMetadata.totalBalance"
+                                                input-id="totalBalance"
+                                                suffix=" Ft"
+                                                class="w-40"
+                                            />
                                         </div>
+                                    </div>
+                                    <div class="w-full lg:w-1/2 flex items-start justify-end mr-4">
+                                        <Button
+                                            v-if="monthlyMetadata.length - 1 !== index"
+                                            class="p-0"
+                                            icon="pi pi-calculator"
+                                            text
+                                            @click="confirmCalculateMonthMetadata(monthMetadata.year, monthMetadata.month)"
+                                        />
+                                        <Button
+                                            class="p-0"
+                                            icon="pi pi-check"
+                                            severity="success"
+                                            text
+                                            @click="handleMonthMetadataSave(monthMetadata)"
+                                        />
+                                        <Button
+                                            class="p-0"
+                                            icon="pi pi-eye"
+                                            severity="contrast"
+                                            text
+                                            @click="openMonthMetadataAccountsModal(monthMetadata.accounts)"
+                                        />
                                     </div>
                                 </div>
                             </template>
                             <Divider align="center">
-                                <span class="text-sm">Data</span>
+                                <span class="pi pi-objects-column" />
                             </Divider>
                             <div class="flex flex-wrap flex-col md:flex-row">
                                 <div class="w-full lg:w-1/2 flex flex-col">
                                     <div class="mb-2">
-                                        <label for="totalIncome" class="block mb-1">totalIncome</label>
-                                        <InputNumber v-model="monthMetadata.totalIncome" suffix=" Ft" class="w-40" input-id="totalIncome" />
+                                        <label for="totalIncome" class="block mb-1">Total income:</label>
+                                        <InputNumber
+                                            v-model="monthMetadata.totalIncome"
+                                            input-id="totalIncome"
+                                            suffix=" Ft"
+                                            class="w-40"
+                                        />
                                     </div>
                                     <div class="mb-2">
-                                        <label for="totalBasicExpense" class="block mb-1">totalBasicExpense</label>
-                                        <InputNumber v-model="monthMetadata.totalBasicExpense" suffix=" Ft" class="w-40" input-id="totalBasicExpense" />
+                                        <label for="totalBasicExpense" class="block mb-1">Total basic expense:</label>
+                                        <InputNumber
+                                            v-model="monthMetadata.totalBasicExpense"
+                                            input-id="totalBasicExpense"
+                                            suffix=" Ft"
+                                            class="w-40"
+                                        />
                                     </div>
                                     <div class="mb-2">
-                                        <label for="totalPremiumExpense" class="block mb-1">totalPremiumExpense</label>
-                                        <InputNumber v-model="monthMetadata.totalPremiumExpense" suffix=" Ft" class="w-40" input-id="totalPremiumExpense" />
+                                        <label for="totalPremiumExpense" class="block mb-1">Total premium expense:</label>
+                                        <InputNumber
+                                            v-model="monthMetadata.totalPremiumExpense"
+                                            input-id="totalPremiumExpense"
+                                            suffix=" Ft"
+                                            class="w-40"
+                                        />
                                     </div>
                                 </div>
-                                <div class="w-full lg:w-1/2 flex bg-green-800">
-                                    diagram
+                                <div class="w-full lg:w-1/2 flex justify-center items-center">
+                                    PLACEHOLDER
                                 </div>
                             </div>
-                            <template #footer>
-                                <div class="flex justify-end">
-                                    <Button
-                                        icon="pi pi-book"
-                                        rounded
-                                        text
-                                        @click="openMonthMetadataAccountsModal(monthMetadata.accounts)"
-                                    />
-                                    <Button
-                                        icon="pi pi-save"
-                                        rounded
-                                        text
-                                        @click="handleMonthMetadataSave(monthMetadata)"
-                                    />
-                                </div>
-                            </template>
                         </Panel>
                     </div>
                 </div>
@@ -126,47 +159,54 @@
                     </Divider>
                     <div class="w-full flex flex-col md:flex-row mb-4">
                         <div class="w-full lg:w-1/4 flex flex-col">
-                            <label for="balance" class="block mb-1">balance</label>
+                            <label for="balance" class="block mb-1">Balance:</label>
                             <InputNumber
                                 v-model="accountMetadata.balance"
-                                :pt=" { input: { class: 'w-40' } }" class="w-40" input-id="balance"
+                                input-id="balance"
+                                :pt=" { input: { class: 'w-40' } }"
+                                class="w-40"
                                 suffix=" Ft"
                             />
                         </div>
                         <div class="w-full lg:w-1/4 flex flex-col">
-                            <label for="income" class="block mb-1">income</label>
-                            <InputNumber v-model="accountMetadata.income" suffix=" Ft" class="w-40" input-id="income" />
+                            <label for="income" class="block mb-1">Income:</label>
+                            <InputNumber
+                                v-model="accountMetadata.income"
+                                input-id="income"
+                                suffix=" Ft"
+                                class="w-40"
+                            />
                         </div>
                         <div class="w-full lg:w-1/4 flex flex-col">
-                            <label for="basicExpense" class="block mb-1">basicExpense</label>
-                            <InputNumber v-model="accountMetadata.basicExpense" suffix=" Ft" class="w-40" input-id="basicExpense" />
+                            <label for="basicExpense" class="block mb-1">Basic expense:</label>
+                            <InputNumber
+                                v-model="accountMetadata.basicExpense"
+                                input-id="basicExpense"
+                                suffix=" Ft"
+                                class="w-40"
+                            />
                         </div>
                         <div class="w-full lg:w-1/4 flex flex-col">
-                            <label for="premiumExpense" class="block mb-1">premiumExpense</label>
-                            <InputNumber v-model="accountMetadata.premiumExpense" suffix=" Ft" class="w-40" input-id="premiumExpense" />
+                            <label for="premiumExpense" class="block mb-1">Premium expense:</label>
+                            <InputNumber
+                                v-model="accountMetadata.premiumExpense"
+                                input-id="premiumExpense"
+                                suffix=" Ft"
+                                class="w-40"
+                            />
                         </div>
                     </div>
                 </div>
 
                 <template #footer>
-                    <Button type="button" label="OK" @click="isMonthMetadataAccountsModal = false" />
+                    <Button
+                        type="button"
+                        label="OK"
+                        @click="isMonthMetadataAccountsModal = false"
+                    />
                 </template>
             </Dialog>
-
-            <!-- <div class="w-full max-w-full sm:px-3 mb-6 p-4 bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-slate-800">
-                <h2 class="font-bold mb-1 text-xl" @click="handleCalculateMonthMetadata">
-                    Test
-                </h2>
-            </div> -->
-
-            <div class="w-full text-center md:text-start mb-4">
-                <!-- TODO fenti blokkba -->
-                <Button
-                    size="small"
-                    label="Save"
-                    @click="handleSave"
-                />
-            </div>
+            <ConfirmDialog group="positioned" />
         </div>
         <template #loading>
             <div class="flex flex-wrap justify-center mb-4">
@@ -200,7 +240,9 @@
 </template>
 
 <script setup lang="ts">
+import { useConfirm } from 'primevue/useconfirm';
 import type { TransactionCategory } from '~/types/models';
+import type { SpendingMonthlyMetadata, SpendingMonthlyMetadataAccount } from '~/types/types';
 
 definePageMeta({
     middleware: 'auth',
@@ -213,8 +255,14 @@ useHead({
 
 const spendingSettingsStore = useSpendingSettingsStore();
 const spendingManagementStore = useSpendingManagementStore();
-const { getSpendingSettingsData, getSpendingActualBalances, updateSpendingSettings, getMonthsMetadata, updateMonthMetadata, calculateMonthMetadata } = spendingSettingsStore;
-const { loading, actualBalances, settings, monthlyMetadata } = storeToRefs(spendingSettingsStore);
+const {
+    getSpendingSettingsData,
+    updateSpendingSettings,
+    getMonthsMetadata,
+    updateMonthMetadata,
+    calculateMonthMetadata,
+} = spendingSettingsStore;
+const { loading, settings, monthlyMetadata } = storeToRefs(spendingSettingsStore);
 const { getTransactionCategories } = spendingManagementStore;
 const { transactionCategories } = storeToRefs(spendingManagementStore);
 
@@ -222,23 +270,15 @@ const basicCategories = ref<number[]>([]);
 const premiumCategories = ref<number[]>([]);
 const expenseCategories = ref<TransactionCategory[]>([]);
 
-const selectedMonthMetadataAccounts: any = ref([]);
+const selectedMonthMetadataAccounts = ref<SpendingMonthlyMetadataAccount[]>([]);
 onMounted(async () => {
     await getSpendingSettingsData();
-    await getSpendingActualBalances();
     await getTransactionCategories();
     await getMonthsMetadata();
     basicCategories.value = settings.value.configs.spending_basic_transaction_categories;
     premiumCategories.value = settings.value.configs.spending_premium_transaction_categories;
     expenseCategories.value = transactionCategories.value.filter(({ transactionType }) => transactionType === 'expense');
 });
-
-async function handleCalculateMonthMetadata() { // TODO?
-    await calculateMonthMetadata({
-        year: '2024',
-        month: '02',
-    });
-};
 
 async function handleSave() {
     await updateSpendingSettings({
@@ -247,20 +287,21 @@ async function handleSave() {
             spending_basic_transaction_categories: basicCategories.value,
             spending_premium_transaction_categories: premiumCategories.value,
         },
-        actualBalances: actualBalances.value,
     });
 };
 
-async function openMonthMetadataAccountsModal(accounts) {
+async function openMonthMetadataAccountsModal(accounts: SpendingMonthlyMetadataAccount[]) {
     selectedMonthMetadataAccounts.value = accounts;
     isMonthMetadataAccountsModal.value = true;
 };
 
 const isMonthMetadataAccountsModal = ref(false);
 
-async function handleMonthMetadataSave(monthMetadata) {
+async function handleMonthMetadataSave(monthMetadata: SpendingMonthlyMetadata) {
     const data = {
         id: monthMetadata.id,
+        year: monthMetadata.year,
+        month: monthMetadata.month,
         totalBalance: monthMetadata.totalBalance,
         totalIncome: monthMetadata.totalIncome,
         totalBasicExpense: monthMetadata.totalBasicExpense,
@@ -275,6 +316,26 @@ async function handleMonthMetadataSave(monthMetadata) {
     };
     await updateMonthMetadata(data);
     await getMonthsMetadata();
+};
+
+const confirm = useConfirm();
+function confirmCalculateMonthMetadata(year: string, month: string) {
+    confirm.require({
+        message: 'Are you sure you want to recalculate this month?',
+        group: 'positioned',
+        header: 'Attention!',
+        position: 'bottom',
+        rejectClass: 'p-button-secondary p-button-outlined',
+        acceptClass: 'bg-blue-400 border-none',
+        acceptLabel: 'Calculate',
+        accept: async () => {
+            await calculateMonthMetadata({
+                year,
+                month,
+            });
+            await getMonthsMetadata();
+        },
+    });
 };
 </script>
 

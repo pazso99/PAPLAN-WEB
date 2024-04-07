@@ -66,7 +66,29 @@ interface SpendingConfigs {
     spending_premium_transaction_categories: number[];
 };
 
-type SpendingActualBalances = Record<string, number>;
+interface SpendingMonthlyData {
+    monthlyMetadata: SpendingMonthlyMetadata[];
+};
+
+interface SpendingMonthlyMetadata {
+    id: number;
+    year: string;
+    month: string;
+    totalBalance: number;
+    totalIncome: number;
+    totalBasicExpense: number;
+    totalPremiumExpense: number;
+    accounts: SpendingMonthlyMetadataAccount[];
+};
+
+interface SpendingMonthlyMetadataAccount {
+    id: number;
+    accountName: string;
+    balance: number;
+    income: number;
+    basicExpense: number;
+    premiumExpense: number;
+};
 
 interface RecipesDashboardData {
     recipes: RecipeBasic[];
@@ -111,7 +133,9 @@ export {
     SpendingDashboardData,
     SpendingConfigs,
     SpendingSettings,
-    SpendingActualBalances,
+    SpendingMonthlyMetadata,
+    SpendingMonthlyMetadataAccount,
+    SpendingMonthlyData,
     RecipesDashboardData,
     NotesDashboardData,
     InventoryItemWithUnit,

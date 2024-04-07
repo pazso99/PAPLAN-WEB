@@ -10,8 +10,8 @@
                 <label for="status" class="mb-1">Status</label>
                 <div class="flex items-center gap-2">
                     <InputSwitch
-                        id="status"
                         v-model="status"
+                        input-id="status"
                         :pt="{
                             slider: { class: status ? 'bg-green-600' : 'bg-red-800' },
                         }"
@@ -39,8 +39,8 @@
                 <div class="flex flex-col">
                     <label for="balance" class="mb-1">Balance</label>
                     <InputNumber
-                        id="balance"
                         v-model="balance"
+                        input-id="balance"
                         placeholder="Balance..."
                         suffix=" Ft"
                         :class="{ 'p-invalid': errors.balance }"

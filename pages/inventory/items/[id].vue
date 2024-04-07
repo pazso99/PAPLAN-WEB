@@ -11,8 +11,8 @@
                 <label for="status" class="mb-1">Status</label>
                 <div class="flex items-center gap-2">
                     <InputSwitch
-                        id="status"
                         v-model="status"
+                        input-id="status"
                         :pt="{
                             slider: { class: status ? 'bg-green-600' : 'bg-red-800' },
                         }"
@@ -25,8 +25,8 @@
                 <label for="isEssential" class="my-2">Essential</label>
                 <div class="flex items-center gap-2">
                     <InputSwitch
-                        id="isEssential"
                         v-model="isEssential"
+                        input-id="isEssential"
                         :pt="{
                             slider: { class: isEssential ? 'bg-yellow-600' : 'bg-red-800' },
                         }"
@@ -42,24 +42,24 @@
                 <div class="flex flex-col mb-4">
                     <label for="id" class="mb-1">ID</label>
                     <InputNumber
-                        id="id"
                         v-model="id"
+                        input-id="id"
                         disabled
                     />
                 </div>
                 <div class="flex flex-col mb-4">
                     <label for="createdAt" class="mb-1">Created at</label>
                     <Calendar
-                        id="createdAt"
                         v-model="createdAt"
+                        input-id="createdAt"
                         disabled
                     />
                 </div>
                 <div class="flex flex-col mb-4">
                     <label for="updatedAt" class="mb-1">Updated at</label>
                     <Calendar
-                        id="updatedAt"
                         v-model="updatedAt"
+                        input-id="updatedAt"
                         disabled
                     />
                 </div>
@@ -81,8 +81,8 @@
                 <div class="flex flex-col">
                     <label for="itemType" class="mb-1">Item type</label>
                     <Dropdown
-                        id="itemType"
                         v-model="itemType"
+                        input-id="itemType"
                         option-label="name"
                         :options="selectableItemTypes"
                         placeholder="Select item type"
@@ -92,8 +92,8 @@
                 <div class="flex flex-col">
                     <label for="selectedPackageUnits" class="mb-1">Package units</label>
                     <MultiSelect
-                        id="selectedPackageUnits"
                         v-model="selectedPackageUnits"
+                        input-id="selectedPackageUnits"
                         :options="packageUnits"
                         option-label="name"
                         option-value="id"
@@ -107,8 +107,8 @@
                 <div class="flex flex-col">
                     <label for="expectedLifetimeInDays" class="mb-1">Expected lifetime</label>
                     <InputNumber
-                        id="expectedLifetimeInDays"
                         v-model="expectedLifetimeInDays"
+                        input-id="expectedLifetimeInDays"
                         :suffix="` day${expectedLifetimeInDays > 1 ? 's' : ''}`"
                         placeholder="Expected lifetime..."
                         :class="{ 'p-invalid': errors.expectedLifetimeInDays }"
@@ -118,8 +118,8 @@
                 <div class="flex flex-col">
                     <label for="recommendedStock" class="mb-1">Recommended stock</label>
                     <InputNumber
-                        id="recommendedStock"
                         v-model="recommendedStock"
+                        input-id="recommendedStock"
                         placeholder="Recommended stock..."
                         :class="{ 'p-invalid': errors.recommendedStock }"
                     />
