@@ -12,8 +12,8 @@
                 <label for="status" class="mb-1">Status</label>
                 <div class="flex items-center gap-2">
                     <InputSwitch
-                        id="status"
                         v-model="status"
+                        input-id="status"
                         :pt="{
                             slider: { class: status ? 'bg-green-600' : 'bg-red-800' },
                         }"
@@ -29,24 +29,24 @@
                 <div class="flex flex-col mb-4">
                     <label for="id" class="mb-1">ID</label>
                     <InputNumber
-                        id="id"
                         v-model="id"
+                        input-id="id"
                         disabled
                     />
                 </div>
                 <div class="flex flex-col mb-4">
                     <label for="createdAt" class="mb-1">Created at</label>
                     <Calendar
-                        id="createdAt"
                         v-model="createdAt"
+                        input-id="createdAt"
                         disabled
                     />
                 </div>
                 <div class="flex flex-col mb-4">
                     <label for="updatedAt" class="mb-1">Updated at</label>
                     <Calendar
-                        id="updatedAt"
                         v-model="updatedAt"
+                        input-id="updatedAt"
                         disabled
                     />
                 </div>

@@ -11,8 +11,8 @@
                 <label for="status" class="mb-1">Status</label>
                 <div class="flex items-center gap-2">
                     <InputSwitch
-                        id="status"
                         v-model="status"
+                        input-id="status"
                         :pt="{
                             slider: { class: status ? 'bg-green-600' : 'bg-red-800' },
                         }"
@@ -28,24 +28,24 @@
                 <div class="flex flex-col mb-4">
                     <label for="id" class="mb-1">ID</label>
                     <InputNumber
-                        id="id"
                         v-model="id"
+                        input-id="id"
                         disabled
                     />
                 </div>
                 <div class="flex flex-col mb-4">
                     <label for="createdAt" class="mb-1">Created at</label>
                     <Calendar
-                        id="createdAt"
                         v-model="createdAt"
+                        input-id="createdAt"
                         disabled
                     />
                 </div>
                 <div class="flex flex-col mb-4">
                     <label for="updatedAt" class="mb-1">Updated at</label>
                     <Calendar
-                        id="updatedAt"
                         v-model="updatedAt"
+                        input-id="updatedAt"
                         disabled
                     />
                 </div>
@@ -55,8 +55,8 @@
                 <div class="flex flex-col mb-4">
                     <label for="date" class="mb-1">Date</label>
                     <Calendar
-                        id="date"
                         v-model="date"
+                        input-id="date"
                         date-format="yy-mm-dd"
                     />
                 </div>
@@ -66,8 +66,8 @@
                 <div class="flex flex-col">
                     <label for="transactionCategory" class="mb-1">Transaction category</label>
                     <Dropdown
-                        id="transactionCategory"
                         v-model="transactionCategory"
+                        input-id="transactionCategory"
                         :options="selectableTransactionCategories"
                         filter
                         option-label="label"
@@ -104,8 +104,8 @@
                 <div class="flex flex-col">
                     <label for="account" class="mb-1">Account</label>
                     <Dropdown
-                        id="account"
                         v-model="account"
+                        input-id="account"
                         option-label="name"
                         :options="selectableAccounts"
                         placeholder="Select account"
@@ -123,8 +123,8 @@
                 <div class="flex flex-col">
                     <label for="amount" class="mb-1">Amount</label>
                     <InputNumber
-                        id="amount"
                         v-model="amount"
+                        input-id="amount"
                         suffix=" Ft"
                         placeholder="Amount..."
                         :class="{ 'p-invalid': errors.amount }"
@@ -140,8 +140,8 @@
                 <div class="flex flex-col">
                     <label for="toAccount" class="mb-1">To Account</label>
                     <Dropdown
-                        id="toAccount"
                         v-model="toAccount"
+                        input-id="toAccount"
                         option-label="name"
                         :options="toAccounts"
                         placeholder="Select account"
@@ -171,8 +171,8 @@
                 <div class="flex flex-col">
                     <label for="comment" class="mb-1">Comment</label>
                     <Textarea
-                        id="comment"
                         v-model="comment"
+                        input-id="comment"
                         rows="5"
                         cols="30"
                     />

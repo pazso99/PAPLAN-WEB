@@ -1,5 +1,4 @@
 import type {
-    SpendingActualBalances,
     SpendingConfigs,
     TransactionType,
     NotePriority,
@@ -12,7 +11,28 @@ interface UserLoginRequest {
 
 interface SpendingSettingsUpdateRequest {
     configs: SpendingConfigs;
-    actualBalances: SpendingActualBalances;
+};
+
+interface SpendingMonthMetadataUpdateRequest {
+    id: number;
+    year: string;
+    month: string;
+    totalBalance: number;
+    totalIncome: number;
+    totalBasicExpense: number;
+    totalPremiumExpense: number;
+    accounts: {
+        id: number;
+        balance: number;
+        income: number;
+        basicExpense: number;
+        premiumExpense: number;
+    }[];
+};
+
+interface SpendingCalculateMonthMetadataRequest {
+    year: string;
+    month: string;
 };
 
 interface SpendingDashboardRequest {
@@ -171,6 +191,8 @@ interface InventoryPurchasedItemUpdateRequest {
 export {
     UserLoginRequest,
     SpendingSettingsUpdateRequest,
+    SpendingMonthMetadataUpdateRequest,
+    SpendingCalculateMonthMetadataRequest,
     SpendingDashboardRequest,
     SpendingAccountCreateRequest,
     SpendingAccountUpdateRequest,
