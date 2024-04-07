@@ -121,8 +121,8 @@
                     <div class="flex flex-col mb-4">
                         <label for="date" class="mb-1">Date</label>
                         <Calendar
-                            id="date"
                             v-model="date"
+                            input-id="date"
                             date-format="yy-mm-dd"
                         />
                     </div>
@@ -132,8 +132,8 @@
                     <div class="flex flex-col">
                         <label for="transactionCategory" class="mb-1">Transaction category</label>
                         <Dropdown
-                            id="transactionCategory"
                             v-model="transactionCategory"
+                            input-id="transactionCategory"
                             :options="filteredTransactionCategories"
                             filter
                             option-label="name"
@@ -143,8 +143,8 @@
                     <div class="flex flex-col">
                         <label for="amount" class="mb-1">Amount</label>
                         <InputNumber
-                            id="amount"
                             v-model="amount"
+                            input-id="amount"
                             suffix=" Ft"
                             placeholder="Amount..."
                             :class="{ 'p-invalid': errors.amount }"
@@ -160,8 +160,8 @@
                     <div class="flex flex-col">
                         <label for="toAccount" class="mb-1">To account</label>
                         <Dropdown
-                            id="toAccount"
                             v-model="toAccount"
+                            input-id="toAccount"
                             option-label="name"
                             :options="toAccounts"
                             placeholder="Select account"
@@ -191,8 +191,8 @@
                     <div class="flex flex-col">
                         <label for="comment" class="mb-1">Comment</label>
                         <Textarea
-                            id="comment"
                             v-model="comment"
+                            input-id="comment"
                             rows="5"
                             cols="30"
                         />

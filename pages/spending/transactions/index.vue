@@ -18,6 +18,7 @@
             'transactionCategory.transactionType',
             'amount',
             'transactionCategory.name',
+            'comment',
         ]"
         :filters="filters"
         :actions-column-meta="{
