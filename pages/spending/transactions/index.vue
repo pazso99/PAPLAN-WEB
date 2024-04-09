@@ -1,6 +1,7 @@
 <template>
     <ContentListCard
         title="Transactions"
+        list-key="transactions"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/spending/transactions/create' },
             { icon: 'pi-chevron-left', to: '/spending' },
@@ -26,7 +27,6 @@
             editUrl: '/spending/transactions',
             canDelete: true,
         }"
-        export-filename="transactions"
         @refresh-table="refreshTable"
         @delete-item="removeTransaction"
     >

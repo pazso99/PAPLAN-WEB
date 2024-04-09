@@ -1,6 +1,7 @@
 <template>
     <ContentListCard
         title="Package units"
+        list-key="package_units"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/inventory/package-units/create' },
             { icon: 'pi-chevron-left', to: '/inventory' },
@@ -21,7 +22,6 @@
             editUrl: '/inventory/package-units',
             canDelete: true,
         }"
-        export-filename="package_units"
         @refresh-table="refreshTable"
         @delete-item="removePackageUnit"
     >

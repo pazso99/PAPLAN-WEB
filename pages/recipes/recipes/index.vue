@@ -1,6 +1,7 @@
 <template>
     <ContentListCard
         title="Recipes"
+        list-key="recipes"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/recipes/recipes/create' },
             { icon: 'pi-chevron-left', to: '/recipes' },
@@ -23,7 +24,6 @@
             showUrl: '/recipes/recipes',
             canDelete: true,
         }"
-        export-filename="recipes"
         @refresh-table="refreshTable"
         @delete-item="removeRecipe"
     >

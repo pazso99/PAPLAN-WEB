@@ -1,6 +1,7 @@
 <template>
     <ContentListCard
         title="Notes"
+        list-key="notes"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/notes/notes/create' },
             { icon: 'pi-chevron-left', to: '/notes' },
@@ -24,7 +25,6 @@
             showUrl: '/notes/notes',
             canDelete: true,
         }"
-        export-filename="notes"
         @refresh-table="refreshTable"
         @delete-item="removeNote"
     >

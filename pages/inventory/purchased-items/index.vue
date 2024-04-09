@@ -1,6 +1,7 @@
 <template>
     <ContentListCard
         title="Stock items"
+        list-key="stock_items"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/inventory/purchased-items/create' },
             { icon: 'pi-chevron-left', to: '/inventory' },
@@ -27,7 +28,6 @@
             editUrl: '/inventory/purchased-items',
             canDelete: true,
         }"
-        export-filename="stock_items"
         @refresh-table="refreshTable"
         @delete-item="removePurchasedItem"
     >

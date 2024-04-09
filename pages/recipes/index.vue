@@ -1,6 +1,9 @@
 <template>
     <ContentBaseCard
         title="Recipes dashboard"
+        :nav-buttons="[
+            { icon: 'pi-plus', to: '/recipes/recipes/create' },
+        ]"
         :loading="loading"
     >
         <DataView

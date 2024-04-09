@@ -19,6 +19,8 @@
             removable-sort
             filter-display="menu"
             :global-filter-fields="globalFilterFields"
+            state-storage="local"
+            :state-key="`${listKey}_table_state`"
             :export-filename="getExportFilename()"
         >
             <template #empty>
@@ -221,7 +223,7 @@ const props = defineProps<{
     globalFilterFields: string[];
     filters: DataTableFilterMeta;
     actionsColumnMeta?: { width: string; editUrl?: string; showUrl?: string; canDelete?: boolean };
-    exportFilename: string;
+    listKey: string;
 }>();
 
 const emit = defineEmits<{
@@ -268,7 +270,7 @@ function handleRefresh() {
 
 const dayjs = useDayjs();
 function getExportFilename() {
-    return `${props.exportFilename}_${dayjs().format('YYYY_MM_DD_HHmm')}`;
+    return `${props.listKey}_${dayjs().format('YYYY_MM_DD_HHmm')}`;
 }
 
 const table = ref();

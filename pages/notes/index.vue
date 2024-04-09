@@ -1,6 +1,9 @@
 <template>
     <ContentBaseCard
         title="Notes dashboard"
+        :nav-buttons="[
+            { icon: 'pi-plus', to: '/notes/notes/create' },
+        ]"
         :loading="loading"
     >
         <DataView

@@ -1,6 +1,7 @@
 <template>
     <ContentListCard
         title="Item types"
+        list-key="item_types"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/inventory/item-types/create' },
             { icon: 'pi-chevron-left', to: '/inventory' },
@@ -21,7 +22,6 @@
             editUrl: '/inventory/item-types',
             canDelete: true,
         }"
-        export-filename="item_types"
         @refresh-table="refreshTable"
         @delete-item="removeItemType"
     >
