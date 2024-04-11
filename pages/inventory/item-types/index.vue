@@ -1,10 +1,11 @@
 <template>
     <ContentListCard
         title="Item types"
+        list-key="item_types"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/inventory/item-types/create' },
-            { icon: 'pi-chevron-left', to: '/inventory' },
         ]"
+        nav-back-button
         :items="itemTypes"
         :loading="loading"
         :multi-sort-meta="[
@@ -21,7 +22,6 @@
             editUrl: '/inventory/item-types',
             canDelete: true,
         }"
-        export-filename="item_types"
         @refresh-table="refreshTable"
         @delete-item="removeItemType"
     >
@@ -122,6 +122,7 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/inventory',
 });
 
 useHead({

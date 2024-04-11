@@ -1,9 +1,7 @@
 <template>
     <ContentBaseCard
         title="Create item"
-        :nav-buttons="[
-            { icon: 'pi-chevron-left', to: '/inventory/items' },
-        ]"
+        nav-back-button
         :loading="loading"
     >
         <form class="p-5">
@@ -117,6 +115,7 @@ import * as yup from 'yup';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/inventory/items',
 });
 
 useHead({

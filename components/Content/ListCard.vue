@@ -2,6 +2,7 @@
     <ContentBaseCard
         :title="title"
         :nav-buttons="navButtons"
+        :nav-back-button="navBackButton"
         :loading="loading"
     >
         <DataTable
@@ -19,6 +20,8 @@
             removable-sort
             filter-display="menu"
             :global-filter-fields="globalFilterFields"
+            state-storage="local"
+            :state-key="`${listKey}_table_state`"
             :export-filename="getExportFilename()"
         >
             <template #empty>
@@ -212,17 +215,21 @@
 import { FilterMatchMode } from 'primevue/api';
 import type { DataTableFilterMeta, DataTableSortMeta } from 'primevue/datatable';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     title: string;
     loading: boolean;
     navButtons: { icon: string; to: string }[];
+    navBackButton?: boolean;
     items: object[];
     multiSortMeta: DataTableSortMeta[];
     globalFilterFields: string[];
     filters: DataTableFilterMeta;
     actionsColumnMeta?: { width: string; editUrl?: string; showUrl?: string; canDelete?: boolean };
-    exportFilename: string;
-}>();
+    listKey: string;
+}>(), {
+    loading: false,
+    navBackButton: false,
+});
 
 const emit = defineEmits<{
     (e: 'deleteItem', id: number): void;
@@ -268,7 +275,7 @@ function handleRefresh() {
 
 const dayjs = useDayjs();
 function getExportFilename() {
-    return `${props.exportFilename}_${dayjs().format('YYYY_MM_DD_HHmm')}`;
+    return `${props.listKey}_${dayjs().format('YYYY_MM_DD_HHmm')}`;
 }
 
 const table = ref();

@@ -14,12 +14,11 @@
                         {{ title }}
                     </h2>
                     <div
-                        v-if="navButtons"
                         class="flex"
                     >
-                        <template v-for="button, i in navButtons">
+                        <template v-if="navButtons">
                             <NuxtLink
-                                v-if="button.to"
+                                v-for="button, i in navButtons"
                                 :key="i"
                                 :to="button.to"
                             >
@@ -31,6 +30,17 @@
                                 />
                             </NuxtLink>
                         </template>
+                        <NuxtLink
+                            v-if="navBackButton"
+                            :to="previousRoute"
+                        >
+                            <Button
+                                text
+                                rounded
+                                severity="contrast"
+                                icon="pi pi-chevron-left"
+                            />
+                        </NuxtLink>
                     </div>
                 </div>
             </template>
@@ -51,7 +61,12 @@ withDefaults(defineProps<{
     title: string;
     customHeader?: boolean;
     navButtons?: { icon: string; to: string }[];
+    navBackButton?: boolean;
 }>(), {
     loading: false,
+    navBackButton: false,
 });
+
+const navigationStore = useNavigationStore();
+const { previousRoute } = storeToRefs(navigationStore);
 </script>

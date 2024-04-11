@@ -3,8 +3,8 @@
         title="Edit recipe"
         :nav-buttons="[
             { icon: 'pi-eye', to: `/recipes/recipes/${recipe.id}/show` },
-            { icon: 'pi-chevron-left', to: '/recipes/recipes' },
         ]"
+        nav-back-button
         :loading="loading"
     >
         <form class="p-5">
@@ -151,6 +151,7 @@ import Editor from 'primevue/editor';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/recipes/recipes',
 });
 
 useHead({

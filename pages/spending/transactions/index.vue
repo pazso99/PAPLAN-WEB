@@ -1,10 +1,11 @@
 <template>
     <ContentListCard
         title="Transactions"
+        list-key="transactions"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/spending/transactions/create' },
-            { icon: 'pi-chevron-left', to: '/spending' },
         ]"
+        nav-back-button
         :items="transactions"
         :loading="loading"
         :multi-sort-meta="[
@@ -26,7 +27,6 @@
             editUrl: '/spending/transactions',
             canDelete: true,
         }"
-        export-filename="transactions"
         @refresh-table="refreshTable"
         @delete-item="removeTransaction"
     >
@@ -79,7 +79,6 @@
                 </div>
             </template>
         </Column>
-
 
         <Column
             field="date"
@@ -229,6 +228,7 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/spending',
 });
 
 useHead({

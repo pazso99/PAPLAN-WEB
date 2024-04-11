@@ -1,9 +1,7 @@
 <template>
     <ContentBaseCard
         title="Create item type"
-        :nav-buttons="[
-            { icon: 'pi-chevron-left', to: '/inventory/item-types' },
-        ]"
+        nav-back-button
     >
         <form class="p-5">
             <div class="flex flex-col mb-4">
@@ -54,6 +52,7 @@ import * as yup from 'yup';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/inventory/item-types',
 });
 
 useHead({
