@@ -1,9 +1,7 @@
 <template>
     <ContentBaseCard
         title="Edit Item"
-        :nav-buttons="[
-            { icon: 'pi-chevron-left', to: '/inventory/items' },
-        ]"
+        nav-back-button
         :loading="loading"
     >
         <form class="p-5">
@@ -157,6 +155,7 @@ import type { ItemTypeBasic } from '~/types/models';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/inventory/items',
 });
 
 useHead({

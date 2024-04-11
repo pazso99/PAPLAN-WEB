@@ -1,9 +1,7 @@
 <template>
     <ContentBaseCard
         title="Edit Item type"
-        :nav-buttons="[
-            { icon: 'pi-chevron-left', to: '/inventory/item-types' },
-        ]"
+        nav-back-button
         :loading="loading"
     >
         <form class="p-5">
@@ -94,6 +92,7 @@ import { useConfirm } from 'primevue/useconfirm';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/inventory/item-types',
 });
 
 useHead({

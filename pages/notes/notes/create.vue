@@ -1,9 +1,7 @@
 <template>
     <ContentBaseCard
         title="Create note"
-        :nav-buttons="[
-            { icon: 'pi-chevron-left', to: '/notes/notes' },
-        ]"
+        nav-back-button
     >
         <form class="p-5">
             <div class="flex flex-col mb-4">
@@ -132,6 +130,7 @@ import Editor from 'primevue/editor';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/notes/notes',
 });
 
 useHead({

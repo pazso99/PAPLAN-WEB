@@ -1,9 +1,7 @@
 <template>
     <ContentBaseCard
         title="Create transaction"
-        :nav-buttons="[
-            { icon: 'pi-chevron-left', to: '/spending/transactions' },
-        ]"
+        nav-back-button
         :loading="loading"
     >
         <form class="p-5">
@@ -172,12 +170,12 @@
 
 <script setup lang="ts">
 import * as yup from 'yup';
-import type { Account, TransactionCategory } from '~/types/models';
-import type { TransactionType } from '~/types/types';
+import type { Account } from '~/types/models';
 
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/spending/transactions',
 });
 
 useHead({

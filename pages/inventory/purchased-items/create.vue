@@ -1,9 +1,7 @@
 <template>
     <ContentBaseCard
         title="Create stock item"
-        :nav-buttons="[
-            { icon: 'pi-chevron-left', to: '/inventory/purchased-items' },
-        ]"
+        nav-back-button
         :loading="loading"
     >
         <form class="p-5">
@@ -180,6 +178,7 @@ import type { PackageUnit } from '~/types/models';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/inventory/purchased-items',
 });
 
 useHead({

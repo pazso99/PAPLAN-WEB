@@ -1,10 +1,11 @@
 <template>
     <ContentListCard
         title="Notes"
+        list-key="notes"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/notes/notes/create' },
-            { icon: 'pi-chevron-left', to: '/notes' },
         ]"
+        nav-back-button
         :items="notes"
         :loading="loading"
         :multi-sort-meta="[
@@ -24,7 +25,6 @@
             showUrl: '/notes/notes',
             canDelete: true,
         }"
-        export-filename="notes"
         @refresh-table="refreshTable"
         @delete-item="removeNote"
     >
@@ -176,6 +176,7 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/notes',
 });
 
 useHead({

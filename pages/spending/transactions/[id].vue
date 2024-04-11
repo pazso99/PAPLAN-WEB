@@ -1,9 +1,7 @@
 <template>
     <ContentBaseCard
         title="Edit Transaction"
-        :nav-buttons="[
-            { icon: 'pi-chevron-left', to: '/spending/transactions' },
-        ]"
+        nav-back-button
         :loading="loading"
     >
         <form class="p-5">
@@ -209,6 +207,7 @@ import type { Account, AccountBasic } from '~/types/models';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/spending/transactions',
 });
 
 useHead({
