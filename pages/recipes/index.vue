@@ -48,7 +48,9 @@
                             </div>
                         </div>
                         <div class="flex justify-end mt-1">
-                            <NuxtLink :to="`/recipes/recipes/${item.id}/show`">
+                            <NuxtLink
+                                :to="{ name: 'recipes-recipes-id-show', params: { id: item.id }, query: { from: '/recipes' } }"
+                            >
                                 <Button icon="pi pi-eye" rounded />
                             </NuxtLink>
                         </div>
@@ -79,7 +81,9 @@
                         </template>
                         <template #footer>
                             <div class="flex justify-end mt-1">
-                                <NuxtLink :to="`/recipes/recipes/${item.id}/show`">
+                                <NuxtLink
+                                    :to="{ name: 'recipes-recipes-id-show', params: { id: item.id }, query: { from: '/recipes' } }"
+                                >
                                     <Button icon="pi pi-eye" rounded />
                                 </NuxtLink>
                             </div>

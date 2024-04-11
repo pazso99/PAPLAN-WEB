@@ -4,8 +4,8 @@
         list-key="recipes"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/recipes/recipes/create' },
-            { icon: 'pi-chevron-left', to: '/recipes' },
         ]"
+        nav-back-button
         :items="recipes"
         :loading="loading"
         :multi-sort-meta="[
@@ -143,6 +143,7 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/recipes',
 });
 
 useHead({

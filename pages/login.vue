@@ -1,5 +1,5 @@
 <template>
-    <div class="relative flex flex-col items-center min-w-0 break-words bg-transparent border-0 shadow-none lg:py4 dark:bg-slate-850 rounded-2xl bg-clip-border">
+    <div class="flex flex-col items-center">
         <div class="p-6 pb-0 mb-0">
             <h1 class="font-bold text-4xl text-transparent bg-clip-text bg-gradient-to-r to-cyan-100 from-blue-800">
                 PAPLAN

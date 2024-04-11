@@ -2,6 +2,7 @@
     <ContentBaseCard
         :title="title"
         :nav-buttons="navButtons"
+        :nav-back-button="navBackButton"
         :loading="loading"
     >
         <DataTable
@@ -214,17 +215,21 @@
 import { FilterMatchMode } from 'primevue/api';
 import type { DataTableFilterMeta, DataTableSortMeta } from 'primevue/datatable';
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     title: string;
     loading: boolean;
     navButtons: { icon: string; to: string }[];
+    navBackButton?: boolean;
     items: object[];
     multiSortMeta: DataTableSortMeta[];
     globalFilterFields: string[];
     filters: DataTableFilterMeta;
     actionsColumnMeta?: { width: string; editUrl?: string; showUrl?: string; canDelete?: boolean };
     listKey: string;
-}>();
+}>(), {
+    loading: false,
+    navBackButton: false,
+});
 
 const emit = defineEmits<{
     (e: 'deleteItem', id: number): void;

@@ -4,8 +4,8 @@
         list-key="stock_items"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/inventory/purchased-items/create' },
-            { icon: 'pi-chevron-left', to: '/inventory' },
         ]"
+        nav-back-button
         :items="purchasedItems"
         :loading="loading"
         :multi-sort-meta="[
@@ -220,6 +220,7 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/inventory',
 });
 
 useHead({

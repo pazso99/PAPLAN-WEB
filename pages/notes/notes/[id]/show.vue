@@ -3,8 +3,8 @@
         :title="note.name ?? ''"
         :nav-buttons="[
             { icon: 'pi-pencil', to: `/notes/notes/${note.id}` },
-            { icon: 'pi-chevron-left', to: '/notes/notes' },
         ]"
+        nav-back-button
         :loading="loading"
     >
         <div class="grid grid-cols-1 mt-4">
@@ -42,6 +42,7 @@ import Editor from 'primevue/editor';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/notes/notes',
 });
 
 useHead({

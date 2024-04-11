@@ -1,9 +1,7 @@
 <template>
     <ContentBaseCard
         title="Edit stock item"
-        :nav-buttons="[
-            { icon: 'pi-chevron-left', to: '/inventory/purchased-items' },
-        ]"
+        nav-back-button
         :loading="loading"
     >
         <form class="p-5">
@@ -197,11 +195,12 @@
 <script setup lang="ts">
 import * as yup from 'yup';
 import { useConfirm } from 'primevue/useconfirm';
-import type { ItemBasic, PackageUnit, PackageUnitBasic } from '~/types/models';
+import type { PackageUnitBasic } from '~/types/models';
 
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/inventory/purchased-items',
 });
 
 useHead({

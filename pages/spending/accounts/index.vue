@@ -4,8 +4,8 @@
         list-key="accounts"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/spending/accounts/create' },
-            { icon: 'pi-chevron-left', to: '/spending' },
         ]"
+        nav-back-button
         :items="accounts"
         :loading="loading"
         :multi-sort-meta="[
@@ -141,6 +141,7 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/spending',
 });
 
 useHead({

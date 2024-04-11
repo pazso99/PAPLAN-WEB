@@ -3,12 +3,26 @@
         title="Inventory dashboard"
         :loading="loading"
     >
+        <div class="flex flex-col gap-2 justify-center p-4">
+            <IconField icon-position="left">
+                <InputIcon>
+                    <i class="pi pi-search" />
+                </InputIcon>
+                <InputText
+                    v-model="filter"
+                    placeholder="Search..."
+                    @input="filterList(true)"
+                />
+            </IconField>
+            <Divider />
+        </div>
+
         <Accordion
             v-model:active-index="activeTabs"
             multiple
         >
             <AccordionTab
-                v-for="inventoryItemType in inventoryItemTypes"
+                v-for="inventoryItemType in filteredInventoryItemTypes"
                 :key="inventoryItemType.id"
                 :disabled="inventoryItemType.items.length === 0"
             >
@@ -57,15 +71,15 @@
                         <div
                             class="w-full md:w-1/4 p-2"
                         >
-                            <Card :class="`bg-gradient-to-tr ${getCardClass(inventoryItem)}`">
+                            <Card :class="`bg-gradient-to-tr ${getStockStatusClass(inventoryItem)}`">
                                 <template #header>
-                                    <div :class="`flex items-center text-bold text-xl p-3 gap-1 bg-gradient-to-tr ${getCardClass2(inventoryItem)}`">
+                                    <div :class="`flex items-center text-bold text-xl p-3 gap-1 bg-gradient-to-tr ${getEssentialItemClass(inventoryItem)}`">
                                         <div class="flex-1 text-center">
                                             <NuxtLink
-                                                :to="`/inventory/items/${inventoryItem.id}`"
+                                                :to="{ name: 'inventory-items-id', params: { id: inventoryItem.id }, query: { from: '/inventory' } }"
                                             >
                                                 <span
-                                                    :class="getIsEssentialClass(inventoryItem.isEssential)"
+                                                    :class="getEssentialTextClass(inventoryItem.isEssential)"
                                                 >
                                                     {{ inventoryItem.name }}
                                                 </span>
@@ -227,7 +241,7 @@
                     <template #body="{ data }">
                         <div class="flex justify-end">
                             <NuxtLink
-                                :to="`/inventory/purchased-items/${data.id}`"
+                                :to="{ name: 'inventory-purchased-items-id', params: { id: data.id }, query: { from: '/inventory' } }"
                             >
                                 <Button
                                     icon="pi pi-eye"
@@ -406,6 +420,7 @@ import * as yup from 'yup';
 import { useConfirm } from 'primevue/useconfirm';
 import type {
     InventoryItem,
+    InventoryItemTypeWithItems,
 } from '~/types/types';
 
 definePageMeta({
@@ -424,9 +439,25 @@ const { getItem, createPurchasedItem } = inventoryManagementStore;
 const { inventoryItemTypes, activeTabs, loading } = storeToRefs(inventoryDashboardStore);
 const { item } = storeToRefs(inventoryManagementStore);
 
+const filteredInventoryItemTypes = ref<InventoryItemTypeWithItems[]>([]);
 onMounted(async () => {
     await getInventoryDashboardData();
+    filteredInventoryItemTypes.value = inventoryItemTypes.value;
 });
+
+const filter = ref<string>('');
+function filterList(setActiveTabs: boolean = true) {
+    const filterText = filter.value.toLowerCase();
+    const arrCopy: InventoryItemTypeWithItems[] = JSON.parse(JSON.stringify(inventoryItemTypes.value));
+    filteredInventoryItemTypes.value = arrCopy.filter((inventoryItemType, index) => {
+        inventoryItemType.items = inventoryItemType.items.filter(item => item.name.toLowerCase().includes(filterText));
+        const hasItems = inventoryItemType.items.length > 0;
+        if (!hasItems && setActiveTabs) {
+            activeTabs.value = activeTabs.value.filter(num => num !== index);
+        }
+        return hasItems || inventoryItemType.name.toLowerCase().includes(filterText);
+    });
+};
 
 const itemListDialog = ref(false);
 const selectedStockType = ref('');
@@ -437,7 +468,7 @@ function openItemListDialog(item: InventoryItem, stockType: 'inStock' | 'used') 
     itemListDialog.value = true;
 }
 
-function getCardClass(item: InventoryItem) { // TODO
+function getStockStatusClass(item: InventoryItem) {
     switch (item.stockStatus) {
         case 'in_stock':
             return 'from-green-900 to-green-950';
@@ -450,7 +481,7 @@ function getCardClass(item: InventoryItem) { // TODO
     }
 }
 
-function getCardClass2(item: InventoryItem) { // TODO
+function getEssentialItemClass(item: InventoryItem) {
     let className = '';
 
     if (item.isEssential) {
@@ -462,7 +493,7 @@ function getCardClass2(item: InventoryItem) { // TODO
     return className;
 }
 
-function getIsEssentialClass(isEssential: boolean) {
+function getEssentialTextClass(isEssential: boolean) {
     return isEssential ? 'text-yellow-500' : 'text-white';
 }
 
@@ -515,6 +546,7 @@ const save = handleSubmit(async ({ packageUnit, amount, price, purchaseDate, exp
     await getInventoryDashboardData();
     newItemDialog.value = false;
     createAmount.value = 1;
+    filterList(false);
 });
 
 const confirm = useConfirm();
@@ -531,6 +563,7 @@ function confirmUse(id: number) {
             itemListDialog.value = false;
             await useInStockItem(id);
             await getInventoryDashboardData();
+            filterList(false);
         },
     });
 };

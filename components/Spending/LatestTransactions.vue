@@ -17,7 +17,9 @@
                         :key="index"
                         class="py-2 px-4 flex justify-between"
                     >
-                        <NuxtLink :to="`/spending/transactions/${transaction.id}`">
+                        <NuxtLink
+                            :to="{ name: 'spending-transactions-id', params: { id: transaction.id }, query: { from: '/spending' } }"
+                        >
                             <span class="text-gray-400 flex gap-1 flex-col md:flex-row">
                                 {{ transaction.date }}:
                                 <span class="font-bold">{{ transaction.transactionCategory.name }}</span>
@@ -43,7 +45,9 @@
         </DataView>
 
         <div class="w-full text-center p-3">
-            <NuxtLink to="/spending/transactions">
+            <NuxtLink
+                :to="{ name: 'spending-transactions', query: { from: '/spending' } }"
+            >
                 <Button
                     size="small"
                     label="All transactions"

@@ -4,8 +4,8 @@
         list-key="notes"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/notes/notes/create' },
-            { icon: 'pi-chevron-left', to: '/notes' },
         ]"
+        nav-back-button
         :items="notes"
         :loading="loading"
         :multi-sort-meta="[
@@ -176,6 +176,7 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/notes',
 });
 
 useHead({

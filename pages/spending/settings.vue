@@ -1,9 +1,6 @@
 <template>
     <ContentBaseCard
         title="Spending settings"
-        :nav-buttons="[
-            { icon: 'pi-chevron-left', to: '/spending' },
-        ]"
         :loading="loading"
     >
         <div class="sm:p-4 p-2">

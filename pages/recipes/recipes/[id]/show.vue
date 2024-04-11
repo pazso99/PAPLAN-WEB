@@ -3,8 +3,8 @@
         :title="recipe.name ?? ''"
         :nav-buttons="[
             { icon: 'pi-pencil', to: `/recipes/recipes/${recipe.id}` },
-            { icon: 'pi-chevron-left', to: '/recipes/recipes' },
         ]"
+        nav-back-button
         :loading="loading"
     >
         <div class="grid grid-cols-1 mt-4">
@@ -38,6 +38,7 @@ import Editor from 'primevue/editor';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/recipes/recipes',
 });
 
 useHead({

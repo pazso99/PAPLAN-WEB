@@ -55,7 +55,9 @@
                             </div>
                         </div>
                         <div class="flex justify-end mt-1">
-                            <NuxtLink :to="`/notes/notes/${item.id}/show`">
+                            <NuxtLink
+                                :to="{ name: 'notes-notes-id-show', params: { id: item.id }, query: { from: '/notes' } }"
+                            >
                                 <Button icon="pi pi-eye" rounded />
                             </NuxtLink>
                         </div>
@@ -93,7 +95,9 @@
                         </template>
                         <template #footer>
                             <div class="flex justify-end mt-1">
-                                <NuxtLink :to="`/notes/notes/${item.id}/show`">
+                                <NuxtLink
+                                    :to="{ name: 'notes-notes-id-show', params: { id: item.id }, query: { from: '/notes' } }"
+                                >
                                     <Button icon="pi pi-eye" rounded />
                                 </NuxtLink>
                             </div>

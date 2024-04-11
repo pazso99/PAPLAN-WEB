@@ -21,6 +21,7 @@ import type {
 
 interface NavigationState {
     isNavOpen: boolean;
+    previousRoute: string;
 };
 
 interface AuthState {

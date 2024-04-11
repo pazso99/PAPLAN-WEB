@@ -4,8 +4,8 @@
         list-key="transaction_categories"
         :nav-buttons="[
             { icon: 'pi-plus', to: '/spending/transaction-categories/create' },
-            { icon: 'pi-chevron-left', to: '/spending' },
         ]"
+        nav-back-button
         :items="transactionCategories"
         :loading="loading"
         :multi-sort-meta="[
@@ -151,6 +151,7 @@ import { FilterMatchMode, FilterOperator } from 'primevue/api';
 definePageMeta({
     middleware: 'auth',
     layout: 'admin',
+    navBackRoute: '/spending',
 });
 
 useHead({

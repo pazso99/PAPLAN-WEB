@@ -9,7 +9,9 @@
         >
             <Fieldset class="bg-gradient-to-tr from-slate-800 to-gray-900">
                 <template #legend>
-                    <NuxtLink :to="`/spending/accounts/${account.id}`">
+                    <NuxtLink
+                        :to="{ name: 'spending-accounts-id', params: { id: account.id }, query: { from: '/spending' } }"
+                    >
                         <span class="py-1 px-2 rounded bg-gradient-to-tl from-blue-900 to-blue-800">{{ account.name }}</span>
                     </NuxtLink>
                 </template>
