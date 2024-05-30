@@ -20,7 +20,7 @@
             removable-sort
             filter-display="menu"
             :global-filter-fields="globalFilterFields"
-            state-storage="local"
+            state-storage="session"
             :state-key="`${listKey}_table_state`"
             :export-filename="getExportFilename()"
         >
