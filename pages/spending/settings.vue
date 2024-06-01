@@ -143,7 +143,7 @@
                 v-model:visible="isMonthMetadataAccountsModal"
                 modal
                 header="Accounts"
-                :style="{ width: '50rem' }"
+                :style="{ width: '60rem' }"
             >
                 <div
                     v-for="accountMetadata in selectedMonthMetadataAccounts"
@@ -155,7 +155,7 @@
                         </p>
                     </Divider>
                     <div class="w-full flex flex-col md:flex-row mb-4">
-                        <div class="w-full lg:w-1/4 flex flex-col">
+                        <div class="w-full lg:w-1/5 flex flex-col">
                             <label for="balance" class="block mb-1">Balance:</label>
                             <InputNumber
                                 v-model="accountMetadata.balance"
@@ -165,7 +165,7 @@
                                 suffix=" Ft"
                             />
                         </div>
-                        <div class="w-full lg:w-1/4 flex flex-col">
+                        <div class="w-full lg:w-1/5 flex flex-col">
                             <label for="income" class="block mb-1">Income:</label>
                             <InputNumber
                                 v-model="accountMetadata.income"
@@ -174,7 +174,7 @@
                                 class="w-40"
                             />
                         </div>
-                        <div class="w-full lg:w-1/4 flex flex-col">
+                        <div class="w-full lg:w-1/5 flex flex-col">
                             <label for="basicExpense" class="block mb-1">Basic expense:</label>
                             <InputNumber
                                 v-model="accountMetadata.basicExpense"
@@ -183,11 +183,20 @@
                                 class="w-40"
                             />
                         </div>
-                        <div class="w-full lg:w-1/4 flex flex-col">
+                        <div class="w-full lg:w-1/5 flex flex-col">
                             <label for="premiumExpense" class="block mb-1">Premium expense:</label>
                             <InputNumber
                                 v-model="accountMetadata.premiumExpense"
                                 input-id="premiumExpense"
+                                suffix=" Ft"
+                                class="w-40"
+                            />
+                        </div>
+                        <div class="w-full lg:w-1/5 flex flex-col">
+                            <label for="transfer" class="block mb-1">Transfer:</label>
+                            <InputNumber
+                                v-model="accountMetadata.transfer"
+                                input-id="transfer"
                                 suffix=" Ft"
                                 class="w-40"
                             />
@@ -309,6 +318,7 @@ async function handleMonthMetadataSave(monthMetadata: SpendingMonthlyMetadata) {
             income: account.income,
             basicExpense: account.basicExpense,
             premiumExpense: account.premiumExpense,
+            transfer: account.transfer,
         })),
     };
     await updateMonthMetadata(data);
