@@ -88,6 +88,7 @@ interface SpendingMonthlyMetadataAccount {
     income: number;
     basicExpense: number;
     premiumExpense: number;
+    transfer: number;
 };
 
 interface RecipesDashboardData {
