@@ -27,6 +27,7 @@ interface SpendingMonthMetadataUpdateRequest {
         income: number;
         basicExpense: number;
         premiumExpense: number;
+        transfer: number;
     }[];
 };
 
