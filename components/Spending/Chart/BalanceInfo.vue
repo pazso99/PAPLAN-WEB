@@ -28,10 +28,9 @@ watch(spendingDashboardData, async (newSpending) => {
 });
 
 function setData(spendingData: SpendingDashboardData) {
-    const documentStyle = getComputedStyle(document.documentElement);
-    const textColor = documentStyle.getPropertyValue('--text-color');
-    const textColorSecondary = documentStyle.getPropertyValue('--text-color-secondary');
-    const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
+    const textColor = '#fff';
+    const textColorSecondary = '#8d97a5';
+    const surfaceBorder = '#3b3b3b';
 
     chartData.value = {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
@@ -39,7 +38,7 @@ function setData(spendingData: SpendingDashboardData) {
             {
                 label: 'Balance',
                 fill: false,
-                borderColor: documentStyle.getPropertyValue('--green-500'),
+                borderColor: '#22c55e',
                 data: spendingData.diagrams.yearlyBalance.filter(b => b.amount > 0).map(b => b.amount),
             },
         ],

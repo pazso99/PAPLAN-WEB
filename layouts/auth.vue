@@ -5,7 +5,7 @@
         </div>
         <div class="absolute top-0 right-0 hidden lg:flex lg:w-1/2 h-full">
             <div class="h-full w-full bg-cover paplan-bg">
-                <div class="h-full w-full bg-cover opacity-60 bg-gradient-to-tl from-blue-500 to-violet-500" />
+                <div class="h-full w-full bg-cover opacity-60 !bg-gradient-to-tl !from-blue-500 !to-violet-500" />
             </div>
         </div>
     </div>
@@ -16,6 +16,9 @@
 useHead({
     titleTemplate: (titleChunk) => {
         return titleChunk ? `${titleChunk} - Paplan` : 'Paplan';
+    },
+    htmlAttrs: {
+        class: 'is-dark',
     },
 });
 </script>

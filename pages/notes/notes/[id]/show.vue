@@ -12,12 +12,13 @@
                 <Editor
                     v-model="note.description"
                     readonly
+                    :pt="{
+                        toolbar: { class: '!border-0' },
+                        content: { class: '!border-0' },
+                    }"
                 >
                     <template #toolbar>
-                        <div class="flex justify-between items-center gap-2 px-2">
-                            <h1 class="text-lg">
-                                Description
-                            </h1>
+                        <div class="flex justify-end items-center gap-2 px-2">
                             <div class="flex flex-col gap-2">
                                 <Tag
                                     :value="getNotePriorityLabel(note.priority)"

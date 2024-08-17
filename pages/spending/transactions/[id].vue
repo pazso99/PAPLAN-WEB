@@ -8,7 +8,7 @@
             <div class="flex flex-col mb-4">
                 <label for="status" class="mb-1">Status</label>
                 <div class="flex items-center gap-2">
-                    <InputSwitch
+                    <ToggleSwitch
                         v-model="status"
                         input-id="status"
                         :pt="{
@@ -33,7 +33,7 @@
                 </div>
                 <div class="flex flex-col mb-4">
                     <label for="createdAt" class="mb-1">Created at</label>
-                    <Calendar
+                    <DatePicker
                         v-model="createdAt"
                         input-id="createdAt"
                         disabled
@@ -41,7 +41,7 @@
                 </div>
                 <div class="flex flex-col mb-4">
                     <label for="updatedAt" class="mb-1">Updated at</label>
-                    <Calendar
+                    <DatePicker
                         v-model="updatedAt"
                         input-id="updatedAt"
                         disabled
@@ -52,7 +52,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <div class="flex flex-col mb-4">
                     <label for="date" class="mb-1">Date</label>
-                    <Calendar
+                    <DatePicker
                         v-model="date"
                         input-id="date"
                         date-format="yy-mm-dd"
@@ -63,7 +63,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <div class="flex flex-col">
                     <label for="transactionCategory" class="mb-1">Transaction category</label>
-                    <Dropdown
+                    <Select
                         v-model="transactionCategory"
                         input-id="transactionCategory"
                         :options="selectableTransactionCategories"
@@ -97,11 +97,11 @@
                                 {{ slotProps.placeholder }}
                             </span>
                         </template>
-                    </Dropdown>
+                    </Select>
                 </div>
                 <div class="flex flex-col">
                     <label for="account" class="mb-1">Account</label>
-                    <Dropdown
+                    <Select
                         v-model="account"
                         input-id="account"
                         option-label="name"
@@ -116,7 +116,7 @@
                                 </Tag>
                             </div>
                         </template>
-                    </Dropdown>
+                    </Select>
                 </div>
                 <div class="flex flex-col">
                     <label for="amount" class="mb-1">Amount</label>
@@ -137,7 +137,7 @@
             >
                 <div class="flex flex-col">
                     <label for="toAccount" class="mb-1">To Account</label>
-                    <Dropdown
+                    <Select
                         v-model="toAccount"
                         input-id="toAccount"
                         option-label="name"
@@ -161,7 +161,7 @@
                                 </Tag>
                             </div>
                         </template>
-                    </Dropdown>
+                    </Select>
                 </div>
             </div>
 

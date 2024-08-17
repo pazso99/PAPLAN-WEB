@@ -9,7 +9,6 @@
             ref="table"
             v-model:filters="filters"
             :value="items"
-            striped-rows
             size="small"
             paginator
             paginator-template="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink RowsPerPageDropdown"
@@ -38,7 +37,7 @@
                     <Button
                         type="button"
                         size="small"
-                        severity="contrast"
+                        severity="secondary"
                         icon="pi pi-filter-slash"
                         text
                         rounded
@@ -66,7 +65,7 @@
                         >
                             <Button
                                 icon="pi pi-eye"
-                                severity="contrast"
+                                severity="secondary"
                                 text
                                 rounded
                             />
@@ -77,7 +76,7 @@
                         >
                             <Button
                                 icon="pi pi-pencil"
-                                severity="contrast"
+                                severity="secondary"
                                 text
                                 rounded
                             />
@@ -97,14 +96,14 @@
             <template #paginatorstart>
                 <Button
                     type="button"
-                    severity="contrast"
+                    severity="secondary"
                     icon="pi pi-refresh"
                     text
                     @click="handleRefresh"
                 />
                 <Button
                     type="button"
-                    severity="contrast"
+                    severity="secondary"
                     icon="pi pi-download"
                     text
                     @click="exportCSV"
@@ -212,7 +211,7 @@
 </template>
 
 <script setup lang="ts">
-import { FilterMatchMode } from 'primevue/api';
+import { FilterMatchMode } from '@primevue/core/api';
 import type { DataTableFilterMeta, DataTableSortMeta } from 'primevue/datatable';
 
 const props = withDefaults(defineProps<{

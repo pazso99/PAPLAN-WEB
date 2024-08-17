@@ -1,154 +1,162 @@
 <template>
     <Accordion
-        :active-index="activeIndex"
+        :value="activeIndex"
     >
-        <AccordionTab>
-            <template #header>
+        <AccordionPanel value="0">
+            <AccordionHeader>
                 <span class="flex items-center gap-2 text-[15px]">
                     <i class="pi pi-credit-card text-green-600" />
                     <span class="font-bold white-space-nowrap">Spending</span>
                 </span>
-            </template>
-            <PanelMenu
-                v-model:expandedKeys="spendingExpandedKeys"
-                :model="spendingItems"
-                unstyled
-            >
-                <template #item="{ item, root, active }">
-                    <NuxtLink
-                        v-if="item.route"
-                        :to="item.route"
-                        class="flex items-center justify-between px-3 py-2 cursor-pointer"
-                        :class="route.name === 'spending' ? item.key === 'spending-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
-                        @click="isMobile && toggleNav()"
-                    >
-                        <span class="text-sm" :class="[root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
-                    </NuxtLink>
-                    <a
-                        v-else
-                        v-ripple
-                        class="flex items-center justify-between px-3 py-2 cursor-pointer text-zinc-400"
-                    >
-                        <span class="ml-2 text-sm">{{ item.label }}</span>
-                        <span>
-                            <i v-if="active" class="pi pi-angle-up" />
-                            <i v-else class="pi pi-angle-down" />
-                        </span>
-                    </a>
-                </template>
-            </PanelMenu>
-        </AccordionTab>
+            </AccordionHeader>
+            <AccordionContent>
+                <PanelMenu
+                    v-model:expandedKeys="spendingExpandedKeys"
+                    :model="spendingItems"
+                    unstyled
+                >
+                    <template #item="{ item, root, active }">
+                        <NuxtLink
+                            v-if="item.route"
+                            :to="item.route"
+                            class="flex items-center justify-between px-3 py-2 cursor-pointer"
+                            :class="route.name === 'spending' ? item.key === 'spending-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
+                            @click="isMobile && toggleNav()"
+                        >
+                            <span class="text-sm" :class="[root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
+                        </NuxtLink>
+                        <a
+                            v-else
+                            v-ripple
+                            class="flex items-center justify-between px-3 py-2 cursor-pointer text-zinc-400"
+                        >
+                            <span class="ml-2 text-sm">{{ item.label }}</span>
+                            <span>
+                                <i v-if="active" class="pi pi-angle-down" />
+                                <i v-else class="pi pi-angle-up" />
+                            </span>
+                        </a>
+                    </template>
+                </PanelMenu>
+            </AccordionContent>
+        </AccordionPanel>
 
-        <AccordionTab>
-            <template #header>
+        <AccordionPanel value="1">
+            <AccordionHeader>
                 <span class="flex items-center gap-2 text-[15px]">
                     <i class="pi pi-book text-gray-400" />
                     <span class="font-bold white-space-nowrap">Recipes</span>
                 </span>
-            </template>
-            <PanelMenu
-                v-model:expandedKeys="recipesExpandedKeys"
-                :model="recipesItems"
-                unstyled
-            >
-                <template #item="{ item, root, active }">
-                    <NuxtLink
-                        v-if="item.route"
-                        :to="item.route"
-                        class="flex items-center justify-between px-3 py-2 cursor-pointer"
-                        :class="route.name === 'recipes' ? item.key === 'recipes-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
-                        @click="isMobile && toggleNav()"
-                    >
-                        <span class="text-sm" :class="[root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
-                    </NuxtLink>
-                    <a
-                        v-else
-                        v-ripple
-                        class="flex items-center justify-between px-3 py-2 cursor-pointer text-zinc-400"
-                    >
-                        <span class="ml-2 text-sm">{{ item.label }}</span>
-                        <span>
-                            <i v-if="active" class="pi pi-angle-up" />
-                            <i v-else class="pi pi-angle-down" />
-                        </span>
-                    </a>
-                </template>
-            </PanelMenu>
-        </AccordionTab>
+            </AccordionHeader>
+            <AccordionContent>
+                <PanelMenu
+                    v-model:expandedKeys="recipesExpandedKeys"
+                    :model="recipesItems"
+                    unstyled
+                >
+                    <template #item="{ item, root, active }">
+                        <NuxtLink
+                            v-if="item.route"
+                            :to="item.route"
+                            class="flex items-center justify-between px-3 py-2 cursor-pointer"
+                            :class="route.name === 'recipes' ? item.key === 'recipes-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
+                            @click="isMobile && toggleNav()"
+                        >
+                            <span class="text-sm" :class="[root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
+                        </NuxtLink>
+                        <a
+                            v-else
+                            v-ripple
+                            class="flex items-center justify-between px-3 py-2 cursor-pointer text-zinc-400"
+                        >
+                            <span class="ml-2 text-sm">{{ item.label }}</span>
+                            <span>
+                                <i v-if="active" class="pi pi-angle-down" />
+                                <i v-else class="pi pi-angle-up" />
+                            </span>
+                        </a>
+                    </template>
+                </PanelMenu>
+            </AccordionContent>
+        </AccordionPanel>
 
-        <AccordionTab>
-            <template #header>
+        <AccordionPanel value="2">
+            <AccordionHeader>
                 <span class="flex items-center gap-2 text-[15px]">
                     <i class="pi pi-table text-blue-600" />
                     <span class="font-bold white-space-nowrap">Notes</span>
                 </span>
-            </template>
-            <PanelMenu
-                v-model:expandedKeys="notesExpandedKeys"
-                :model="notesItems"
-                unstyled
-            >
-                <template #item="{ item, root, active }">
-                    <NuxtLink
-                        v-if="item.route"
-                        :to="item.route"
-                        class="flex items-center justify-between px-3 py-2 cursor-pointer"
-                        :class="route.name === 'notes' ? item.key === 'notes-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
-                        @click="isMobile && toggleNav()"
-                    >
-                        <span class="text-sm" :class="[root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
-                    </NuxtLink>
-                    <a
-                        v-else
-                        v-ripple
-                        class="flex items-center justify-between px-3 py-2 cursor-pointer text-zinc-400"
-                    >
-                        <span class="ml-2 text-sm">{{ item.label }}</span>
-                        <span>
-                            <i v-if="active" class="pi pi-angle-up" />
-                            <i v-else class="pi pi-angle-down" />
-                        </span>
-                    </a>
-                </template>
-            </PanelMenu>
-        </AccordionTab>
+            </AccordionHeader>
+            <AccordionContent>
+                <PanelMenu
+                    v-model:expandedKeys="notesExpandedKeys"
+                    :model="notesItems"
+                    unstyled
+                >
+                    <template #item="{ item, root, active }">
+                        <NuxtLink
+                            v-if="item.route"
+                            :to="item.route"
+                            class="flex items-center justify-between px-3 py-2 cursor-pointer"
+                            :class="route.name === 'notes' ? item.key === 'notes-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
+                            @click="isMobile && toggleNav()"
+                        >
+                            <span class="text-sm" :class="[root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
+                        </NuxtLink>
+                        <a
+                            v-else
+                            v-ripple
+                            class="flex items-center justify-between px-3 py-2 cursor-pointer text-zinc-400"
+                        >
+                            <span class="ml-2 text-sm">{{ item.label }}</span>
+                            <span>
+                                <i v-if="active" class="pi pi-angle-down" />
+                                <i v-else class="pi pi-angle-up" />
+                            </span>
+                        </a>
+                    </template>
+                </PanelMenu>
+            </AccordionContent>
+        </AccordionPanel>
 
-        <AccordionTab>
-            <template #header>
+        <AccordionPanel value="3">
+            <AccordionHeader>
                 <span class="flex items-center gap-2 text-[15px]">
                     <i class="pi pi-box text-yellow-600" />
                     <span class="font-bold white-space-nowrap">Inventory</span>
                 </span>
-            </template>
-            <PanelMenu
-                v-model:expandedKeys="inventoryExpandedKeys"
-                :model="inventoryItemTypes"
-                unstyled
-            >
-                <template #item="{ item, root, active }">
-                    <NuxtLink
-                        v-if="item.route"
-                        :to="item.route"
-                        class="flex items-center justify-between px-3 py-2 cursor-pointer"
-                        :class="route.name === 'inventory' ? item.key === 'inventory-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
-                        @click="isMobile && toggleNav()"
-                    >
-                        <span class="text-sm" :class="[root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
-                    </NuxtLink>
-                    <a
-                        v-else
-                        v-ripple
-                        class="flex items-center justify-between px-3 py-2 cursor-pointer text-zinc-400"
-                    >
-                        <span class="ml-2 text-sm">{{ item.label }}</span>
-                        <span>
-                            <i v-if="active" class="pi pi-angle-up" />
-                            <i v-else class="pi pi-angle-down" />
-                        </span>
-                    </a>
-                </template>
-            </PanelMenu>
-        </AccordionTab>
+            </AccordionHeader>
+            <AccordionContent>
+                <PanelMenu
+                    v-model:expandedKeys="inventoryExpandedKeys"
+                    :model="inventoryItemTypes"
+                    unstyled
+                >
+                    <template #item="{ item, root, active }">
+                        <NuxtLink
+                            v-if="item.route"
+                            :to="item.route"
+                            class="flex items-center justify-between px-3 py-2 cursor-pointer"
+                            :class="route.name === 'inventory' ? item.key === 'inventory-dashboard' ? 'text-white' : 'text-zinc-400' : route.name.includes(item.key) ? 'text-white' : 'text-zinc-400'"
+                            @click="isMobile && toggleNav()"
+                        >
+                            <span class="text-sm" :class="[root ? 'ml-2' : 'ml-6']">{{ item.label }}</span>
+                        </NuxtLink>
+                        <a
+                            v-else
+                            v-ripple
+                            class="flex items-center justify-between px-3 py-2 cursor-pointer text-zinc-400"
+                        >
+                            <span class="ml-2 text-sm">{{ item.label }}</span>
+                            <span>
+                                <i v-if="active" class="pi pi-angle-down" />
+                                <i v-else class="pi pi-angle-up" />
+                            </span>
+                        </a>
+                    </template>
+                </PanelMenu>
+            </AccordionContent>
+        </AccordionPanel>
     </Accordion>
 </template>
 
@@ -266,13 +274,13 @@ const inventoryItemTypes = ref([
 ]);
 
 const route = useRoute();
-const activeIndex = ref(0);
+const activeIndex = ref('0');
 if (route.fullPath.startsWith('/recipes')) {
-    activeIndex.value = 1;
+    activeIndex.value = '1';
 } else if (route.fullPath.startsWith('/notes')) {
-    activeIndex.value = 2;
+    activeIndex.value = '2';
 } else if (route.fullPath.startsWith('/inventory')) {
-    activeIndex.value = 3;
+    activeIndex.value = '3';
 }
 
 const spendingExpandedKeys = ref({});
@@ -328,13 +336,5 @@ watch(() => route.name, () => {
 
 :deep(.p-accordion-content) {
     padding: 0 6px 6px 18px;
-}
-
-:deep(.p-panelmenu-panel) {
-    border: none;
-}
-
-:deep(.p-panelmenu) {
-    font-weight: 0;
 }
 </style>

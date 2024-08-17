@@ -1,7 +1,8 @@
 <template>
     <Card
         :pt="{
-            body: { class: 'p-0' },
+            body: { class: '!p-0' },
+            title: { class: '!h-[50px]' },
         }"
     >
         <template #title>
@@ -9,7 +10,7 @@
                 <slot name="header" />
             </template>
             <template v-else>
-                <div class="flex items-center justify-between gap-3 pr-2 pl-5 py-3 h-[50px]">
+                <div class="flex items-center justify-between gap-3 pr-2 pl-5 py-3">
                     <h2 class="font-semibold text-xl text-white leading-tight">
                         {{ title }}
                     </h2>
@@ -25,7 +26,7 @@
                                 <Button
                                     text
                                     rounded
-                                    severity="contrast"
+                                    severity="secondary"
                                     :icon="`pi ${button.icon}`"
                                 />
                             </NuxtLink>
@@ -37,14 +38,14 @@
                             <Button
                                 text
                                 rounded
-                                severity="contrast"
+                                severity="secondary"
                                 icon="pi pi-chevron-left"
                             />
                         </NuxtLink>
                     </div>
                 </div>
             </template>
-            <Divider class="m-0" />
+            <Divider class="!m-0 !mb-8" />
         </template>
         <template #content>
             <div v-if="loading">
