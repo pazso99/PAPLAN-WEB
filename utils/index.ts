@@ -32,7 +32,7 @@ export function getTransactionTypeColor(transactionType: TransactionType) {
         case 'expense':
             return 'danger';
         case 'transfer':
-            return 'warning';
+            return 'warn';
         default:
             return 'info';
     }
@@ -62,7 +62,7 @@ export function getNotePriorityColor(priority: NotePriority) {
         case 'low':
             return 'success';
         case 'medium':
-            return 'warning';
+            return 'warn';
         case 'high':
             return 'danger';
         case 'critical':

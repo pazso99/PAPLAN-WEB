@@ -8,7 +8,7 @@
             <div class="flex flex-col mb-4">
                 <label for="status" class="mb-1">Status</label>
                 <div class="flex items-center gap-2">
-                    <InputSwitch
+                    <ToggleSwitch
                         v-model="status"
                         input-id="status"
                         :pt="{
@@ -25,7 +25,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                 <div class="flex flex-col">
                     <label for="item" class="mb-1">Item</label>
-                    <Dropdown
+                    <Select
                         v-model="item"
                         input-id="item"
                         :options="selectableItems"
@@ -48,7 +48,7 @@
                                 />
                             </div>
                         </template>
-                    </Dropdown>
+                    </Select>
                 </div>
 
                 <div
@@ -56,7 +56,7 @@
                     class="flex flex-col"
                 >
                     <label for="packageUnit" class="mb-1">Unit</label>
-                    <Dropdown
+                    <Select
                         v-model="packageUnit"
                         input-id="packageUnit"
                         option-label="name"
@@ -97,7 +97,7 @@
                 </div>
                 <div class="flex flex-col">
                     <label for="purchaseDate" class="mb-1">Purchase date</label>
-                    <Calendar
+                    <DatePicker
                         v-model="purchaseDate"
                         input-id="purchaseDate"
                         date-format="yy-mm-dd"
@@ -106,7 +106,7 @@
                 </div>
                 <div class="flex flex-col">
                     <label for="expirationDate" class="mb-1">Expiration date</label>
-                    <Calendar
+                    <DatePicker
                         v-model="expirationDate"
                         input-id="expirationDate"
                         date-format="yy-mm-dd"

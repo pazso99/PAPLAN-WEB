@@ -7,12 +7,17 @@
             :key="account.name"
             class="w-full max-w-full px-1 sm:px-3 my-3 sm:w-1/2 xl:w-1/4"
         >
-            <Fieldset class="bg-gradient-to-tr from-slate-800 to-gray-900">
+            <Fieldset
+                :pt="{
+                    legend: { class: '!p-0 mb-2' },
+                }"
+                class="!bg-gradient-to-tr !from-slate-800 !to-gray-900"
+            >
                 <template #legend>
                     <NuxtLink
                         :to="{ name: 'spending-accounts-id', params: { id: account.id }, query: { from: '/spending' } }"
                     >
-                        <span class="py-1 px-2 rounded bg-gradient-to-tl from-blue-900 to-blue-800">{{ account.name }}</span>
+                        <span class="py-1 px-2 rounded !bg-gradient-to-tl !from-blue-900 !to-blue-800">{{ account.name }}</span>
                     </NuxtLink>
                 </template>
                 <CountTo
@@ -44,7 +49,7 @@
                     >
                         <template #item="{ item }">
                             <Tag
-                                class="px-2 py-1 w-full rounded-none flex justify-start cursor-pointer"
+                                class="px-2 py-1 w-full rounded-none flex !justify-start cursor-pointer"
                                 :severity="item.severity"
                                 @click="openNewTransaction(item.type, account, item.severity)"
                             >
@@ -66,9 +71,13 @@
 
         <div class="w-full flex justify-center">
             <div class="w-full max-w-full px-1 sm:px-3 mb-3 sm:w-1/2 xl:w-1/4">
-                <Fieldset class="bg-gradient-to-tr from-gray-900 to-green-950 border-green-950">
+                <Fieldset
+                    :pt="{
+                        legend: { class: '!p-0 mb-2' },
+                    }"
+                    class="!bg-gradient-to-tr !from-gray-900 !to-green-950 !border-green-950">
                     <template #legend>
-                        <span class="py-1 px-2 rounded bg-gradient-to-tl from-green-900 to-green-700">Total</span>
+                        <span class="py-1 px-2 rounded !bg-gradient-to-tl !from-green-900 !to-green-700">Total</span>
                     </template>
                     <CountTo
                         class="mb-2 text-3xl font-bold"
@@ -122,7 +131,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                     <div class="flex flex-col mb-4">
                         <label for="date" class="mb-1">Date</label>
-                        <Calendar
+                        <DatePicker
                             v-model="date"
                             input-id="date"
                             date-format="yy-mm-dd"
@@ -133,7 +142,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div class="flex flex-col">
                         <label for="transactionCategory" class="mb-1">Transaction category</label>
-                        <Dropdown
+                        <Select
                             v-model="transactionCategory"
                             input-id="transactionCategory"
                             :options="filteredTransactionCategories"
@@ -161,7 +170,7 @@
                 >
                     <div class="flex flex-col">
                         <label for="toAccount" class="mb-1">To account</label>
-                        <Dropdown
+                        <Select
                             v-model="toAccount"
                             input-id="toAccount"
                             option-label="name"
@@ -185,7 +194,7 @@
                                     </Tag>
                                 </div>
                             </template>
-                        </Dropdown>
+                        </Select>
                     </div>
                 </div>
 
@@ -247,7 +256,7 @@ const quickTransactionItems = ref<{
     {
         type: 'transfer',
         label: 'Transfer',
-        severity: 'warning',
+        severity: 'warn',
     },
 ]);
 
@@ -334,7 +343,7 @@ const emitSave = handleSubmit(async ({ amount, comment, date }) => {
     .p-button {
         padding: 2px 10px;
         background: rgba(239, 68, 68, 0.16);
-        border: 1px solid #ef4444;
+        border-color: #ef4444;
         color: #ef4444;
     }
 }

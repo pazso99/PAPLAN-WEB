@@ -59,8 +59,10 @@
             </template>
             <template #filter="{ filterModel }">
                 <div class="flex gap-2 items-center">
-                    <TriStateCheckbox
+                    <Checkbox
                         v-model="filterModel.value"
+                        :indeterminate="filterModel.value === null"
+                        binary
                         :pt="{
                             box: {
                                 class: [
@@ -88,13 +90,15 @@
                 <Tag
                     v-if="data.isEssential"
                     value="ESSENTIAL"
-                    severity="warning"
+                    severity="warn"
                 />
             </template>
             <template #filter="{ filterModel }">
                 <div class="flex gap-2 items-center">
-                    <TriStateCheckbox
+                    <Checkbox
                         v-model="filterModel.value"
+                        :indeterminate="filterModel.value === null"
+                        binary
                         :pt="{
                             box: {
                                 class: [
@@ -104,7 +108,7 @@
                             },
                         }"
                     />
-                    <Tag v-if="filterModel.value === true" value="ESSENTIAL" severity="warning" />
+                    <Tag v-if="filterModel.value === true" value="ESSENTIAL" severity="warn" />
                     <Tag v-else-if="filterModel.value === false" value="FALSE" severity="danger" />
                     <Tag v-else value="All" severity="info" />
                 </div>
@@ -197,7 +201,7 @@
 </template>
 
 <script setup lang="ts">
-import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import { FilterMatchMode, FilterOperator } from '@primevue/core/api';
 
 definePageMeta({
     middleware: 'auth',

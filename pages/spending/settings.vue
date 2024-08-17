@@ -91,7 +91,7 @@
                                         <Button
                                             class="p-0"
                                             icon="pi pi-eye"
-                                            severity="contrast"
+                                            severity="secondary"
                                             text
                                             @click="openMonthMetadataAccountsModal(monthMetadata.accounts)"
                                         />

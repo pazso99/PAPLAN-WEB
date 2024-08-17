@@ -8,7 +8,7 @@
             <div class="flex flex-col mb-4">
                 <label for="status" class="mb-1">Status</label>
                 <div class="flex items-center gap-2">
-                    <InputSwitch
+                    <ToggleSwitch
                         v-model="status"
                         input-id="status"
                         :pt="{
@@ -33,7 +33,7 @@
                 </div>
                 <div class="flex flex-col mb-4">
                     <label for="createdAt" class="mb-1">Created at</label>
-                    <Calendar
+                    <DatePicker
                         v-model="createdAt"
                         input-id="createdAt"
                         disabled
@@ -41,7 +41,7 @@
                 </div>
                 <div class="flex flex-col mb-4">
                     <label for="updatedAt" class="mb-1">Updated at</label>
-                    <Calendar
+                    <DatePicker
                         v-model="updatedAt"
                         input-id="updatedAt"
                         disabled

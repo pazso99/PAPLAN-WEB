@@ -26,7 +26,7 @@
                             @input="filterList"
                         />
                     </IconField>
-                    <DataViewLayoutOptions v-model="layout" />
+                    <SelectButton v-model="layout" />
                 </div>
             </template>
 
@@ -35,7 +35,7 @@
                     <div
                         v-for="(item, index) in slotProps.items"
                         :key="index"
-                        class="flex justify-between p-4 bg-gradient-to-tl from-gray-700 to-gray-800"
+                        class="flex justify-between p-4 !bg-gradient-to-tl !from-gray-700 !to-gray-800"
                     >
                         <div>
                             <div class="text-xl">{{ item.name }}</div>
@@ -63,7 +63,7 @@
                     <Card
                         v-for="(item, index) in slotProps.items"
                         :key="index"
-                        class="col-span-12 sm:col-span-6 md:col-span-4 bg-gradient-to-tl from-gray-700 to-gray-800"
+                        class="col-span-12 sm:col-span-6 md:col-span-4 !bg-gradient-to-tl !from-gray-700 !to-gray-800"
                         :pt="{
                             body: {
                                 class: 'h-full justify-between',

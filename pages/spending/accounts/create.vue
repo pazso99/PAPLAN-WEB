@@ -7,7 +7,7 @@
             <div class="flex flex-col mb-4">
                 <label for="status" class="mb-1">Status</label>
                 <div class="flex items-center gap-2">
-                    <InputSwitch
+                    <ToggleSwitch
                         v-model="status"
                         input-id="status"
                         :pt="{

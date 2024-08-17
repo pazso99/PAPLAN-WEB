@@ -8,7 +8,7 @@
             <div class="flex flex-col mb-4">
                 <label for="status" class="mb-1">Status</label>
                 <div class="flex items-center gap-2">
-                    <InputSwitch
+                    <ToggleSwitch
                         v-model="status"
                         input-id="status"
                         :pt="{
@@ -33,7 +33,7 @@
                 </div>
                 <div class="flex flex-col mb-4">
                     <label for="createdAt" class="mb-1">Created at</label>
-                    <Calendar
+                    <DatePicker
                         v-model="createdAt"
                         input-id="createdAt"
                         disabled
@@ -41,7 +41,7 @@
                 </div>
                 <div class="flex flex-col mb-4">
                     <label for="updatedAt" class="mb-1">Updated at</label>
-                    <Calendar
+                    <DatePicker
                         v-model="updatedAt"
                         input-id="updatedAt"
                         disabled
@@ -66,7 +66,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <div class="flex flex-col">
                     <label for="transactionType" class="mb-1">Transaction type</label>
-                    <Dropdown
+                    <Select
                         v-model="transactionType"
                         input-id="transactionType"
                         :options="transactionTypeOptions"
@@ -86,7 +86,7 @@
                                 :severity="getTransactionTypeColor(slotProps.option)"
                             />
                         </template>
-                    </Dropdown>
+                    </Select>
                 </div>
             </div>
 

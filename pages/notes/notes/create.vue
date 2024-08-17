@@ -7,7 +7,7 @@
             <div class="flex flex-col mb-4">
                 <label for="status" class="mb-1">Status</label>
                 <div class="flex items-center gap-2">
-                    <InputSwitch
+                    <ToggleSwitch
                         v-model="status"
                         input-id="status"
                         :pt="{
@@ -36,7 +36,7 @@
 
                 <div class="flex flex-col">
                     <label for="priority" class="mb-1">Priority</label>
-                    <Dropdown
+                    <Select
                         v-model="priority"
                         input-id="priority"
                         :options="priorityOptions"
@@ -56,12 +56,12 @@
                                 :severity="getNotePriorityColor(slotProps.option)"
                             />
                         </template>
-                    </Dropdown>
+                    </Select>
                 </div>
 
                 <div class="flex flex-col">
                     <label for="dueDate" class="mb-1">Due date</label>
-                    <Calendar
+                    <DatePicker
                         v-model="dueDate"
                         input-id="dueDate"
                         date-format="yy-mm-dd"
