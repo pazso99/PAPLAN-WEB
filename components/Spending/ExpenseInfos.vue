@@ -7,7 +7,7 @@
             <div class="w-full justify-center flex">
                 <SpendingCardExpenseInfo
                     container-class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
-                    background-class="p-4 text-center bg-gradient-to-tr from-slate-800 to-gray-900 rounded-2xl border border-green-950"
+                    background-class="p-4 text-center !bg-gradient-to-tr !from-slate-800 !to-gray-900 rounded-2xl border border-green-950"
                     :number="spendingDashboardData.totals.income"
                     number-class="text-green-500 font-bold"
                     label="Total income"
@@ -17,7 +17,7 @@
                 />
                 <SpendingCardExpenseInfo
                     container-class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
-                    background-class="p-4 text-center bg-gradient-to-tr from-slate-800 to-gray-900 rounded-2xl border border-amber-950"
+                    background-class="p-4 text-center !bg-gradient-to-tr !from-slate-800 !to-gray-900 rounded-2xl border border-amber-950"
                     :number="spendingDashboardData.totals.expense"
                     number-class="text-red-500 font-bold"
                     label="Total expense"
@@ -102,8 +102,6 @@ function setData(spendingData: SpendingDashboardData) {
         profit = 0;
     }
 
-    const documentStyle = getComputedStyle(document.body);
-    const textColor = documentStyle.getPropertyValue('--text-color');
     chartData.value = {
         labels: ['Profit', ...expenseCategories.value.map(c => c.name)],
         datasets: [
@@ -133,7 +131,7 @@ function setData(spendingData: SpendingDashboardData) {
             legend: {
                 labels: {
                     usePointStyle: true,
-                    color: textColor,
+                    color: '#fff',
                 },
             },
         },

@@ -18,15 +18,16 @@
         </div>
 
         <Accordion
-            v-model:active-index="activeTabs"
+            :value="activeTabs"
             multiple
         >
-            <AccordionTab
+            <AccordionPanel
                 v-for="inventoryItemType in filteredInventoryItemTypes"
                 :key="inventoryItemType.id"
+                :value="inventoryItemType.id.toString()"
                 :disabled="inventoryItemType.items.length === 0"
             >
-                <template #header>
+                <AccordionHeader>
                     <div class="w-full flex items-center justify-between gap-2">
                         <span class="font-bold">{{ inventoryItemType.name }}</span>
                         <div class="flex justify-between items-center mr-4">
@@ -48,128 +49,130 @@
                             <Badge :value="inventoryItemType.items.length" />
                         </div>
                     </div>
-                </template>
-                <div class="flex flex-wrap">
-                    <template
-                        v-for="(inventoryItem, index) in inventoryItemType.items"
-                        :key="inventoryItem.id"
-                    >
-                        <div
-                            v-if="index === 0 && inventoryItem.isEssential"
-                            :key="`e_${inventoryItem.id}`"
-                            class="w-[80%] m-auto p-2 text-lg font-bold text-center text-yellow-500 mt-1 mb-4 border border-x-0 border-t-0 border-b-1 border-yellow-500"
+                </AccordionHeader>
+                <AccordionContent>
+                    <div class="flex flex-wrap">
+                        <template
+                            v-for="(inventoryItem, index) in inventoryItemType.items"
+                            :key="inventoryItem.id"
                         >
-                            Essentials
-                        </div>
-                        <div
-                            v-if="!inventoryItem.isEssential && inventoryItemType.items[index - 1]?.isEssential"
-                            :key="`ne_${inventoryItem.id}`"
-                            class="w-[80%] m-auto p-2 text-center mt-2 mb-4 border border-x-0 border-t-0 border-b-1 border-white"
-                        >
-                            Non Essentials
-                        </div>
-                        <div
-                            class="w-full md:w-1/4 p-2"
-                        >
-                            <Card :class="`bg-gradient-to-tr ${getStockStatusClass(inventoryItem)}`">
-                                <template #header>
-                                    <div :class="`flex items-center text-bold text-xl p-3 gap-1 bg-gradient-to-tr ${getEssentialItemClass(inventoryItem)}`">
-                                        <div class="flex-1 text-center">
-                                            <NuxtLink
-                                                :to="{ name: 'inventory-items-id', params: { id: inventoryItem.id }, query: { from: '/inventory' } }"
-                                            >
-                                                <span
-                                                    :class="getEssentialTextClass(inventoryItem.isEssential)"
+                            <div
+                                v-if="index === 0 && inventoryItem.isEssential"
+                                :key="`e_${inventoryItem.id}`"
+                                class="w-[80%] m-auto p-2 text-lg font-bold text-center text-yellow-500 mt-1 mb-4 border border-x-0 border-t-0 border-b-1 border-yellow-500"
+                            >
+                                Essentials
+                            </div>
+                            <div
+                                v-if="!inventoryItem.isEssential && inventoryItemType.items[index - 1]?.isEssential"
+                                :key="`ne_${inventoryItem.id}`"
+                                class="w-[80%] m-auto p-2 text-center mt-2 mb-4 border border-x-0 border-t-0 border-b-1 border-white"
+                            >
+                                Non Essentials
+                            </div>
+                            <div
+                                class="w-full md:w-1/4 p-2"
+                            >
+                                <Card :class="`!bg-gradient-to-tr ${getStockStatusClass(inventoryItem)}`">
+                                    <template #header>
+                                        <div :class="`flex items-center text-bold text-xl p-3 gap-1 !bg-gradient-to-tr ${getEssentialItemClass(inventoryItem)}`">
+                                            <div class="flex-1 text-center">
+                                                <NuxtLink
+                                                    :to="{ name: 'inventory-items-id', params: { id: inventoryItem.id }, query: { from: '/inventory' } }"
                                                 >
-                                                    {{ inventoryItem.name }}
-                                                </span>
-                                            </NuxtLink>
-                                        </div>
-                                        <div class="flex flex-col justify-center gap-2">
-                                            <Button
-                                                class="w-6 h-6 text-xs text-white bg-gradient-to-tr from-green-800 to-green-600 border-none"
-                                                icon="pi pi-plus"
-                                                rounded
-                                                @click="openNewItemDialog(inventoryItem.id)"
-                                            />
-                                        </div>
-                                    </div>
-                                </template>
-                                <template #content>
-                                    <div class="flex justify-between gap-5">
-                                        <div
-                                            v-if="inventoryItem.stockStatus === 'in_stock'"
-                                            class="text-sm"
-                                        >
-                                            <b>In stock</b>
-                                            <div
-                                                v-if="inventoryItem.recommendedStock"
-                                            >
-                                                Recommended stock: <b>{{ inventoryItem.recommendedStock }}</b>
+                                                    <span
+                                                        :class="getEssentialTextClass(inventoryItem.isEssential)"
+                                                    >
+                                                        {{ inventoryItem.name }}
+                                                    </span>
+                                                </NuxtLink>
                                             </div>
-                                            <div
-                                                v-if="inventoryItem.expectedRunOutDate"
-                                            >
-                                                Expected to run out at: <b>{{ inventoryItem.expectedRunOutDate }}</b>
+                                            <div class="flex flex-col justify-center gap-2">
+                                                <Button
+                                                    class="w-6 h-6 text-xs text-white !bg-gradient-to-tr !from-green-800 !to-green-600 !border-none"
+                                                    icon="pi pi-plus"
+                                                    rounded
+                                                    @click="openNewItemDialog(inventoryItem.id)"
+                                                />
                                             </div>
                                         </div>
-                                        <div
-                                            v-if="inventoryItem.stockStatus === 'running_out'"
-                                            class="text-sm"
-                                        >
-                                            <b>Running out</b>
+                                    </template>
+                                    <template #content>
+                                        <div class="flex justify-between gap-5">
                                             <div
-                                                v-if="inventoryItem.recommendedStock"
+                                                v-if="inventoryItem.stockStatus === 'in_stock'"
+                                                class="text-sm"
                                             >
-                                                Recommended stock: <b>{{ inventoryItem.recommendedStock }}</b>
+                                                <b>In stock</b>
+                                                <div
+                                                    v-if="inventoryItem.recommendedStock"
+                                                >
+                                                    Recommended stock: <b>{{ inventoryItem.recommendedStock }}</b>
+                                                </div>
+                                                <div
+                                                    v-if="inventoryItem.expectedRunOutDate"
+                                                >
+                                                    Expected to run out at: <b>{{ inventoryItem.expectedRunOutDate }}</b>
+                                                </div>
                                             </div>
                                             <div
-                                                v-if="inventoryItem.expectedRunOutDate"
+                                                v-if="inventoryItem.stockStatus === 'running_out'"
+                                                class="text-sm"
                                             >
-                                                Expected to run out at: <b>{{ inventoryItem.expectedRunOutDate }}</b>
+                                                <b>Running out</b>
+                                                <div
+                                                    v-if="inventoryItem.recommendedStock"
+                                                >
+                                                    Recommended stock: <b>{{ inventoryItem.recommendedStock }}</b>
+                                                </div>
+                                                <div
+                                                    v-if="inventoryItem.expectedRunOutDate"
+                                                >
+                                                    Expected to run out at: <b>{{ inventoryItem.expectedRunOutDate }}</b>
+                                                </div>
+                                            </div>
+                                            <div
+                                                v-if="inventoryItem.stockStatus === 'out'"
+                                                class="text-sm"
+                                            >
+                                                <b>Ran out</b>
+                                                <div
+                                                    v-if="inventoryItem.ranOutDate"
+                                                >
+                                                    Ran out: <b>{{ inventoryItem.ranOutDate }}</b>
+                                                </div>
+                                                <div
+                                                    v-if="inventoryItem.recommendedStock"
+                                                >
+                                                    Recommended stock: <b>{{ inventoryItem.recommendedStock }}</b>
+                                                </div>
+                                            </div>
+                                            <div class="flex flex-col gap-1">
+                                                <Button
+                                                    class="w-full !bg-gradient-to-tr !from-blue-950 !to-zinc-950 !text-gray-300 !border-none !shadow-sm"
+                                                    size="small"
+                                                    label="IN_STOCK"
+                                                    :disabled="inventoryItem.inStockItems.length === 0"
+                                                    :badge="inventoryItem.inStockItems.length.toString()"
+                                                    @click="openItemListDialog(inventoryItem, 'inStock')"
+                                                />
+                                                <Button
+                                                    class="w-full !bg-gradient-to-tr !from-blue-950 !to-zinc-950 !text-gray-300 !border-none !shadow-sm"
+                                                    size="small"
+                                                    label="USED"
+                                                    :disabled="inventoryItem.usedItems.length === 0"
+                                                    :badge="inventoryItem.usedItems.length.toString()"
+                                                    @click="openItemListDialog(inventoryItem, 'used')"
+                                                />
                                             </div>
                                         </div>
-                                        <div
-                                            v-if="inventoryItem.stockStatus === 'out'"
-                                            class="text-sm"
-                                        >
-                                            <b>Ran out</b>
-                                            <div
-                                                v-if="inventoryItem.ranOutDate"
-                                            >
-                                                Ran out: <b>{{ inventoryItem.ranOutDate }}</b>
-                                            </div>
-                                            <div
-                                                v-if="inventoryItem.recommendedStock"
-                                            >
-                                                Recommended stock: <b>{{ inventoryItem.recommendedStock }}</b>
-                                            </div>
-                                        </div>
-                                        <div class="flex flex-col gap-1">
-                                            <Button
-                                                class="w-full bg-gradient-to-tr from-blue-950 to-zinc-950 text-gray-300 border-none shadow-sm"
-                                                size="small"
-                                                label="IN_STOCK"
-                                                :disabled="inventoryItem.inStockItems.length === 0"
-                                                :badge="inventoryItem.inStockItems.length.toString()"
-                                                @click="openItemListDialog(inventoryItem, 'inStock')"
-                                            />
-                                            <Button
-                                                class="w-full bg-gradient-to-tr from-blue-950 to-zinc-950 text-gray-300 border-none shadow-sm"
-                                                size="small"
-                                                label="USED"
-                                                :disabled="inventoryItem.usedItems.length === 0"
-                                                :badge="inventoryItem.usedItems.length.toString()"
-                                                @click="openItemListDialog(inventoryItem, 'used')"
-                                            />
-                                        </div>
-                                    </div>
-                                </template>
-                            </Card>
-                        </div>
-                    </template>
-                </div>
-            </AccordionTab>
+                                    </template>
+                                </Card>
+                            </div>
+                        </template>
+                    </div>
+                </AccordionContent>
+            </AccordionPanel>
         </Accordion>
 
         <Dialog
@@ -245,7 +248,7 @@
                             >
                                 <Button
                                     icon="pi pi-eye"
-                                    severity="contrast"
+                                    severity="secondary"
                                     text
                                     rounded
                                 />
@@ -287,7 +290,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div class="flex flex-col">
                         <label for="packageUnit" class="mb-1">Unit</label>
-                        <Dropdown
+                        <Select
                             v-model="packageUnit"
                             input-input-id="packageUnit"
                             option-label="name"
@@ -328,7 +331,7 @@
                     </div>
                     <div class="flex flex-col">
                         <label for="purchaseDate" class="mb-1">Purchase date</label>
-                        <Calendar
+                        <DatePicker
                             v-model="purchaseDate"
                             input-id="purchaseDate"
                             date-format="yy-mm-dd"
@@ -337,7 +340,7 @@
                     </div>
                     <div class="flex flex-col">
                         <label for="expirationDate" class="mb-1">Expiration date</label>
-                        <Calendar
+                        <DatePicker
                             v-model="expirationDate"
                             input-id="expirationDate"
                             date-format="yy-mm-dd"
@@ -402,14 +405,15 @@
         </Dialog>
         <template #loading>
             <Accordion>
-                <AccordionTab
+                <AccordionPanel
                     v-for="index in 15"
                     :key="index"
+                    :value="index.toString()"
                 >
-                    <template #header>
+                    <AccordionHeader>
                         <Skeleton width="10rem" height="1.25rem" />
-                    </template>
-                </AccordionTab>
+                    </AccordionHeader>
+                </AccordionPanel>
             </Accordion>
         </template>
     </ContentBaseCard>
@@ -471,13 +475,13 @@ function openItemListDialog(item: InventoryItem, stockType: 'inStock' | 'used') 
 function getStockStatusClass(item: InventoryItem) {
     switch (item.stockStatus) {
         case 'in_stock':
-            return 'from-green-900 to-green-950';
+            return '!from-green-900 !to-green-950';
         case 'running_out':
-            return 'from-yellow-600 to-yellow-800';
+            return '!from-yellow-600 !to-yellow-800';
         case 'out':
-            return 'from-red-900 to-red-950';
+            return '!from-red-900 !to-red-950';
         default:
-            return 'from-blue-900 to-blue-950';
+            return '!from-blue-900 !to-blue-950';
     }
 }
 
@@ -485,9 +489,9 @@ function getEssentialItemClass(item: InventoryItem) {
     let className = '';
 
     if (item.isEssential) {
-        className += 'from-zinc-950 to-amber-950 border border-b-0 border-x-0 border-t-2 border-yellow-500 ';
+        className += '!from-zinc-950 !o-amber-950 !border !border-b-0 !border-x-0 !border-t-2 !border-yellow-500 ';
     } else {
-        className += 'from-slate-800 to-zinc-400';
+        className += '!from-slate-800 !to-zinc-400';
     }
 
     return className;

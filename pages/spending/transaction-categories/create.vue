@@ -7,7 +7,7 @@
             <div class="flex flex-col mb-4">
                 <label for="status" class="mb-1">Status</label>
                 <div class="flex items-center gap-2">
-                    <InputSwitch
+                    <ToggleSwitch
                         v-model="status"
                         input-id="status"
                         :pt="{
@@ -38,7 +38,7 @@
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
                 <div class="flex flex-col">
                     <label for="transactionType" class="mb-1">Transaction type</label>
-                    <Dropdown
+                    <Select
                         v-model="transactionType"
                         input-id="transactionType"
                         :options="transactionTypeOptions"
@@ -58,7 +58,7 @@
                                 :severity="getTransactionTypeColor(slotProps.option)"
                             />
                         </template>
-                    </Dropdown>
+                    </Select>
                 </div>
             </div>
 

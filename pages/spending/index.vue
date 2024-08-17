@@ -6,7 +6,7 @@
         <SpendingAccounts @create-transaction="saveTransaction" />
 
         <Divider align="center">
-            <Dropdown
+            <Select
                 v-model="spendingSelectedDate"
                 :options="dates"
                 placeholder="Date"

@@ -59,8 +59,10 @@
             </template>
             <template #filter="{ filterModel }">
                 <div class="flex gap-2 items-center">
-                    <TriStateCheckbox
+                    <Checkbox
                         v-model="filterModel.value"
+                        :indeterminate="filterModel.value === null"
+                        binary
                         :pt="{
                             box: {
                                 class: [
@@ -126,7 +128,7 @@
                 {{ $dayjs(data.createdAt).format('YYYY-MM-DD') }}
             </template>
             <template #filter="{ filterModel }">
-                <Calendar
+                <DatePicker
                     v-model="filterModel.value"
                     date-format="yy-mm-dd"
                     placeholder="2024-01-01"
@@ -138,7 +140,7 @@
 </template>
 
 <script setup lang="ts">
-import { FilterMatchMode, FilterOperator } from 'primevue/api';
+import { FilterMatchMode, FilterOperator } from '@primevue/core/api';
 
 definePageMeta({
     middleware: 'auth',

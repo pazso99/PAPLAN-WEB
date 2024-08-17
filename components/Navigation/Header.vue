@@ -1,7 +1,7 @@
 <template>
     <Menubar
         :model="items"
-        class="h-[60px] border-t-0 border-x-0 rounded-none border-white p-5"
+        class="h-[60px] !border-t-0 !border-x-0 !rounded-none !border-white p-5"
     >
         <template #start>
             <NuxtLink to="/">
@@ -19,7 +19,7 @@
             <div class="flex gap-4">
                 <Button
                     icon="pi pi-sign-out"
-                    severity="contrast"
+                    severity="secondary"
                     text
                     rounded
                     @click="handleLogout"
@@ -29,11 +29,11 @@
                         icon="pi pi-bars"
                         @click="toggleNav"
                     />
-                    <Sidebar v-model:visible="isNavOpen">
+                    <Drawer v-model:visible="isNavOpen">
                         <template #container>
                             <NavigationMenu :is-mobile="true" />
                         </template>
-                    </Sidebar>
+                    </Drawer>
                 </div>
             </div>
         </template>
