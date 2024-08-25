@@ -119,7 +119,10 @@
                     :max-selected-labels="1"
                 >
                     <template #option="slotProps">
-                        <span>{{ slotProps.option }}</span>
+                        <Tag
+                            :value="slotProps.option.toUpperCase()"
+                            :severity="getTransactionTypeColor(slotProps.option)"
+                        />
                     </template>
                 </MultiSelect>
             </template>

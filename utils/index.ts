@@ -98,3 +98,10 @@ export function getLeftoverPercentageClass(leftoverAmountPercentage: number) {
         return 'bg-red-600';
     }
 }
+
+export function truncateText(text: string, length: number) {
+    if (text.length > length) {
+        return `${text.substring(0, length)}...`;
+    }
+    return text;
+}

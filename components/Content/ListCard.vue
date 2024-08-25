@@ -22,6 +22,8 @@
             state-storage="session"
             :state-key="`${listKey}_table_state`"
             :export-filename="getExportFilename()"
+            scrollable
+            scroll-height="70vh"
         >
             <template #empty>
                 No data.
