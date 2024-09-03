@@ -119,7 +119,10 @@
                     :max-selected-labels="1"
                 >
                     <template #option="slotProps">
-                        <span>{{ slotProps.option }}</span>
+                        <Tag
+                            :value="slotProps.option.toUpperCase()"
+                            :severity="getTransactionTypeColor(slotProps.option)"
+                        />
                     </template>
                 </MultiSelect>
             </template>
@@ -164,7 +167,7 @@ const spendingManagementStore = useSpendingManagementStore();
 const { getTransactionCategories, deleteTransactionCategory } = spendingManagementStore;
 const { transactionCategories, loading } = storeToRefs(spendingManagementStore);
 
-const filters = ref({
+const filters = ref<{ [key: string]: any }>({
     id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },

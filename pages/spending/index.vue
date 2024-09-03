@@ -88,9 +88,7 @@ const dates = [
         { length: dayjs().month() + 13 },
         (_, i) => dayjs().subtract(i, 'month').format('YYYY-MM'),
     ).filter(d => d.startsWith('2024')),
-    '2023-12',
     '2024',
-    '2023',
 ];
 spendingSelectedDate.value = dates[0];
 

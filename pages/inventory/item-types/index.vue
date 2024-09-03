@@ -135,7 +135,7 @@ const inventoryManagementStore = useInventoryManagementStore();
 const { getItemTypes, deleteItemType } = inventoryManagementStore;
 const { itemTypes, loading } = storeToRefs(inventoryManagementStore);
 
-const filters = ref({
+const filters = ref<{ [key: string]: any }>({
     id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },

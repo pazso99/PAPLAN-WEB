@@ -22,6 +22,8 @@
             state-storage="session"
             :state-key="`${listKey}_table_state`"
             :export-filename="getExportFilename()"
+            scrollable
+            scroll-height="70vh"
         >
             <template #empty>
                 No data.
@@ -235,7 +237,7 @@ const emit = defineEmits<{
     (e: 'refreshTable'): void;
 }>();
 
-const filters = ref();
+const filters = ref<{ [key: string]: any }>();
 function initFilters() {
     filters.value = {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },

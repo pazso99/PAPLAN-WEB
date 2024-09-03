@@ -341,10 +341,14 @@ const emitSave = handleSubmit(async ({ amount, comment, date }) => {
 <style lang="scss" scoped>
 :deep(.p-splitbutton) {
     .p-button {
-        padding: 2px 10px;
+        padding: 2px 8px;
         background: rgba(239, 68, 68, 0.16);
         border-color: #ef4444;
         color: #ef4444;
+    }
+
+    .p-splitbutton-dropdown {
+        width: 30px;
     }
 }
 </style>
