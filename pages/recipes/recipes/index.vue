@@ -156,7 +156,7 @@ const recipesManagementStore = useRecipesManagementStore();
 const { getRecipes, deleteRecipe } = recipesManagementStore;
 const { recipes, loading } = storeToRefs(recipesManagementStore);
 
-const filters = ref({
+const filters = ref<{ [key: string]: any }>({
     id: { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     status: { value: null, matchMode: FilterMatchMode.EQUALS },
     name: { value: null, matchMode: FilterMatchMode.CONTAINS },

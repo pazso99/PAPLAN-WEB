@@ -66,7 +66,15 @@
                             severity="success"
                             class="mr-2"
                             size="small"
-                            @click="handleMonthFilter"
+                            @click="handleThisMonthFilter"
+                        />
+                        <Button
+                            label="Previous month"
+                            icon="pi pi-calendar"
+                            severity="success"
+                            class="mr-2"
+                            size="small"
+                            @click="handlePreviousMonthFilter"
                         />
                     </template>
                 </Toolbar>
@@ -501,7 +509,7 @@ const initFilters = {
     'amount': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     'comment': { value: null, matchMode: FilterMatchMode.CONTAINS },
 };
-const filters = ref(initFilters);
+const filters = ref<{ [key: string]: any }>(initFilters);
 
 function resetFilters() {
     filters.value = initFilters;
@@ -547,7 +555,7 @@ function getMetaDescription(
 };
 
 const dayjs = useDayjs();
-function handleMonthFilter() {
+function handleThisMonthFilter() {
     filters.value = {
         ...filters.value,
         ...{
@@ -556,6 +564,26 @@ function handleMonthFilter() {
                 constraints: [
                     { value: dayjs().startOf('month').toDate(), matchMode: FilterMatchMode.DATE_AFTER },
                     { value: dayjs().endOf('month').toDate(), matchMode: FilterMatchMode.DATE_BEFORE },
+                ],
+            },
+        },
+    };
+}
+function handlePreviousMonthFilter() {
+    let monthNum = dayjs().month();
+    if (monthNum === 0) {
+        monthNum = 11;
+    } else {
+        monthNum--;
+    }
+    filters.value = {
+        ...filters.value,
+        ...{
+            date: {
+                operator: FilterOperator.AND,
+                constraints: [
+                    { value: dayjs().month(monthNum).startOf('month').toDate(), matchMode: FilterMatchMode.DATE_AFTER },
+                    { value: dayjs().month(monthNum).endOf('month').toDate(), matchMode: FilterMatchMode.DATE_BEFORE },
                 ],
             },
         },

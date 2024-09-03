@@ -237,7 +237,7 @@ const emit = defineEmits<{
     (e: 'refreshTable'): void;
 }>();
 
-const filters = ref();
+const filters = ref<{ [key: string]: any }>();
 function initFilters() {
     filters.value = {
         global: { value: null, matchMode: FilterMatchMode.CONTAINS },

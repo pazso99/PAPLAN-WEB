@@ -233,7 +233,7 @@ const inventoryManagementStore = useInventoryManagementStore();
 const { getPurchasedItems, getItems, deletePurchasedItem } = inventoryManagementStore;
 const { purchasedItems, items, loading } = storeToRefs(inventoryManagementStore);
 
-const filters = ref({
+const filters = ref<{ [key: string]: any }>({
     'id': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     'status': { value: null, matchMode: FilterMatchMode.EQUALS },
     'item.name': { value: null, matchMode: FilterMatchMode.IN },
