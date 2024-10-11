@@ -49,32 +49,29 @@
                         <InputText v-model="filters.global.value" placeholder="Search..." />
                     </IconField>
                     <Button
+                        v-if="table"
                         type="button"
+                        :badge="table.processedData.length.toString()"
                         size="small"
-                        severity="secondary"
+                        :severity="table.processedData.length !== transactions.length || filters.global.value !== '' ? 'primary' : 'secondary'"
                         icon="pi pi-filter-slash"
                         text
                         rounded
-                        @click="clearFilter()"
+                        @click="clearFilter"
                     />
                 </div>
                 <Toolbar class="my-2 overflow-auto">
                     <template #start>
                         <Button
-                            label="This month"
-                            icon="pi pi-calendar"
-                            severity="success"
+                            v-for="filterButton in filterButtons"
+                            :key="filterButton.filter"
+                            :label="filterButton.display"
+                            :icon="filterButton.icon"
+                            severity="primary"
                             class="mr-2"
                             size="small"
-                            @click="handleThisMonthFilter"
-                        />
-                        <Button
-                            label="Previous month"
-                            icon="pi pi-calendar"
-                            severity="success"
-                            class="mr-2"
-                            size="small"
-                            @click="handlePreviousMonthFilter"
+                            :outlined="!filterButton.isOn"
+                            @click="filterButton.handle"
                         />
                     </template>
                 </Toolbar>
@@ -499,7 +496,7 @@ const { getTransactions, getAccounts, deleteTransaction, getTransactionCategorie
 const { transactions, accounts, transactionCategories } = storeToRefs(spendingManagementStore);
 
 const initFilters = {
-    'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+    'global': { value: '', matchMode: FilterMatchMode.CONTAINS },
     'id': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.EQUALS }] },
     'status': { value: null, matchMode: FilterMatchMode.EQUALS },
     'date': { operator: FilterOperator.AND, constraints: [{ value: null, matchMode: FilterMatchMode.DATE_IS }] },
@@ -513,7 +510,7 @@ const filters = ref<{ [key: string]: any }>(initFilters);
 
 function resetFilters() {
     filters.value = initFilters;
-    filters.value.global.value = null;
+    filters.value.global.value = '';
 };
 
 function clearFilter() {
@@ -555,40 +552,87 @@ function getMetaDescription(
 };
 
 const dayjs = useDayjs();
+const thisMonthFilter = {
+    date: {
+        operator: FilterOperator.AND,
+        constraints: [
+            { value: dayjs().startOf('month').toDate(), matchMode: FilterMatchMode.DATE_AFTER },
+            { value: dayjs().endOf('month').toDate(), matchMode: FilterMatchMode.DATE_BEFORE },
+        ],
+    },
+};
+
+const monthNum = ref();
+monthNum.value = dayjs().month();
+if (monthNum.value === 0) {
+    monthNum.value = 11;
+} else {
+    monthNum.value--;
+}
+const previousMonthFilter = {
+    date: {
+        operator: FilterOperator.AND,
+        constraints: [
+            { value: dayjs().month(monthNum.value).startOf('month').toDate(), matchMode: FilterMatchMode.DATE_AFTER },
+            { value: dayjs().month(monthNum.value).endOf('month').toDate(), matchMode: FilterMatchMode.DATE_BEFORE },
+        ],
+    },
+};
+
+/* eslint-disable style/indent */
+const filterButtons = ref<{
+    filter: string;
+    display: string;
+    icon: string;
+    isOn: boolean;
+    handle: () => void;
+}[]>([
+    {
+        filter: 'thisMonth',
+        display: 'This month',
+        icon: 'pi pi-calendar',
+        isOn: false,
+        handle: handleThisMonthFilter,
+    },
+    {
+        filter: 'previousMonth',
+        display: 'Previous month',
+        icon: 'pi pi-calendar',
+        isOn: false,
+        handle: handlePreviousMonthFilter,
+    },
+]);
+/* eslint-enable style/indent */
+
 function handleThisMonthFilter() {
     filters.value = {
         ...filters.value,
-        ...{
-            date: {
-                operator: FilterOperator.AND,
-                constraints: [
-                    { value: dayjs().startOf('month').toDate(), matchMode: FilterMatchMode.DATE_AFTER },
-                    { value: dayjs().endOf('month').toDate(), matchMode: FilterMatchMode.DATE_BEFORE },
-                ],
-            },
-        },
+        ...thisMonthFilter,
     };
 }
 function handlePreviousMonthFilter() {
-    let monthNum = dayjs().month();
-    if (monthNum === 0) {
-        monthNum = 11;
-    } else {
-        monthNum--;
-    }
     filters.value = {
         ...filters.value,
-        ...{
-            date: {
-                operator: FilterOperator.AND,
-                constraints: [
-                    { value: dayjs().month(monthNum).startOf('month').toDate(), matchMode: FilterMatchMode.DATE_AFTER },
-                    { value: dayjs().month(monthNum).endOf('month').toDate(), matchMode: FilterMatchMode.DATE_BEFORE },
-                ],
-            },
-        },
+        ...previousMonthFilter,
     };
 }
+
+watch(filters, (newFilter) => {
+    filterButtons.value.forEach((filterButton) => {
+        filterButton.isOn = false;
+        if (
+            filterButton.filter === 'thisMonth'
+            && JSON.stringify(newFilter.date) === JSON.stringify(thisMonthFilter.date)
+        ) {
+            filterButton.isOn = true;
+        } else if (
+            filterButton.filter === 'previousMonth'
+            && JSON.stringify(newFilter.date) === JSON.stringify(previousMonthFilter.date)
+        ) {
+            filterButton.isOn = true;
+        }
+    });
+}, { deep: true });
 
 const selectedTransactions = ref<Transaction[]>([]);
 const selectedTransactionIncomeTotal = ref(0);
