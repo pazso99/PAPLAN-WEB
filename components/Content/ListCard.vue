@@ -37,9 +37,11 @@
                         <InputText v-model="filters.global.value" placeholder="Search..." />
                     </IconField>
                     <Button
+                        v-if="table"
                         type="button"
+                        :badge="table.processedData.length.toString()"
                         size="small"
-                        severity="secondary"
+                        :severity="table.processedData.length !== items.length || filters.global.value !== '' ? 'primary' : 'secondary'"
                         icon="pi pi-filter-slash"
                         text
                         rounded
@@ -240,7 +242,7 @@ const emit = defineEmits<{
 const filters = ref<{ [key: string]: any }>();
 function initFilters() {
     filters.value = {
-        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+        global: { value: '', matchMode: FilterMatchMode.CONTAINS },
         ...props.filters,
     };
 };
