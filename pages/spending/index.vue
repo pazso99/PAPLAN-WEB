@@ -87,7 +87,8 @@ const dates = [
     ...Array.from(
         { length: dayjs().month() + 13 },
         (_, i) => dayjs().subtract(i, 'month').format('YYYY-MM'),
-    ).filter(d => d.startsWith('2024')),
+    ).filter(d => d.startsWith('2024') || d.startsWith('2025')),
+    '2025',
     '2024',
 ];
 spendingSelectedDate.value = dates[0];
