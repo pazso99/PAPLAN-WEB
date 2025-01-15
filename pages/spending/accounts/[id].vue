@@ -158,6 +158,7 @@ const save = handleSubmit(async ({ id, status, name, balance }) => {
         name,
         balance,
     });
+    await getAccount(routeId.value);
     setData();
 });
 

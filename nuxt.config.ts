@@ -33,6 +33,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             API_BASE_URL: process.env.API_BASE_URL,
+            SPENDING_YEARS: process.env.SPENDING_YEARS,
         },
     },
 

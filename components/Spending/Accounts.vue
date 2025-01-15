@@ -2,8 +2,16 @@
     <div
         class="flex flex-wrap justify-center mb-4"
     >
+        <NuxtLink
+            v-if="spendingDashboardData.accounts.length === 0"
+            :to="{ name: 'spending-accounts-create', query: { from: '/spending' } }"
+            class="w-full max-w-full px-1 sm:px-3 my-3 sm:w-1/3 xl:w-1/5 flex justify-center p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl"
+        >
+            + Add accounts
+        </NuxtLink>
         <div
             v-for="account in spendingDashboardData.accounts"
+            v-else
             :key="account.name"
             class="w-full max-w-full px-1 sm:px-3 my-3 sm:w-1/2 xl:w-1/4"
         >
@@ -69,7 +77,10 @@
             </Fieldset>
         </div>
 
-        <div class="w-full flex justify-center">
+        <div
+            v-if="spendingDashboardData.accounts.length > 0"
+            class="w-full flex justify-center"
+        >
             <div class="w-full max-w-full px-1 sm:px-3 mb-3 sm:w-1/2 xl:w-1/4">
                 <Fieldset
                     :pt="{
@@ -142,7 +153,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div class="flex flex-col">
                         <label for="transactionCategory" class="mb-1">Transaction category</label>
+                        <NuxtLink
+                            v-if="filteredTransactionCategories!.length === 0"
+                            :to="{ name: 'spending-transaction-categories-create', query: { from: '/spending' } }"
+                            class="bg-black p-2 border border-stone-600 rounded-md"
+                        >
+                            + Add new transaction category
+                        </NuxtLink>
                         <Select
+                            v-else
                             v-model="transactionCategory"
                             input-id="transactionCategory"
                             :options="filteredTransactionCategories"
@@ -303,11 +322,11 @@ function openNewTransaction(type: TransactionType, account: AccountBasic, severi
         severity,
     };
     filteredTransactionCategories.value = transactionCategories.value.filter(
-        ({ transactionType }) => transactionType === type,
+        ({ status, transactionType }) => status && transactionType === type,
     );
 
     transactionType.value = type;
-    toAccounts.value = accounts.value.filter(acc => acc.id !== account.id);
+    toAccounts.value = accounts.value.filter(acc => acc.status && acc.id !== account.id);
 
     resetForm({
         values: {

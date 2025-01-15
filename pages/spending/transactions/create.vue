@@ -61,12 +61,33 @@
                             </div>
                         </template>
                         <template #value="slotProps">
-                            <Tag
+                            <template
                                 v-if="slotProps.value"
-                                :value="slotProps.value.label"
-                                :severity="slotProps.value.severity"
-                            />
+                            >
+                                <Tag
+                                    :value="slotProps.value.label"
+                                    :severity="slotProps.value.severity"
+                                />
+                                <Tag
+                                    v-if="!slotProps.value.status"
+                                    class="ml-3"
+                                    severity="danger"
+                                >
+                                    INACTIVE
+                                </Tag>
+                            </template>
                             <span v-else>{{ slotProps.placeholder }}</span>
+                        </template>
+                        <template #option="slotProps">
+                            <div class="flex gap-2">
+                                <span>{{ slotProps.option.label }}</span>
+                                <Tag
+                                    v-if="!slotProps.option.status"
+                                    severity="danger"
+                                >
+                                    INACTIVE
+                                </Tag>
+                            </div>
                         </template>
                     </Select>
                 </div>
@@ -85,6 +106,12 @@
                                 <Tag severity="success">
                                     {{ $formatNumber(slotProps.value.balance) }} Ft
                                 </Tag>
+                                <Tag
+                                    v-if="!slotProps.value.status"
+                                    severity="danger"
+                                >
+                                    INACTIVE
+                                </Tag>
                             </div>
                             <span v-else>{{ slotProps.placeholder }}</span>
                         </template>
@@ -93,6 +120,12 @@
                                 <span>{{ slotProps.option.name }}</span>
                                 <Tag severity="success">
                                     {{ $formatNumber(slotProps.option.balance) }} Ft
+                                </Tag>
+                                <Tag
+                                    v-if="!slotProps.option.status"
+                                    severity="danger"
+                                >
+                                    INACTIVE
                                 </Tag>
                             </div>
                         </template>
@@ -264,6 +297,7 @@ function setTransactionTypeGroups() {
         }
 
         transactionTypeGroups[item.transactionType].push({
+            status: item.status,
             label: item.name,
             value: item.id,
             transactionType: item.transactionType,
