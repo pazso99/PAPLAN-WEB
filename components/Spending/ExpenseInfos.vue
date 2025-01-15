@@ -1,79 +1,84 @@
 <template>
-    <div class="flex items-center flex-wrap my-4 md:my-8">
+    <div class="flex items-center justify-center flex-wrap my-4 md:my-8">
         <h2 class="w-full text-2xl text-center mb-4 md:mb-8">
             Expense infos
         </h2>
-        <div class="flex flex-wrap justify-center w-full max-w-full px-1 sm:px-3 mb-3 lg:w-full xl:w-1/2">
-            <div class="w-full justify-center flex">
-                <SpendingCardExpenseInfo
-                    container-class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
-                    background-class="p-4 text-center !bg-gradient-to-tr !from-slate-800 !to-gray-900 rounded-2xl border border-green-950"
-                    :number="spendingDashboardData.totals.income"
-                    number-class="text-green-500 font-bold"
-                    label="Total income"
-                    label-class="mb-0 font-weight-bolder"
-                    :duration="300"
-                    suffix="Ft"
-                />
-                <SpendingCardExpenseInfo
-                    container-class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
-                    background-class="p-4 text-center !bg-gradient-to-tr !from-slate-800 !to-gray-900 rounded-2xl border border-amber-950"
-                    :number="spendingDashboardData.totals.expense"
-                    number-class="text-red-500 font-bold"
-                    label="Total expense"
-                    label-class="mb-0 font-weight-bolder"
-                    :duration="300"
-                    suffix="Ft"
-                />
-            </div>
-            <div class="w-full justify-center flex">
-                <SpendingCardExpenseInfo
-                    container-class="w-full max-w-full px-1 sm:px-3 lg:w-1/3"
-                    background-class="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
-                    :number="spendingDashboardData.totals.basicExpense"
-                    number-class="text-red-500"
-                    label="Basic expense"
-                    label-class="mb-0 font-weight-bolder"
-                    :duration="300"
-                    suffix="Ft"
-                />
-                <SpendingCardExpenseInfo
-                    container-class="w-full max-w-full px-1 sm:px-3 lg:w-1/3"
-                    background-class="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
-                    :number="spendingDashboardData.totals.premiumExpense"
-                    number-class="text-red-500"
-                    label="Premium expense"
-                    label-class="mb-0 font-weight-bolder"
-                    :duration="300"
-                    suffix="Ft"
-                />
-            </div>
-            <Divider align="center">
-                <i class="pi pi-th-large my-6" />
-            </Divider>
-            <SpendingCardExpenseInfo
-                v-for="expenseCategory in expenseCategories"
-                :key="expenseCategory.name"
-                container-class="w-full max-w-full px-1 sm:px-3 mb-3 sm:w-1/2 lg:w-1/3"
-                background-class="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
-                :number="expenseCategory.sumTransactionAmount"
-                number-class="text-red-500"
-                :label="expenseCategory.name"
-                label-class="mb-0 font-weight-bolder"
-                :duration="300"
-                suffix="Ft"
-            />
+        <div v-if="!isTransactionsExists">
+            No transactions.
         </div>
-        <div class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-full xl:w-1/2">
-            <div class="flex justify-center p-4 bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-slate-800">
-                <Chart
-                    type="pie"
-                    :data="chartData"
-                    :options="chartOptions"
-                    class="w-full md:w-[30rem]"
+        <template v-else>
+            <div class="flex flex-wrap justify-center w-full max-w-full px-1 sm:px-3 mb-3 lg:w-full xl:w-1/2">
+                <div class="w-full justify-center flex">
+                    <SpendingCardExpenseInfo
+                        container-class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
+                        background-class="p-4 text-center !bg-gradient-to-tr !from-slate-800 !to-gray-900 rounded-2xl border border-green-950"
+                        :number="spendingDashboardData.totals.income"
+                        number-class="text-green-500 font-bold"
+                        label="Total income"
+                        label-class="mb-0 font-weight-bolder"
+                        :duration="300"
+                        suffix="Ft"
+                    />
+                    <SpendingCardExpenseInfo
+                        container-class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
+                        background-class="p-4 text-center !bg-gradient-to-tr !from-slate-800 !to-gray-900 rounded-2xl border border-amber-950"
+                        :number="spendingDashboardData.totals.expense"
+                        number-class="text-red-500 font-bold"
+                        label="Total expense"
+                        label-class="mb-0 font-weight-bolder"
+                        :duration="300"
+                        suffix="Ft"
+                    />
+                </div>
+                <div class="w-full justify-center flex">
+                    <SpendingCardExpenseInfo
+                        container-class="w-full max-w-full px-1 sm:px-3 lg:w-1/3"
+                        background-class="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
+                        :number="spendingDashboardData.totals.basicExpense"
+                        number-class="text-red-500"
+                        label="Basic expense"
+                        label-class="mb-0 font-weight-bolder"
+                        :duration="300"
+                        suffix="Ft"
+                    />
+                    <SpendingCardExpenseInfo
+                        container-class="w-full max-w-full px-1 sm:px-3 lg:w-1/3"
+                        background-class="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
+                        :number="spendingDashboardData.totals.premiumExpense"
+                        number-class="text-red-500"
+                        label="Premium expense"
+                        label-class="mb-0 font-weight-bolder"
+                        :duration="300"
+                        suffix="Ft"
+                    />
+                </div>
+                <Divider align="center">
+                    <i class="pi pi-th-large my-6" />
+                </Divider>
+                <SpendingCardExpenseInfo
+                    v-for="expenseCategory in expenseCategories"
+                    :key="expenseCategory.name"
+                    container-class="w-full max-w-full px-1 sm:px-3 mb-3 sm:w-1/2 lg:w-1/3"
+                    background-class="p-4 text-center bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-amber-950"
+                    :number="expenseCategory.sumTransactionAmount"
+                    number-class="text-red-500"
+                    :label="expenseCategory.name"
+                    label-class="mb-0 font-weight-bolder"
+                    :duration="300"
+                    suffix="Ft"
                 />
             </div>
-        </div>
+            <div class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-full xl:w-1/2">
+                <div class="flex justify-center p-4 bg-gradient-to-tr from-gray-900 to-slate-800 rounded-2xl border border-slate-800">
+                    <Chart
+                        type="pie"
+                        :data="chartData"
+                        :options="chartOptions"
+                        class="w-full md:w-[30rem]"
+                    />
+                </div>
+            </div>
+        </template>
     </div>
 </template>
 
@@ -86,6 +91,7 @@ const { spendingDashboardData } = storeToRefs(spendingDashboardStore);
 const chartData = ref();
 const chartOptions = ref();
 const expenseCategories = ref<SpendingDashboardCategoryInfo[]>();
+const isTransactionsExists = ref();
 
 onMounted(() => {
     setData(spendingDashboardData.value);
@@ -96,6 +102,8 @@ watch(spendingDashboardData, async (newSpending) => {
 });
 
 function setData(spendingData: SpendingDashboardData) {
+    isTransactionsExists.value = spendingData.categories.some(category => category.sumTransactionAmount > 0);
+
     expenseCategories.value = spendingData.categories.filter(c => c.type === 'expense');
     let profit = spendingData.totals.income - spendingData.totals.expense;
     if (profit < 0) {
@@ -103,12 +111,18 @@ function setData(spendingData: SpendingDashboardData) {
     }
 
     chartData.value = {
-        labels: ['Profit', ...expenseCategories.value.map(c => c.name)],
+        labels: [
+            ...(profit > 0 ? ['Profit'] : []),
+            ...expenseCategories.value.map(c => c.name),
+        ],
         datasets: [
             {
-                data: [profit, ...expenseCategories.value.map(c => c.sumTransactionAmount)],
+                data: [
+                    ...(profit > 0 ? [profit] : []),
+                    ...expenseCategories.value.map(c => c.sumTransactionAmount),
+                ],
                 backgroundColor: [
-                    '#22c55e',
+                    ...(profit > 0 ? ['#22c55e'] : []),
                     '#3498db',
                     '#5733ff',
                     '#09435a',

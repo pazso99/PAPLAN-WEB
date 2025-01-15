@@ -15,7 +15,7 @@
 import Chart from 'primevue/chart';
 import type { SpendingDashboardData } from '~/types/types';
 
-const { spendingDashboardData } = storeToRefs(useSpendingDashboardStore());
+const { spendingDashboardData, spendingSelectedDate } = storeToRefs(useSpendingDashboardStore());
 const chartData = ref();
 const chartOptions = ref();
 
@@ -31,15 +31,17 @@ function setData(spendingData: SpendingDashboardData) {
     const textColor = '#fff';
     const textColorSecondary = '#8d97a5';
     const surfaceBorder = '#3b3b3b';
-
     chartData.value = {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         datasets: [
             {
-                label: 'Balance',
+                label: `${spendingSelectedDate.value.split('-')[0]} balance`,
                 fill: false,
                 borderColor: '#22c55e',
-                data: spendingData.diagrams.yearlyBalance.filter(b => b.amount > 0).map(b => b.amount),
+                data: [
+                    ...spendingData.diagrams.yearlyBalance.filter(b => b.amount > 0).map(b => b.amount),
+                    spendingData.totals.balance,
+                ],
             },
         ],
     };

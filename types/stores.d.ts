@@ -43,6 +43,7 @@ interface SpendingManagementState {
 
 interface SpendingDashboardState {
     loading: boolean;
+    spendingYears: integer[];
     spendingSelectedDate: string;
     spendingDashboardData: SpendingDashboardData;
 };

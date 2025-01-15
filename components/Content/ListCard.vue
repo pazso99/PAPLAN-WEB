@@ -26,7 +26,7 @@
             scroll-height="70vh"
         >
             <template #empty>
-                No data.
+                <p class="p-4">No {{ title }}.</p>
             </template>
             <template #header>
                 <div class="flex justify-between pl-2">

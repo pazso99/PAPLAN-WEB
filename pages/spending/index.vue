@@ -80,16 +80,15 @@ useHead({
 
 const spendingDashboardStore = useSpendingDashboardStore();
 const { getSpendingData, createTransaction } = spendingDashboardStore;
-const { spendingSelectedDate } = storeToRefs(spendingDashboardStore);
+const { spendingSelectedDate, spendingYears } = storeToRefs(spendingDashboardStore);
 
 const dayjs = useDayjs();
 const dates = [
     ...Array.from(
         { length: dayjs().month() + 13 },
         (_, i) => dayjs().subtract(i, 'month').format('YYYY-MM'),
-    ).filter(d => d.startsWith('2024') || d.startsWith('2025')),
-    '2025',
-    '2024',
+    ).filter(d => spendingYears.value.some(year => d.startsWith(year))),
+    ...spendingYears.value.map(year => year.toString()),
 ];
 spendingSelectedDate.value = dates[0];
 
