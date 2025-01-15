@@ -16,7 +16,6 @@
             </IconField>
             <Divider />
         </div>
-
         <Accordion
             :value="activeTabs"
             multiple

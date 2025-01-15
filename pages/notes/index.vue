@@ -30,6 +30,10 @@
                 </div>
             </template>
 
+            <template #empty>
+                <p class="p-4">No notes.</p>
+            </template>
+
             <template #list="slotProps">
                 <div class="grid grid-cols-1 gap-4 p-4">
                     <div

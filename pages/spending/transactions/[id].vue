@@ -88,14 +88,35 @@
                             </div>
                         </template>
                         <template #value="slotProps">
-                            <Tag
+                            <template
                                 v-if="slotProps.value"
-                                :value="slotProps.value.label"
-                                :severity="slotProps.value.severity"
-                            />
+                            >
+                                <Tag
+                                    :value="slotProps.value.label"
+                                    :severity="slotProps.value.severity"
+                                />
+                                <Tag
+                                    v-if="!slotProps.value.status"
+                                    class="ml-3"
+                                    severity="danger"
+                                >
+                                    INACTIVE
+                                </Tag>
+                            </template>
                             <span v-else>
                                 {{ slotProps.placeholder }}
                             </span>
+                        </template>
+                        <template #option="slotProps">
+                            <div class="flex gap-2">
+                                <span>{{ slotProps.option.label }}</span>
+                                <Tag
+                                    v-if="!slotProps.option.status"
+                                    severity="danger"
+                                >
+                                    INACTIVE
+                                </Tag>
+                            </div>
                         </template>
                     </Select>
                 </div>
@@ -108,11 +129,40 @@
                         :options="selectableAccounts"
                         placeholder="Select account"
                     >
+                        <template #value="slotProps">
+                            <template
+                                v-if="slotProps.value"
+                            >
+                                {{ slotProps.value.name }}
+                                <Tag
+                                    severity="success"
+                                    class="ml-2"
+                                >
+                                    {{ $formatNumber(slotProps.value.balance) }} Ft
+                                </Tag>
+                                <Tag
+                                    v-if="!slotProps.value.status"
+                                    class="ml-3"
+                                    severity="danger"
+                                >
+                                    INACTIVE
+                                </Tag>
+                            </template>
+                            <span v-else>
+                                {{ slotProps.placeholder }}
+                            </span>
+                        </template>
                         <template #option="slotProps">
                             <div class="flex gap-2">
                                 <span>{{ slotProps.option.name }}</span>
                                 <Tag severity="success">
                                     {{ $formatNumber(slotProps.option.balance) }} Ft
+                                </Tag>
+                                <Tag
+                                    v-if="!slotProps.option.status"
+                                    severity="danger"
+                                >
+                                    INACTIVE
                                 </Tag>
                             </div>
                         </template>
@@ -320,8 +370,9 @@ function setMeta() {
 
 const selectableAccounts = ref<AccountBasic[]>([]);
 function setSelectableAccounts() {
-    selectableAccounts.value = accounts.value.map(({ id, name, balance }) => ({
+    selectableAccounts.value = accounts.value.map(({ id, status, name, balance }) => ({
         id,
+        status,
         name,
         balance,
     }));
@@ -337,6 +388,7 @@ function setTransactionTypeGroups() {
         }
 
         const category = {
+            status: item.status,
             label: item.name,
             value: item.id,
             transactionType: item.transactionType,

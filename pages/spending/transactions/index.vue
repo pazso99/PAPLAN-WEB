@@ -562,19 +562,23 @@ const thisMonthFilter = {
     },
 };
 
-const monthNum = ref();
-monthNum.value = dayjs().month();
-if (monthNum.value === 0) {
-    monthNum.value = 11;
+const prevMonthNum = ref();
+const yearNum = ref();
+prevMonthNum.value = dayjs().month();
+yearNum.value = dayjs().year();
+
+if (prevMonthNum.value === 0) {
+    yearNum.value--;
+    prevMonthNum.value = 11;
 } else {
-    monthNum.value--;
+    prevMonthNum.value--;
 }
 const previousMonthFilter = {
     date: {
         operator: FilterOperator.AND,
         constraints: [
-            { value: dayjs().month(monthNum.value).startOf('month').toDate(), matchMode: FilterMatchMode.DATE_AFTER },
-            { value: dayjs().month(monthNum.value).endOf('month').toDate(), matchMode: FilterMatchMode.DATE_BEFORE },
+            { value: dayjs().year(yearNum.value).month(prevMonthNum.value).startOf('month').toDate(), matchMode: FilterMatchMode.DATE_AFTER },
+            { value: dayjs().year(yearNum.value).month(prevMonthNum.value).endOf('month').toDate(), matchMode: FilterMatchMode.DATE_BEFORE },
         ],
     },
 };

@@ -4,9 +4,12 @@ import type { SpendingDashboardResponse, SpendingTransactionResponse } from '~/t
 import type { SpendingDashboardState } from '~/types/stores';
 import type { SpendingDashboardData } from '~/types/types';
 
+const config = useRuntimeConfig();
+
 export const useSpendingDashboardStore = defineStore('spending-dashboard', {
     state: () => ({
         loading: true,
+        spendingYears: config.public.SPENDING_YEARS.split(',').map(year => year.trim()),
         spendingSelectedDate: '',
         spendingDashboardData: <SpendingDashboardData>{},
     } as SpendingDashboardState),

@@ -22,6 +22,10 @@ interface Account extends AccountBasic {
     updatedAt: Date;
 }
 
+interface SelectableAccount extends AccountBasic {
+    status: boolean;
+};
+
 interface TransactionCategoryBasic {
     id: number;
     name: string;
@@ -40,7 +44,7 @@ interface TransactionBasic {
     date: Date;
     amount: number;
     transactionCategory: TransactionCategoryBasic;
-    account: AccountBasic;
+    account: SelectableAccount;
     comment: string;
     meta: string;
 };
@@ -143,6 +147,7 @@ export {
     User,
     AccountBasic,
     Account,
+    SelectableAccount,
     TransactionCategoryBasic,
     TransactionCategory,
     TransactionBasic,
