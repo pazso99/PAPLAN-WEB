@@ -88,6 +88,19 @@ interface SpendingTransactionUpdateRequest {
     meta: string | null;
 };
 
+interface SpendingCategoryGroupCreateRequest {
+    status: boolean;
+    name: string;
+    transactionCategoryIds: number[];
+};
+
+interface SpendingCategoryGroupUpdateRequest {
+    id: number;
+    status: boolean;
+    name: string;
+    transactionCategoryIds: number[];
+};
+
 interface RecipesRecipeCreateRequest {
     status: boolean;
     name: string;
@@ -201,6 +214,8 @@ export {
     SpendingTransactionCategoryUpdateRequest,
     SpendingTransactionCreateRequest,
     SpendingTransactionUpdateRequest,
+    SpendingCategoryGroupCreateRequest,
+    SpendingCategoryGroupUpdateRequest,
     RecipesRecipeCreateRequest,
     RecipesRecipeUpdateRequest,
     NotesNoteCreateRequest,

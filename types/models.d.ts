@@ -55,6 +55,19 @@ interface Transaction extends TransactionBasic {
     updatedAt: Date;
 }
 
+interface CategoryGroupBasic {
+    id: number;
+    name: string;
+};
+
+interface CategoryGroup extends CategoryGroupBasic {
+    status: boolean;
+    slug: string;
+    transactionCategories: TransactionCategory[];
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 interface RecipeBasic {
     id: number;
     name: string;
@@ -152,6 +165,8 @@ export {
     TransactionCategory,
     TransactionBasic,
     Transaction,
+    CategoryGroupBasic,
+    CategoryGroup,
     RecipeBasic,
     Recipe,
     NoteBasic,

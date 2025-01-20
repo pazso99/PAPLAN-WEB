@@ -3,6 +3,7 @@ import type {
     Account,
     Transaction,
     TransactionCategory,
+    CategoryGroup,
     Recipe,
     RecipeBasic,
     Note,
@@ -39,6 +40,8 @@ interface SpendingManagementState {
     transactionCategory: TransactionCategory;
     transactions: Transaction[];
     transaction: Transaction;
+    categoryGroups: CategoryGroup[];
+    categoryGroup: CategoryGroup;
 };
 
 interface SpendingDashboardState {
