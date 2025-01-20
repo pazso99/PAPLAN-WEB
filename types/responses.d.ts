@@ -2,6 +2,7 @@ import type {
     Account,
     Transaction,
     TransactionCategory,
+    CategoryGroup,
     Recipe,
     Note,
     PackageUnit,
@@ -41,6 +42,8 @@ type SpendingTransactionCategoryResponse = ApiSuccessResponse<TransactionCategor
 type SpendingTransactionCategoryListResponse = ApiSuccessResponse<TransactionCategory[]>;
 type SpendingTransactionResponse = ApiSuccessResponse<Transaction>;
 type SpendingTransactionListResponse = ApiSuccessResponse<Transaction[]>;
+type SpendingCategoryGroupResponse = ApiSuccessResponse<CategoryGroup>;
+type SpendingCategoryGroupListResponse = ApiSuccessResponse<CategoryGroup[]>;
 
 type RecipesRecipeResponse = ApiSuccessResponse<Recipe>;
 type RecipesRecipeListResponse = ApiSuccessResponse<Recipe[]>;
@@ -73,6 +76,8 @@ export {
     SpendingTransactionCategoryListResponse,
     SpendingTransactionResponse,
     SpendingTransactionListResponse,
+    SpendingCategoryGroupResponse,
+    SpendingCategoryGroupListResponse,
     RecipesRecipeResponse,
     RecipesRecipeListResponse,
     RecipesDashboardResponse,

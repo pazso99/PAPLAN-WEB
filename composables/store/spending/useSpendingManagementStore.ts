@@ -7,6 +7,8 @@ import type {
     SpendingTransactionCategoryUpdateRequest,
     SpendingTransactionCreateRequest,
     SpendingTransactionUpdateRequest,
+    SpendingCategoryGroupCreateRequest,
+    SpendingCategoryGroupUpdateRequest,
 } from '~/types/requests';
 import type {
     SpendingAccountResponse,
@@ -15,8 +17,10 @@ import type {
     SpendingTransactionCategoryListResponse,
     SpendingTransactionResponse,
     SpendingTransactionListResponse,
+    SpendingCategoryGroupResponse,
+    SpendingCategoryGroupListResponse,
 } from '~/types/responses';
-import type { Account, Transaction, TransactionCategory } from '~/types/models';
+import type { Account, Transaction, TransactionCategory, CategoryGroup } from '~/types/models';
 
 export const useSpendingManagementStore = defineStore('spending-management', {
     state: () => ({
@@ -27,6 +31,8 @@ export const useSpendingManagementStore = defineStore('spending-management', {
         transactionCategory: <TransactionCategory>{},
         transactions: [],
         transaction: <Transaction>{},
+        categoryGroups: [],
+        categoryGroup: <CategoryGroup>{},
     } as SpendingManagementState),
     actions: {
         // ACCOUNTS
@@ -273,6 +279,89 @@ export const useSpendingManagementStore = defineStore('spending-management', {
             } finally {
                 if (navigate) {
                     navigateTo('/spending/transactions');
+                }
+                this.loading = false;
+            }
+        },
+        // CATEGORY GROUPS
+        async getCategoryGroups() {
+            const toast = useToastService();
+            try {
+                this.loading = true;
+                const response = await useApiFetch<SpendingCategoryGroupListResponse>('spending/category-groups');
+
+                this.categoryGroups = response.data.map(group => ({
+                    ...group,
+                    createdAt: new Date(group.createdAt),
+                    updatedAt: new Date(group.updatedAt),
+                }));
+            } catch (err: any) {
+                navigateTo('/spending');
+                toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
+            } finally {
+                this.loading = false;
+            }
+        },
+        async getCategoryGroup(id: number) {
+            const toast = useToastService();
+            try {
+                this.loading = true;
+                const response = await useApiFetch<SpendingCategoryGroupResponse>(`spending/category-groups/${id}`);
+                this.categoryGroup = response.data;
+            } catch (err: any) {
+                navigateTo('/spending/category-groups');
+                toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
+            } finally {
+                this.loading = false;
+            }
+        },
+        async createCategoryGroup(data: SpendingCategoryGroupCreateRequest) {
+            const toast = useToastService();
+            try {
+                this.loading = true;
+                const response = await useApiFetch<SpendingCategoryGroupResponse>('spending/category-groups', {
+                    method: 'POST',
+                    body: data,
+                });
+                this.categoryGroup = response.data;
+                toast.add({ summary: 'Record created!', severity: 'success', detail: 'Successful', life: 3000 });
+            } catch (err: any) {
+                toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
+            } finally {
+                navigateTo('/spending/category-groups');
+                this.loading = false;
+            }
+        },
+        async updateCategoryGroup(data: SpendingCategoryGroupUpdateRequest) {
+            const toast = useToastService();
+            try {
+                this.loading = true;
+                const response = await useApiFetch<SpendingCategoryGroupResponse>(`spending/category-groups/${data.id}`, {
+                    method: 'PUT',
+                    body: data,
+                });
+                this.categoryGroup = response.data;
+                toast.add({ summary: 'Record updated', severity: 'success', detail: 'Successful', life: 3000 });
+            } catch (err: any) {
+                navigateTo('/spending/category-groups');
+                toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
+            } finally {
+                this.loading = false;
+            }
+        },
+        async deleteCategoryGroup(id: number, navigate: boolean = false) {
+            const toast = useToastService();
+            try {
+                this.loading = true;
+                await useApiFetch<SpendingCategoryGroupResponse>(`spending/category-groups/${id}`, {
+                    method: 'DELETE',
+                });
+                toast.add({ summary: 'Record deleted!', severity: 'success', detail: 'Successful', life: 3000 });
+            } catch (err: any) {
+                toast.add({ summary: 'Some error happened!', severity: 'error', detail: 'error', life: 3000 });
+            } finally {
+                if (navigate) {
+                    navigateTo('/spending/category-groups');
                 }
                 this.loading = false;
             }

@@ -197,6 +197,11 @@ const spendingItems = ref([
                 label: 'Transactions',
                 route: '/spending/transactions',
             },
+            {
+                key: 'spending-category-groups',
+                label: 'Category groups',
+                route: '/spending/category-groups',
+            },
         ],
     },
 ]);
@@ -293,6 +298,7 @@ watch(() => route.name, () => {
             'spending-accounts',
             'spending-transaction-categories',
             'spending-transactions',
+            'spending-category-groups',
         ].some(e => route.name && typeof route.name === 'string' && route.name.includes(e))
     ) {
         spendingExpandedKeys.value = {
