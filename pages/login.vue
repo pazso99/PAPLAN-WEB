@@ -25,19 +25,15 @@
                     {{ errors.name }}
                 </small>
             </div>
-            <div class="mb-4">
-                <IconField icon-position="left">
-                    <InputIcon>
-                        <i class="pi pi-lock" />
-                    </InputIcon>
-                    <InputText
-                        v-model="password"
-                        type="password"
-                        :class="{ 'p-invalid': errors.password }"
-                        name="password"
-                        placeholder="Password"
-                    />
-                </IconField>
+            <div class="mb-4 flex flex-col">
+                <Password
+                    v-model="password"
+                    :class="{ 'p-invalid': errors.password }"
+                    name="password"
+                    placeholder="Password"
+                    toggle-mask
+                    :feedback="false"
+                />
                 <small class="p-error">
                     {{ errors.password }}
                 </small>
@@ -66,11 +62,13 @@ useHead({
 
 const toast = useToast();
 const route = useRoute();
+const router = useRouter();
+
 onMounted(() => {
     nextTick(() => {
         if (route.query.expired == '1') {
             toast.add({ severity: 'error', summary: 'Error!', detail: 'Token expired!', life: 3000 });
-            useRouter().push({ query: {} });
+            router.push({ query: {} });
         }
     });
 });

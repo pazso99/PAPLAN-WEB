@@ -18,6 +18,7 @@
                         label-class="mb-0 font-weight-bolder"
                         :duration="300"
                         suffix="Ft"
+                        :route="{ name: 'spending-transactions', query: { type: 'income' } }"
                     />
                     <SpendingCardExpenseInfo
                         container-class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
@@ -28,6 +29,7 @@
                         label-class="mb-0 font-weight-bolder"
                         :duration="300"
                         suffix="Ft"
+                        :route="{ name: 'spending-transactions', query: { type: 'expense' } }"
                     />
                 </div>
                 <div class="w-full justify-center flex">
@@ -40,6 +42,7 @@
                         label-class="mb-0 font-weight-bolder"
                         :duration="300"
                         suffix="Ft"
+                        :route="{ name: 'spending-transactions', query: { type: 'expense', category: basicExpenseCategoryNames.join(',') } }"
                     />
                     <SpendingCardExpenseInfo
                         container-class="w-full max-w-full px-1 sm:px-3 lg:w-1/3"
@@ -50,6 +53,7 @@
                         label-class="mb-0 font-weight-bolder"
                         :duration="300"
                         suffix="Ft"
+                        :route="{ name: 'spending-transactions', query: { type: 'expense', category: premiumExpenseCategoryNames.join(',') } }"
                     />
                 </div>
                 <Divider align="center">
@@ -66,6 +70,8 @@
                     label-class="mb-0 font-weight-bolder"
                     :duration="300"
                     suffix="Ft"
+                    :category-type="expenseCategory.expenseCategoryType"
+                    :route="{ name: 'spending-transactions', query: { type: 'expense', category: expenseCategory.name } }"
                 />
             </div>
             <div class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-full xl:w-1/2">
@@ -92,6 +98,9 @@ const chartData = ref();
 const chartOptions = ref();
 const expenseCategories = ref<SpendingDashboardCategoryInfo[]>();
 const isTransactionsExists = ref();
+const basicExpenseCategoryNames = ref<string[]>([]);
+const premiumExpenseCategoryNames = ref<string[]>([]);
+
 
 onMounted(() => {
     setData(spendingDashboardData.value);
@@ -104,7 +113,19 @@ watch(spendingDashboardData, async (newSpending) => {
 function setData(spendingData: SpendingDashboardData) {
     isTransactionsExists.value = spendingData.categories.some(category => category.sumTransactionAmount > 0);
 
-    expenseCategories.value = spendingData.categories.filter(c => c.type === 'expense');
+    const expenseCategoriesArray: SpendingDashboardCategoryInfo[] = [];
+    spendingData.categories.forEach((category) => {
+        if (category.type === 'expense') {
+            expenseCategoriesArray.push(category);
+            if (category.expenseCategoryType === 'basic') {
+                basicExpenseCategoryNames.value.push(category.name);
+            } else if (category.expenseCategoryType === 'premium') {
+                premiumExpenseCategoryNames.value.push(category.name);
+            }
+        }
+    });
+    expenseCategories.value = expenseCategoriesArray;
+
     let profit = spendingData.totals.income - spendingData.totals.expense;
     if (profit < 0) {
         profit = 0;
