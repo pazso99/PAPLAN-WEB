@@ -1,5 +1,6 @@
 import type {
     TransactionTypes,
+    ExpenseCategoryTypes,
     NotePriorities,
     ItemStockStatuses,
 } from './constants';
@@ -14,6 +15,8 @@ import type {
 } from './models';
 
 type TransactionType = typeof TransactionTypes[number];
+
+type ExpenseCategoryType = typeof ExpenseCategoryTypes[number];
 
 type NotePriority = typeof NotePriorities[number];
 
@@ -55,6 +58,7 @@ interface SpendingDashboardCategoryInfo {
     name: string;
     type: TransactionType;
     sumTransactionAmount: number;
+    expenseCategoryType: ExpenseCategoryType;
 };
 
 interface SpendingSettings {
@@ -76,6 +80,7 @@ interface SpendingMonthlyMetadata {
     month: string;
     totalBalance: number;
     totalIncome: number;
+    totalExpense: number;
     totalBasicExpense: number;
     totalPremiumExpense: number;
     accounts: SpendingMonthlyMetadataAccount[];

@@ -52,7 +52,7 @@
 
             <div class="w-full text-center p-3">
                 <NuxtLink
-                    :to="{ name: 'spending-transactions', query: { from: '/spending' } }"
+                    :to="{ name: 'spending-transactions' }"
                 >
                     <Button
                         size="small"

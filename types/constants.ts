@@ -4,6 +4,11 @@ const TransactionTypes = [
     'transfer',
 ] as const;
 
+const ExpenseCategoryTypes = [
+    'basic',
+    'premium',
+] as const;
+
 const NotePriorities = [
     'none',
     'low',
@@ -20,6 +25,7 @@ const ItemStockStatuses = [
 
 export {
     TransactionTypes,
+    ExpenseCategoryTypes,
     NotePriorities,
     ItemStockStatuses,
 };

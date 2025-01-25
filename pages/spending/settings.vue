@@ -10,7 +10,7 @@
                 </h2>
                 <div class="flex flex-col md:flex-row">
                     <div class="w-full lg:w-1/2 p-2 mb-4 flex flex-col">
-                        Basic categories:
+                        Basic:
                         <MultiSelect
                             v-model="basicCategories"
                             :options="expenseCategories"
@@ -21,7 +21,7 @@
                         />
                     </div>
                     <div class="w-full lg:w-1/2 p-2 mb-4 flex flex-col">
-                        Premium categories:
+                        Premium:
                         <MultiSelect
                             v-model="premiumCategories"
                             :options="expenseCategories"
@@ -44,8 +44,9 @@
                     Monthly data
                 </h2>
                 <div class="flex flex-wrap flex-col md:flex-row">
+                    <p v-if="monthlyMetadata.length === 0">Monthly data will be calculated at the end of the month.</p>
                     <div
-                        v-for="(monthMetadata, index) in monthlyMetadata"
+                        v-for="monthMetadata in monthlyMetadata"
                         :key="monthMetadata.id"
                         class="p-2 w-full xl:w-1/2"
                     >
@@ -75,7 +76,6 @@
                                     </div>
                                     <div class="w-full lg:w-1/2 flex items-start justify-end mr-4">
                                         <Button
-                                            v-if="monthlyMetadata.length - 1 !== index"
                                             class="p-0"
                                             icon="pi pi-calculator"
                                             text
@@ -102,7 +102,20 @@
                                 <span class="pi pi-objects-column" />
                             </Divider>
                             <div class="flex flex-wrap flex-col md:flex-row">
-                                <div class="w-full lg:w-1/2 flex flex-col">
+                                <div class="w-full flex justify-between">
+                                    <div class="mb-2">
+                                        <label for="totalExpense" class="block mb-1">Total Expense:</label>
+                                        <InputNumber
+                                            v-model="monthMetadata.totalExpense"
+                                            disabled
+                                            input-id="totalExpense"
+                                            suffix=" Ft"
+                                            class="w-40"
+                                        />
+                                    </div>
+                                    <div class="flex items-center mb-2">
+                                        {{ $formatNumber(monthMetadata.totalIncome - monthMetadata.totalExpense) }} Ft
+                                    </div>
                                     <div class="mb-2">
                                         <label for="totalIncome" class="block mb-1">Total income:</label>
                                         <InputNumber
@@ -112,6 +125,8 @@
                                             class="w-40"
                                         />
                                     </div>
+                                </div>
+                                <div class="w-full lg:w-1/2 flex flex-col">
                                     <div class="mb-2">
                                         <label for="totalBasicExpense" class="block mb-1">Total basic expense:</label>
                                         <InputNumber
@@ -312,7 +327,7 @@ async function handleMonthMetadataSave(monthMetadata: SpendingMonthlyMetadata) {
         totalIncome: monthMetadata.totalIncome,
         totalBasicExpense: monthMetadata.totalBasicExpense,
         totalPremiumExpense: monthMetadata.totalPremiumExpense,
-        accounts: monthMetadata.accounts.map(account => ({
+        accounts: monthMetadata.accounts.filter(account => account.id > 0).map(account => ({
             id: account.id,
             balance: account.balance,
             income: account.income,
