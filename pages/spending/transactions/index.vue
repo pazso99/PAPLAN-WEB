@@ -4,6 +4,7 @@
         :nav-buttons="[
             { icon: 'pi-plus', to: '/spending/transactions/create' },
         ]"
+        nav-back-button
         :loading="loading"
     >
         <DataTable
@@ -513,7 +514,17 @@ function resetFilters() {
     filters.value.global.value = '';
 };
 
+const route = useRoute();
+const router = useRouter();
 function clearFilter() {
+    router.push({ query: {
+        ...route.query,
+        id: undefined,
+        status: undefined,
+        account: undefined,
+        type: undefined,
+        category: undefined,
+    } });
     resetFilters();
 }
 
@@ -530,6 +541,40 @@ onMounted(async () => {
     transactionCategoryNameOptions.value = transactionCategories.value.map(({ name }) => (name));
 
     loading.value = false;
+
+    nextTick(() => {
+        if (Object.keys(route.query).length > 0) {
+            const queryFilters: { [key: string]: any } = {};
+
+            if (route.query.id) {
+                queryFilters.id = { operator: FilterOperator.AND, constraints: [{ value: route.query.id, matchMode: FilterMatchMode.EQUALS }] };
+            }
+
+            if (route.query.status) {
+                queryFilters.status = { value: route.query.status, matchMode: FilterMatchMode.EQUALS };
+            }
+
+            if (route.query.account) {
+                queryFilters['account.name'] = { value: route.query.account.toString().split(','), matchMode: FilterMatchMode.IN };
+            }
+
+            if (route.query.type) {
+                queryFilters['transactionCategory.transactionType'] = { value: route.query.type.toString().split(','), matchMode: FilterMatchMode.IN };
+            }
+
+            if (route.query.category) {
+                queryFilters['transactionCategory.name'] = { value: route.query.category.toString().split(','), matchMode: FilterMatchMode.IN };
+            }
+
+            if (Object.keys(queryFilters).length > 0) {
+                resetFilters();
+                filters.value = {
+                    ...filters.value,
+                    ...queryFilters,
+                };
+            }
+        }
+    });
 });
 
 async function handleRefresh() {

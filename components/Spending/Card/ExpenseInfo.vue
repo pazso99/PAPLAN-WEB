@@ -11,7 +11,21 @@
                 {{ "" }}
                 <span class="text-lg ms-n1">{{ suffix }}</span>
             </h1>
-            <h6 :class="labelClass">
+            <NuxtLink
+                v-if="route"
+                :to="route"
+            >
+                <h6 :class="labelClass">
+                    {{ label }}
+                </h6>
+                <div v-if="categoryType" class="text-xs text-gray-400">
+                    {{ categoryType}}
+                </div>
+            </NuxtLink>
+            <h6
+                v-else
+                :class="labelClass"
+            >
                 {{ label }}
             </h6>
         </div>
@@ -20,6 +34,7 @@
 
 <script setup lang="ts">
 import CountTo from 'vue-count-to/src';
+import type { RouteLocationAsPathGeneric, RouteLocationAsRelativeGeneric } from 'vue-router';
 
 defineProps<{
     containerClass: string;
@@ -30,5 +45,7 @@ defineProps<{
     labelClass: string;
     duration: number;
     suffix: string;
+    route?: string | RouteLocationAsRelativeGeneric | RouteLocationAsPathGeneric | undefined;
+    categoryType?: string;
 }>();
 </script>

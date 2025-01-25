@@ -23,10 +23,12 @@
             >
                 <template #legend>
                     <NuxtLink
+                        v-if="account.id > 0"
                         :to="{ name: 'spending-accounts-id', params: { id: account.id }, query: { from: '/spending' } }"
                     >
                         <span class="py-1 px-2 rounded !bg-gradient-to-tl !from-blue-900 !to-blue-800">{{ account.name }}</span>
                     </NuxtLink>
+                    <span v-else class="py-1 px-2 rounded !bg-gradient-to-tl !from-red-900 !to-red-800">{{ account.name }}</span>
                 </template>
                 <CountTo
                     class="mb-2 text-3xl font-bold"
@@ -34,7 +36,10 @@
                     :end-val="account.balance"
                     :duration="200"
                 /> Ft
-                <div>
+                <NuxtLink
+                    class="block"
+                    :to="{ name: 'spending-transactions', query: { account: account.name } }"
+                >
                     <span
                         :class="account.profit < 0 ? 'text-red-500' : 'text-emerald-500'"
                     >
@@ -46,7 +51,7 @@
                         /> Ft
                     </span>
                     <span class="text-slate-500">in {{ spendingSelectedDate }}</span>
-                </div>
+                </NuxtLink>
                 <div class="flex justify-between mt-4">
                     <SplitButton
                         :model="quickTransactionItems"
@@ -66,19 +71,28 @@
                         </template>
                     </SplitButton>
                     <div class="flex gap-2">
-                        <Tag severity="success">
-                            {{ $formatNumber(account.income) }} Ft
-                        </Tag>
-                        <Tag severity="danger">
-                            {{ $formatNumber(account.expense) }} Ft
-                        </Tag>
+                        <NuxtLink
+                            :to="{ name: 'spending-transactions', query: { account: account.name, type: 'income,transfer' } }"
+                        >
+                            <Tag severity="success">
+                                {{ $formatNumber(account.income) }} Ft
+                            </Tag>
+                        </NuxtLink>
+
+                        <NuxtLink
+                            :to="{ name: 'spending-transactions', query: { account: account.name, type: 'expense,transfer' } }"
+                        >
+                            <Tag severity="danger">
+                                {{ $formatNumber(account.expense) }} Ft
+                            </Tag>
+                        </NuxtLink>
                     </div>
                 </div>
             </Fieldset>
         </div>
 
         <div
-            v-if="spendingDashboardData.accounts.length > 0"
+            v-if="spendingDashboardData.accounts.length > 1"
             class="w-full flex justify-center"
         >
             <div class="w-full max-w-full px-1 sm:px-3 mb-3 sm:w-1/2 xl:w-1/4">
@@ -96,7 +110,10 @@
                         :end-val="spendingDashboardData.totals.balance"
                         :duration="200"
                     /> Ft
-                    <div>
+                    <NuxtLink
+                        class="block"
+                        :to="{ name: 'spending-transactions', query: { type: 'income,expense,transfer' } }"
+                    >
                         <span
                             :class="spendingDashboardData.totals.profit < 0 ? 'text-red-500' : 'text-emerald-500'"
                         >
@@ -108,14 +125,23 @@
                             /> Ft
                         </span>
                         <span class="text-slate-500">in {{ spendingSelectedDate }}</span>
-                    </div>
+                    </NuxtLink>
                     <div class="flex justify-end gap-2 mt-2">
-                        <Tag severity="success">
-                            {{ $formatNumber(spendingDashboardData.totals.income) }} Ft
-                        </Tag>
-                        <Tag severity="danger">
-                            {{ $formatNumber(spendingDashboardData.totals.expense) }} Ft
-                        </Tag>
+                        <NuxtLink
+                            :to="{ name: 'spending-transactions', query: { type: 'income,transfer' } }"
+                        >
+                            <Tag severity="success">
+                                {{ $formatNumber(spendingDashboardData.totals.income) }} Ft
+                            </Tag>
+                        </NuxtLink>
+
+                        <NuxtLink
+                            :to="{ name: 'spending-transactions', query: { type: 'expense,transfer' } }"
+                        >
+                            <Tag severity="danger">
+                                {{ $formatNumber(spendingDashboardData.totals.expense) }} Ft
+                            </Tag>
+                        </NuxtLink>
                     </div>
                 </Fieldset>
             </div>
@@ -184,7 +210,7 @@
                 </div>
 
                 <div
-                    v-if="transactionType === 'transfer'"
+                    v-if="transactionType === 'transfer' && filteredTransactionCategories!.length !== 0"
                     class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"
                 >
                     <div class="flex flex-col">
