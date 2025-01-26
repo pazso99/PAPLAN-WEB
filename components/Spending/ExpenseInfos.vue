@@ -18,7 +18,14 @@
                         label-class="mb-0 font-weight-bolder"
                         :duration="300"
                         suffix="Ft"
-                        :route="{ name: 'spending-transactions', query: { type: 'income' } }"
+                        :route="{
+                            name: 'spending-transactions',
+                            query: {
+                                type: 'income',
+                                start_date: spendingSelectedDateStart,
+                                end_date: spendingSelectedDateEnd,
+                            },
+                        }"
                     />
                     <SpendingCardExpenseInfo
                         container-class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-1/2"
@@ -29,7 +36,14 @@
                         label-class="mb-0 font-weight-bolder"
                         :duration="300"
                         suffix="Ft"
-                        :route="{ name: 'spending-transactions', query: { type: 'expense' } }"
+                        :route="{
+                            name: 'spending-transactions',
+                            query: {
+                                type: 'expense',
+                                start_date: spendingSelectedDateStart,
+                                end_date: spendingSelectedDateEnd,
+                            },
+                        }"
                     />
                 </div>
                 <div class="w-full justify-center flex">
@@ -42,7 +56,15 @@
                         label-class="mb-0 font-weight-bolder"
                         :duration="300"
                         suffix="Ft"
-                        :route="{ name: 'spending-transactions', query: { type: 'expense', category: basicExpenseCategoryNames.join(',') } }"
+                        :route="{
+                            name: 'spending-transactions',
+                            query: {
+                                type: 'expense',
+                                category: basicExpenseCategoryNames.join(','),
+                                start_date: spendingSelectedDateStart,
+                                end_date: spendingSelectedDateEnd,
+                            },
+                        }"
                     />
                     <SpendingCardExpenseInfo
                         container-class="w-full max-w-full px-1 sm:px-3 lg:w-1/3"
@@ -53,7 +75,15 @@
                         label-class="mb-0 font-weight-bolder"
                         :duration="300"
                         suffix="Ft"
-                        :route="{ name: 'spending-transactions', query: { type: 'expense', category: premiumExpenseCategoryNames.join(',') } }"
+                        :route="{
+                            name: 'spending-transactions',
+                            query: {
+                                type: 'expense',
+                                category: premiumExpenseCategoryNames.join(','),
+                                start_date: spendingSelectedDateStart,
+                                end_date: spendingSelectedDateEnd,
+                            },
+                        }"
                     />
                 </div>
                 <Divider align="center">
@@ -71,7 +101,15 @@
                     :duration="300"
                     suffix="Ft"
                     :category-type="expenseCategory.expenseCategoryType"
-                    :route="{ name: 'spending-transactions', query: { type: 'expense', category: expenseCategory.name } }"
+                    :route="{
+                        name: 'spending-transactions',
+                        query: {
+                            type: 'expense',
+                            category: expenseCategory.name,
+                            start_date: spendingSelectedDateStart,
+                            end_date: spendingSelectedDateEnd,
+                        },
+                    }"
                 />
             </div>
             <div class="w-full max-w-full px-1 sm:px-3 mb-6 lg:w-full xl:w-1/2">
@@ -90,10 +128,10 @@
 
 <script setup lang="ts">
 import Chart from 'primevue/chart';
-import type { SpendingDashboardCategoryInfo, SpendingDashboardData } from '~/types/types';
+import type { SpendingDashboardCategoryInfo } from '~/types/types';
 
 const spendingDashboardStore = useSpendingDashboardStore();
-const { spendingDashboardData } = storeToRefs(spendingDashboardStore);
+const { spendingDashboardData, spendingSelectedDate } = storeToRefs(spendingDashboardStore);
 const chartData = ref();
 const chartOptions = ref();
 const expenseCategories = ref<SpendingDashboardCategoryInfo[]>();
@@ -101,20 +139,22 @@ const isTransactionsExists = ref();
 const basicExpenseCategoryNames = ref<string[]>([]);
 const premiumExpenseCategoryNames = ref<string[]>([]);
 
-
 onMounted(() => {
-    setData(spendingDashboardData.value);
+    setData();
 });
 
-watch(spendingDashboardData, async (newSpending) => {
-    setData(newSpending);
+watch(spendingDashboardData, async () => {
+    setData();
 });
 
-function setData(spendingData: SpendingDashboardData) {
-    isTransactionsExists.value = spendingData.categories.some(category => category.sumTransactionAmount > 0);
+const dayjs = useDayjs();
+const spendingSelectedDateStart = ref();
+const spendingSelectedDateEnd = ref();
+function setData() {
+    isTransactionsExists.value = spendingDashboardData.value.categories.some(category => category.sumTransactionAmount > 0);
 
     const expenseCategoriesArray: SpendingDashboardCategoryInfo[] = [];
-    spendingData.categories.forEach((category) => {
+    spendingDashboardData.value.categories.forEach((category) => {
         if (category.type === 'expense') {
             expenseCategoriesArray.push(category);
             if (category.expenseCategoryType === 'basic') {
@@ -126,7 +166,7 @@ function setData(spendingData: SpendingDashboardData) {
     });
     expenseCategories.value = expenseCategoriesArray;
 
-    let profit = spendingData.totals.income - spendingData.totals.expense;
+    let profit = spendingDashboardData.value.totals.income - spendingDashboardData.value.totals.expense;
     if (profit < 0) {
         profit = 0;
     }
@@ -171,5 +211,10 @@ function setData(spendingData: SpendingDashboardData) {
             },
         },
     };
+
+    const { dateStart, dateEnd } = getDateRange(spendingSelectedDate.value);
+
+    spendingSelectedDateStart.value = dateStart;
+    spendingSelectedDateEnd.value = dateEnd;
 };
 </script>

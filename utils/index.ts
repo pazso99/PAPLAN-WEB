@@ -8,6 +8,8 @@ import type {
     NotePriority,
 } from '~/types/types';
 
+const dayjs = useDayjs();
+
 export function getIdFromRoute(routeParams: RouteParams) {
     return parseInt(routeParams.id.toString());
 }
@@ -104,4 +106,15 @@ export function truncateText(text: string, length: number) {
         return `${text.substring(0, length)}...`;
     }
     return text;
+}
+
+export function getDateRange(date: string) {
+    const isYearOnly = date.length === 4;
+    const dateStart = dayjs(date).startOf(isYearOnly ? 'year' : 'month').format('YYYY-MM-DD');
+    const dateEnd = dayjs(date).endOf(isYearOnly ? 'year' : 'month').format('YYYY-MM-DD');
+
+    return {
+        dateStart,
+        dateEnd,
+    };
 }
