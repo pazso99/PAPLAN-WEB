@@ -524,6 +524,8 @@ function clearFilter() {
         account: undefined,
         type: undefined,
         category: undefined,
+        start_date: undefined,
+        end_date: undefined,
     } });
     resetFilters();
 }
@@ -541,7 +543,10 @@ onMounted(async () => {
     transactionCategoryNameOptions.value = transactionCategories.value.map(({ name }) => (name));
 
     loading.value = false;
+    applyFilters();
+});
 
+function applyFilters() {
     nextTick(() => {
         if (Object.keys(route.query).length > 0) {
             const queryFilters: { [key: string]: any } = {};
@@ -566,6 +571,28 @@ onMounted(async () => {
                 queryFilters['transactionCategory.name'] = { value: route.query.category.toString().split(','), matchMode: FilterMatchMode.IN };
             }
 
+            if (route.query.start_date || route.query.end_date) {
+                const constraints = [];
+                if (route.query.start_date) {
+                    constraints.push({
+                        value: dayjs(route.query.start_date.toString()).toDate(),
+                        matchMode: FilterMatchMode.DATE_AFTER,
+                    });
+                }
+
+                if (route.query.end_date) {
+                    constraints.push({
+                        value: dayjs(route.query.end_date.toString()).toDate(),
+                        matchMode: FilterMatchMode.DATE_BEFORE,
+                    });
+                }
+
+                queryFilters.date = {
+                    operator: FilterOperator.AND,
+                    constraints,
+                };
+            }
+
             if (Object.keys(queryFilters).length > 0) {
                 resetFilters();
                 filters.value = {
@@ -575,6 +602,10 @@ onMounted(async () => {
             }
         }
     });
+};
+
+watch(() => route.query, () => {
+    applyFilters();
 });
 
 async function handleRefresh() {

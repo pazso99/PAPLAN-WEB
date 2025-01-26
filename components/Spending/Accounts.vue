@@ -38,7 +38,14 @@
                 /> Ft
                 <NuxtLink
                     class="block"
-                    :to="{ name: 'spending-transactions', query: { account: account.name } }"
+                    :to="{
+                        name: 'spending-transactions',
+                        query: {
+                            account: account.name,
+                            start_date: spendingSelectedDateStart,
+                            end_date: spendingSelectedDateEnd,
+                        },
+                    }"
                 >
                     <span
                         :class="account.profit < 0 ? 'text-red-500' : 'text-emerald-500'"
@@ -72,7 +79,15 @@
                     </SplitButton>
                     <div class="flex gap-2">
                         <NuxtLink
-                            :to="{ name: 'spending-transactions', query: { account: account.name, type: 'income,transfer' } }"
+                            :to="{
+                                name: 'spending-transactions',
+                                query: {
+                                    account: account.name,
+                                    type: 'income,transfer',
+                                    start_date: spendingSelectedDateStart,
+                                    end_date: spendingSelectedDateEnd,
+                                },
+                            }"
                         >
                             <Tag severity="success">
                                 {{ $formatNumber(account.income) }} Ft
@@ -80,7 +95,15 @@
                         </NuxtLink>
 
                         <NuxtLink
-                            :to="{ name: 'spending-transactions', query: { account: account.name, type: 'expense,transfer' } }"
+                            :to="{
+                                name: 'spending-transactions',
+                                query: {
+                                    account: account.name,
+                                    type: 'expense,transfer',
+                                    start_date: spendingSelectedDateStart,
+                                    end_date: spendingSelectedDateEnd,
+                                },
+                            }"
                         >
                             <Tag severity="danger">
                                 {{ $formatNumber(account.expense) }} Ft
@@ -112,7 +135,14 @@
                     /> Ft
                     <NuxtLink
                         class="block"
-                        :to="{ name: 'spending-transactions', query: { type: 'income,expense,transfer' } }"
+                        :to="{
+                            name: 'spending-transactions',
+                            query: {
+                                type: 'income,expense,transfer',
+                                start_date: spendingSelectedDateStart,
+                                end_date: spendingSelectedDateEnd,
+                            },
+                        }"
                     >
                         <span
                             :class="spendingDashboardData.totals.profit < 0 ? 'text-red-500' : 'text-emerald-500'"
@@ -128,7 +158,14 @@
                     </NuxtLink>
                     <div class="flex justify-end gap-2 mt-2">
                         <NuxtLink
-                            :to="{ name: 'spending-transactions', query: { type: 'income,transfer' } }"
+                            :to="{
+                                name: 'spending-transactions',
+                                query: {
+                                    type: 'income,transfer',
+                                    start_date: spendingSelectedDateStart,
+                                    end_date: spendingSelectedDateEnd,
+                                },
+                            }"
                         >
                             <Tag severity="success">
                                 {{ $formatNumber(spendingDashboardData.totals.income) }} Ft
@@ -136,7 +173,14 @@
                         </NuxtLink>
 
                         <NuxtLink
-                            :to="{ name: 'spending-transactions', query: { type: 'expense,transfer' } }"
+                            :to="{
+                                name: 'spending-transactions',
+                                query: {
+                                    type: 'expense,transfer',
+                                    start_date: spendingSelectedDateStart,
+                                    end_date: spendingSelectedDateEnd,
+                                },
+                            }"
                         >
                             <Tag severity="danger">
                                 {{ $formatNumber(spendingDashboardData.totals.expense) }} Ft
@@ -286,7 +330,23 @@ const { transactionCategories, accounts } = storeToRefs(spendingManagementStore)
 onMounted(async () => {
     await getAccounts();
     await getTransactionCategories();
+
+    setSpendingSelectedDateRange();
 });
+
+watch(spendingSelectedDate, async () => {
+    setSpendingSelectedDateRange();
+});
+
+const dayjs = useDayjs();
+const spendingSelectedDateStart = ref();
+const spendingSelectedDateEnd = ref();
+function setSpendingSelectedDateRange() {
+    const { dateStart, dateEnd } = getDateRange(spendingSelectedDate.value);
+
+    spendingSelectedDateStart.value = dateStart;
+    spendingSelectedDateEnd.value = dateEnd;
+};
 
 const quickTransactionItems = ref<{
     type: TransactionType;
@@ -361,7 +421,6 @@ function openNewTransaction(type: TransactionType, account: AccountBasic, severi
     });
 };
 
-const dayjs = useDayjs();
 const emitSave = handleSubmit(async ({ amount, comment, date }) => {
     const meta: {
         toAccountId?: number; // TODO meta t type

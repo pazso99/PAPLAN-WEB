@@ -72,7 +72,7 @@ const dates = [
     ).filter(d => spendingYears.value.some(year => d.startsWith(year))),
     ...spendingYears.value.map(year => year.toString()),
 ];
-spendingSelectedDate.value = dates[0];
+spendingSelectedDate.value = spendingSelectedDate.value || dates[0];
 
 const initLoading = ref(true);
 onMounted(async () => {
